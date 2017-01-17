@@ -1,0 +1,4 @@
+*.DS_Store
+[Tt]humbs.db 
+node_modules/*
+*.log
