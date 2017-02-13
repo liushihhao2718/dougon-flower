@@ -1,4 +1,3 @@
-import SVG from 'svg.js';
 import fitCurve from 'fit-curve';
 
 const error = 100;

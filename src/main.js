@@ -1,4 +1,3 @@
-import GlyphsControl from './Controls/GlyphsControl';
 import PaintControl from './Controls/PaintControl';
 import SVG from 'svg.js';
 
@@ -10,11 +9,13 @@ setControl(draw);
 function setControl(_container) {
 	let isMouseDown = false;
 	let currnetControl = new PaintControl(draw);
-
+	const top = draw.node.getBoundingClientRect().top;
+	const left = draw.node.getBoundingClientRect().left;
+	
 	_container.on('mousedown', function (e) {
 		const point = [
-			e.clientX,
-			e.clientY
+			e.clientX - top,
+			e.clientY - left
 		];
 		isMouseDown = true;
 		currnetControl.start(point);
