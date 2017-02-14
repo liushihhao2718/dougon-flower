@@ -18,6 +18,7 @@
     "watchify": "3.7.0"
   },
   "dependencies": {
+    "bezier-js": "^2.2.2",
     "fit-curve": "^0.1.4",
     "mathjs": "^3.4.1",
     "svg.js": "*"

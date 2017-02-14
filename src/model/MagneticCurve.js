@@ -1,26 +1,36 @@
+import fitCurve from 'fit-curve';
+
+const error = 100;
+
+
 export default class MagneticCurve {
-	static makeCurve(param) {
+	constructor(param) {
 		/*
 		startX, startY : 初始點
 		vx, vy : 初始速度
 		T : 總點數
 		alpha : 等角螺線參數
+		sign : 電荷正負
 		*/
+		this.param = param;
+	}
+
+	makeCurve() {
 		const points = [];
+		
+		let sign = this.param.sign || 1;
+		let x = this.param.startX;
+		let y = this.param.startY;
 
-		let x = param.startX;
-		let y = param.startY;
+		let [vx, vy] = normalize( [this.param.vx, this.param.vy] );
 
-		let vx = param.vx;
-		let vy = param.vy;
-
-		let T = param.T;
+		let T = this.param.T;
 		let t = 0;
-		let dt = 1;
+		let dt = 1/T;
 
 		while( t < T ) {
 			points.push( [x, y] );
-			const q = Math.pow( (T-t), this.param.alpha );
+			const q = sign * Math.pow( (T-t), -1 * this.param.alpha );
 			x += vx * dt;
 			y += vy * dt;
 
@@ -29,8 +39,44 @@ export default class MagneticCurve {
 
 			vx += ax * dt;
 			vy += ay * dt;
+
+			t += dt;
 		}
 
 		return points;
 	}
+
+	drawOn(pannel){
+		let mag = this.makeCurve();
+		let smoothBizer = fitCurve( mag, error );
+		let pathString = fittedCurveToPathString(smoothBizer);
+
+		pannel.path(pathString).fill('none').stroke({ width: 1 });
+	}
+
+
+}
+function fittedCurveToPathString(fittedLineData) {
+	var str = '';
+	//bezier : [ [c0], [c1], [c2], [c3] ]
+	fittedLineData.map(function (bezier, i) {
+		if (i == 0) {
+			str += 'M ' + bezier[0][0] + ' ' + bezier[0][1];
+		}
+
+		str += 'C ' + bezier[1][0] + ' ' + bezier[1][1] + ', ' +
+		bezier[2][0] + ' ' + bezier[2][1] + ', ' +
+		bezier[3][0] + ' ' + bezier[3][1] + ' ';	
+					
+	});
+
+	return str;
+}
+
+function normalize(vector) {
+	let x = vector[0];
+	let y = vector[1];
+	let length = Math.sqrt(x*x + y*y);
+
+	return [x/length, y/length];
 }
