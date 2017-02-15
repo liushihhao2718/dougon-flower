@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "ava",
-    "dev": "watchify src/main.js -v --debug -t babelify -o public/js/main.js",
-    "start": "http-server public",
+    "dev": "watchify src/main.js -v --debug -t babelify -o docs/js/main.js",
+    "start": "http-server docs",
     "flow": "flow; test $? -eq 0 -o $? -eq 2"
   },
   "author": "",
