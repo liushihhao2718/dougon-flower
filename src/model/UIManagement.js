@@ -1,4 +1,5 @@
 import * as dat from '../lib/dat.gui';
+import download from '../lib/download';
 
 let gui, folders = [];
 export let state = {
@@ -18,6 +19,13 @@ export let state = {
 	]
 };
 
+let features = {
+	download : function(){
+		let svg = document.getElementsByTagName('svg')[0];
+		download(svg.outerHTML, 'file.svg', 'text/plain');
+	}
+};
+
 export function setGUI(){
 	gui = new dat.GUI();
 
@@ -35,4 +43,6 @@ export function setGUI(){
 	f1.add(state.levelCurve[1], 'alpha');
 	f1.add(state.levelCurve[1], 'branches');
 	folders.push(f1);
+
+	gui.add(features, 'download');
 }
