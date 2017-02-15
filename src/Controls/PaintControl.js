@@ -1,5 +1,6 @@
 import fitCurve from 'fit-curve';
 import LevelCurve from '../model/LevelCurve';
+import * as UI from '../model/UIManagement';
 
 const error = 100;
 
@@ -19,23 +20,16 @@ function PaintControl(pannel) {
 
 	this.end = function() {
 		let smoothBizer = fitCurve( rawPointData, error );
+		if(smoothBizer.length == 0) {
+			clearRawData();
+			return;
+		}
 		let pathString = fittedCurveToPathString(smoothBizer);
 
 		drawOnPannel(pannel, pathString);
 		clearRawData();
 
-		let lvCurve = new LevelCurve(smoothBizer, 1, [
-			{
-				length: 100,
-				alpha: 0.9,
-				branches: 5
-			},
-			{
-				length: 20,
-				alpha: 0.65,
-				branches: 4
-			}
-		]);
+		let lvCurve = new LevelCurve(smoothBizer, 1, UI.state.levelCurve);
 		lvCurve.drawOn(pannel);
 	};
 

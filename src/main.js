@@ -1,12 +1,10 @@
 import PaintControl from './Controls/PaintControl';
 import SVG from 'svg.js';
-import * as dat from './lib/dat.gui';
-
+import * as UI from './model/UIManagement';
 
 (function(){
 	let draw = SVG('drawing').size(1000, 1000);
-	let gui = new dat.GUI();
-	
+	UI.setGUI();
 	setControl(draw);
 
 })();
