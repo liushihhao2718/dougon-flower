@@ -1,17 +1,22 @@
 import PaintControl from './Controls/PaintControl';
 import SVG from 'svg.js';
+import * as dat from './lib/dat.gui';
 
-var draw = SVG('drawing').size(300, 300);
 
+(function(){
+	let draw = SVG('drawing').size(1000, 1000);
+	let gui = new dat.GUI();
+	
+	setControl(draw);
 
-setControl(draw);
+})();
 
 function setControl(_container) {
 	let isMouseDown = false;
-	let currnetControl = new PaintControl(draw);
-	const top = draw.node.getBoundingClientRect().top;
-	const left = draw.node.getBoundingClientRect().left;
-	
+	let currnetControl = new PaintControl(_container);
+	const top = _container.node.getBoundingClientRect().top;
+	const left = _container.node.getBoundingClientRect().left;
+
 	_container.on('mousedown', function (e) {
 		const point = [
 			e.clientX - top,

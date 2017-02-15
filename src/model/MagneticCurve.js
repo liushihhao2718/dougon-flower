@@ -1,6 +1,6 @@
 import fitCurve from 'fit-curve';
 
-const error = 100;
+const error = 10;
 
 
 export default class MagneticCurve {
@@ -26,16 +26,16 @@ export default class MagneticCurve {
 
 		let T = this.param.T;
 		let t = 0;
-		let dt = 1/T;
+		let dt = 1;
 
 		while( t < T ) {
 			points.push( [x, y] );
-			const q = sign * Math.pow( (T-t), -1 * this.param.alpha );
+			let q = sign * Math.pow( (T-t), -1 * this.param.alpha );
 			x += vx * dt;
 			y += vy * dt;
 
-			const ax = -1 * vy * q;
-			const ay = vx * q;
+			let ax = -1 * vy * q;
+			let ay = vx * q;
 
 			vx += ax * dt;
 			vy += ay * dt;
@@ -49,17 +49,17 @@ export default class MagneticCurve {
 	drawOn(pannel){
 		let mag = this.makeCurve();
 		let smoothBizer = fitCurve( mag, error );
+		this.points = smoothBizer;
 		let pathString = fittedCurveToPathString(smoothBizer);
+		pannel.polyline(mag).fill('none').stroke({ width: 3 }).stroke('#f00');
 
-		pannel.path(pathString).fill('none').stroke({ width: 1 });
+		// pannel.path(pathString).fill('none').stroke({ width: 3 }).stroke('#f00');
 	}
-
-
 }
 function fittedCurveToPathString(fittedLineData) {
 	var str = '';
 	//bezier : [ [c0], [c1], [c2], [c3] ]
-	fittedLineData.map(function (bezier, i) {
+	fittedLineData.forEach(function (bezier, i) {
 		if (i == 0) {
 			str += 'M ' + bezier[0][0] + ' ' + bezier[0][1];
 		}
@@ -76,7 +76,9 @@ function fittedCurveToPathString(fittedLineData) {
 function normalize(vector) {
 	let x = vector[0];
 	let y = vector[1];
-	let length = Math.sqrt(x*x + y*y);
+	let length = Math.sqrt(
+		Math.pow(x, 2) + Math.pow(y, 2)
+	);
 
 	return [x/length, y/length];
 }
