@@ -55,7 +55,7 @@ export default class LevelCurve {
 			vy: v.y,
 			T: this.levelParam[level].length,
 			alpha: this.levelParam[level].alpha,
-			sign: -1 * sign
+			sign: sign
 		});
 		mag.drawOn(this.pannel);
 		if (level < this.levelParam.length-1 ) this.drawLevelCurve(mag.points, level+1);
