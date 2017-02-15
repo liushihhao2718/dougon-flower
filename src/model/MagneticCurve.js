@@ -1,6 +1,6 @@
 import fitCurve from 'fit-curve';
 
-const error = 10;
+const error = 1;
 
 
 export default class MagneticCurve {
@@ -51,9 +51,9 @@ export default class MagneticCurve {
 		let smoothBizer = fitCurve( mag, error );
 		this.points = smoothBizer;
 		let pathString = fittedCurveToPathString(smoothBizer);
-		pannel.polyline(mag).fill('none').stroke({ width: 3 }).stroke('#f00');
+		// pannel.polyline(mag).fill('none').stroke({ width: 3 }).stroke('#f00');
 
-		// pannel.path(pathString).fill('none').stroke({ width: 3 }).stroke('#f00');
+		pannel.path(pathString).fill('none').stroke({ width: 3 }).stroke('#f00');
 	}
 }
 function fittedCurveToPathString(fittedLineData) {

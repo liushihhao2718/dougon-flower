@@ -28,13 +28,13 @@ function PaintControl(pannel) {
 			{
 				length: 100,
 				alpha: 0.9,
-				branches: 4
+				branches: 5
 			},
-			// {
-			// 	length: 50,
-			// 	alpha: 0.65,
-			// 	branches: 4
-			// }
+			{
+				length: 20,
+				alpha: 0.65,
+				branches: 4
+			}
 		]);
 		lvCurve.drawOn(pannel);
 	};
