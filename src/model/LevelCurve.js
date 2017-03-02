@@ -1,5 +1,6 @@
 import Bezier from 'bezier-js';
 import MagneticCurve from '../model/MagneticCurve';
+import CurveManagement from './CurveManagement';
 
 export default class LevelCurve {
 	/**
@@ -12,8 +13,10 @@ export default class LevelCurve {
 		this.basePath = basePath;
 		this.trunkWidth = trunkWidth;
 		this.levelParam = levelParam;
+		this.curveGroup = undefined;
 	}
 	drawLevelCurve(beziers, level){
+		if( !beziers ) return;
 		let sign = 1;
 
 		let Bs = beziers.map(b =>{
@@ -30,6 +33,8 @@ export default class LevelCurve {
 		}, 0);
 
 		this.branchPosition(level).forEach((i) => {
+			if( totalLength === 0) return;
+
 			let bezierIndex = 0;
 
 			let pos = totalLength * i;
@@ -57,13 +62,34 @@ export default class LevelCurve {
 			alpha: this.levelParam[level].alpha,
 			sign: sign
 		});
-		mag.drawOn(this.pannel);
+		mag.drawOn(this.curveGroup);
 		if (level < this.levelParam.length-1 ) this.drawLevelCurve(mag.points, level+1);
 	}
 
 	drawOn( pannel ){
 		this.pannel = pannel;
+		this.curveGroup = pannel.group();
+		pannel.add(this.curveGroup);
+		CurveManagement[this.curveGroup.node.id] = this;
+		this.curveGroup.on('click', e => {
+			console.log('clecked');
+
+			let curve_id = e.target.parentElement.id;
+			let lvCurve = CurveManagement[ curve_id ];
+			CurveManagement.selectedCurve.length = 0;
+			CurveManagement.selectedCurve.push(lvCurve);
+
+		});
+
 		this.drawLevelCurve(this.basePath, 0);
+	}
+	redraw() {
+		if( this.pannel === undefined ) {
+			console.error('can not redraw!');
+			return;
+		}
+		this.curveGroup.remove();
+		this.drawOn(this.pannel);
 	}
 
 	branchPosition(level){

@@ -1,7 +1,9 @@
 import * as dat from '../lib/dat.gui';
 import download from '../lib/download';
+import CurveManagement from './CurveManagement';
 
 let gui, folders = [];
+let controls = [];
 export let state = {
 	trunkWidth: 15,
 	intersect: false,
@@ -32,17 +34,28 @@ export function setGUI(){
 	gui.add(state, 'trunkWidth', 1, 20);
 	gui.add(state, 'intersect');
 
-	let f0 = gui.addFolder('Level 0');
-	f0.add(state.levelCurve[0], 'length');
-	f0.add(state.levelCurve[0], 'alpha');
-	f0.add(state.levelCurve[0], 'branches');
-	folders.push(f0);
-
-	let f1 = gui.addFolder('Level 1');
-	f1.add(state.levelCurve[1], 'length');
-	f1.add(state.levelCurve[1], 'alpha');
-	f1.add(state.levelCurve[1], 'branches');
-	folders.push(f1);
+	levelFolder(0);
+	levelFolder(1);
+	setOnChange(controls);
 
 	gui.add(features, 'download');
+
+}
+
+function levelFolder(index){
+	let folder = gui.addFolder(`Level ${index}`);
+	controls.push( folder.add(state.levelCurve[index], 'length') );
+	controls.push( folder.add(state.levelCurve[index], 'alpha') );
+	controls.push( folder.add(state.levelCurve[index], 'branches') );
+	folders.push(folder);
+}
+
+function setOnChange(controls){
+	controls.forEach( c => {
+		c.onChange( () => {
+			if( CurveManagement.selectedCurve.length === 1 ){
+				CurveManagement.selectedCurve[0].redraw();
+			}
+		});
+	});
 }
