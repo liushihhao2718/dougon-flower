@@ -1,6 +1,8 @@
 import Bezier from 'bezier-js';
 import MagneticCurve from '../model/MagneticCurve';
 import CurveManagement from './CurveManagement';
+import * as UI from '../model/UIManagement';
+
 
 export default class LevelCurve {
 	/**
@@ -78,10 +80,42 @@ export default class LevelCurve {
 			let lvCurve = CurveManagement[ curve_id ];
 			CurveManagement.selectedCurve.length = 0;
 			CurveManagement.selectedCurve.push(lvCurve);
-
 		});
 
 		this.drawLevelCurve(this.basePath, 0);
+		this.drawStem();
+	}
+	drawStem(){
+		
+		let basePath = this.basePath.map(c =>{
+			return new Bezier(
+				c[0][0], c[0][1],
+				c[1][0], c[1][1],
+				c[2][0], c[2][1],
+				c[3][0], c[3][1]
+			);
+		});
+		
+
+		let totalLength = basePath.reduce( (length, B) =>{
+			return B.length() + length;
+		}, 0);
+
+		let l = 0;
+		let w = UI.state.trunkWidth;
+
+		let outline = basePath.map(b => {
+			let d1 = w * l / totalLength;
+			l += b.length();
+			let d2 = w * l / totalLength;
+			if(d1 === 0) d1 = 1;
+			return b.outline(d1, d1, d2, d2);
+		});
+		outline.forEach(b => {
+			let pathString = fittedCurveToPathString(b);
+			drawOnPannel( this.curveGroup, pathString );
+		});
+		
 	}
 	redraw() {
 		if( this.pannel === undefined ) {
@@ -104,4 +138,22 @@ export default class LevelCurve {
 		return branches;
 	}
 }
+function fittedCurveToPathString(fittedLineData) {
+	var str = '';
+	//bezier : [ [c0], [c1], [c2], [c3] ]
+	fittedLineData.curves.map(function (bezier, i) {
+		if (i == 0) {
+			str += 'M ' + bezier.points[0].x + ' ' + bezier.points[0].y;
+		}
 
+		str += 'C ' + bezier.points[1].x + ' ' + bezier.points[1].y + ', ' +
+		bezier.points[2].x + ' ' + bezier.points[2].y + ', ' +
+		bezier.points[3].x + ' ' + bezier.points[3].y + ' ';	
+					
+	});
+
+	return str;
+}
+function drawOnPannel(pannel, pathString){
+	pannel.path( pathString ).fill('#bec9b3').stroke({ width: 0 });
+}

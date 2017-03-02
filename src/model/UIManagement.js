@@ -32,7 +32,7 @@ export function setGUI(){
 	gui = new dat.GUI();
 
 	gui.add(state, 'trunkWidth', 1, 20);
-	gui.add(state, 'intersect');
+	//gui.add(state, 'intersect');
 
 	levelFolder(0);
 	levelFolder(1);
@@ -46,7 +46,7 @@ function levelFolder(index){
 	let folder = gui.addFolder(`Level ${index}`);
 	controls.push( folder.add(state.levelCurve[index], 'length') );
 	controls.push( folder.add(state.levelCurve[index], 'alpha') );
-	controls.push( folder.add(state.levelCurve[index], 'branches') );
+	controls.push( folder.add(state.levelCurve[index], 'branches').step(1) );
 	folders.push(folder);
 }
 

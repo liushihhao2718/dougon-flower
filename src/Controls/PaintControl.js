@@ -27,10 +27,11 @@ function PaintControl(pannel) {
 		let pathString = fittedCurveToPathString(smoothBizer);
 
 		drawOnPannel(pannel, pathString);
-		clearRawData();
 
-		let lvCurve = new LevelCurve(smoothBizer, 1, UI.state.levelCurve);
+		let lvCurve = new LevelCurve( smoothBizer, 1, UI.state.levelCurve);
 		lvCurve.drawOn(pannel);
+
+		clearRawData();
 	};
 
 	function updateLines(paintingPolyLine, rawPointData) {

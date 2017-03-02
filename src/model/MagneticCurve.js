@@ -50,6 +50,7 @@ export default class MagneticCurve {
 		let mag = this.makeCurve();
 		let smoothBizer = fitCurve( mag, error );
 		this.points = smoothBizer;
+
 		let pathString = fittedCurveToPathString(smoothBizer);
 
 		pannel.path(pathString).fill('none').stroke({ width: 3 }).stroke('#f00');
