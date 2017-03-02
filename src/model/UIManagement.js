@@ -31,7 +31,8 @@ let features = {
 export function setGUI(){
 	gui = new dat.GUI();
 
-	gui.add(state, 'trunkWidth', 1, 20);
+	let c = gui.add(state, 'trunkWidth', 1, 20);
+	controls.push(c);
 	//gui.add(state, 'intersect');
 
 	levelFolder(0);
