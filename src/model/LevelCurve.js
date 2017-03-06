@@ -83,10 +83,15 @@ export default class LevelCurve {
 		});
 
 		this.drawLevelCurve(this.basePath, 0);
-		this.drawStem( UI.state.trunkWidth,  );
-		this.drawStem( UI.state.trunkWidth/3 );
+		this.drawStem( UI.state.trunkWidth,'#7B5A62');
+		this.drawStem( UI.state.trunkWidth-1,'#F9F2F4');
+		this.drawStem( UI.state.trunkWidth*9/10, '#CED5D0');
+		this.drawStem( UI.state.trunkWidth/2, '#9FB9A8');
+		this.drawStem( UI.state.trunkWidth/8, '#7C8168');
+
+
 	}
-	drawStem(width, color){
+	drawStem(width, color, strokeColor){
 		
 		let basePath = this.basePath.map(c =>{
 			return new Bezier(
@@ -114,7 +119,7 @@ export default class LevelCurve {
 		});
 		outline.forEach(b => {
 			let pathString = fittedCurveToPathString(b);
-			drawOnPannel( this.curveGroup, pathString, color );
+			drawOnPannel( this.curveGroup, pathString, color,strokeColor );
 		});
 		
 	}
@@ -155,6 +160,11 @@ function fittedCurveToPathString(fittedLineData) {
 
 	return str;
 }
-function drawOnPannel(pannel, pathString, color){
-	pannel.path( pathString ).fill(color).stroke({ width: 0 });
+function drawOnPannel(pannel, pathString, color, strokeColor = 'none'){
+	pannel.path( pathString )
+	.fill(color)
+	.stroke({
+		width: 1,
+		color: strokeColor
+	 });
 }
