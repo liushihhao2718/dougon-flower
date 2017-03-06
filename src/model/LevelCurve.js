@@ -83,16 +83,15 @@ export default class LevelCurve {
 		});
 
 		this.drawLevelCurve(this.basePath, 0);
-		this.drawStem( UI.state.trunkWidth,'#7B5A62');
-		this.drawStem( UI.state.trunkWidth-1,'#F9F2F4');
-		this.drawStem( UI.state.trunkWidth*9/10, '#CED5D0');
-		this.drawStem( UI.state.trunkWidth/2, '#9FB9A8');
-		this.drawStem( UI.state.trunkWidth/8, '#7C8168');
+		this.drawStem( UI.state.trunkHeadWidth,UI.state.trunkTailWidth,'#7B5A62');
+		this.drawStem( UI.state.trunkHeadWidth-1,UI.state.trunkTailWidth-1,'#F9F2F4');
+		this.drawStem( UI.state.trunkHeadWidth/1.111,UI.state.trunkTailWidth/1.111, '#CED5D0');
+		this.drawStem( UI.state.trunkHeadWidth/2,UI.state.trunkTailWidth/2, '#9FB9A8');
+		this.drawStem( UI.state.trunkHeadWidth/8,UI.state.trunkTailWidth/8, '#7C8168');
 
 
 	}
-	drawStem(width, color, strokeColor){
-		
+	drawStem(beginWidth, endWidth, color){
 		let basePath = this.basePath.map(c =>{
 			return new Bezier(
 				c[0][0], c[0][1],
@@ -103,23 +102,22 @@ export default class LevelCurve {
 		});
 		
 
-		let totalLength = basePath.reduce( (length, B) =>{
-			return B.length() + length;
+		let totalLength = basePath.reduce( (length, Bezier) =>{
+			return Bezier.length() + length;
 		}, 0);
 
 		let l = 0;
-		let w = width;
-
+		let w = (endWidth-beginWidth)/totalLength;
 		let outline = basePath.map(b => {
-			let d1 = w * l / totalLength;
+			let d1 = beginWidth + l * w;
 			l += b.length();
-			let d2 = w * l / totalLength;
+			let d2 = beginWidth + l * w;
 			if(d1 === 0) d1 = 1;
 			return b.outline(d1, d1, d2, d2);
 		});
 		outline.forEach(b => {
 			let pathString = fittedCurveToPathString(b);
-			drawOnPannel( this.curveGroup, pathString, color,strokeColor );
+			drawOnPannel( this.curveGroup, pathString, color );
 		});
 		
 	}
@@ -160,11 +158,8 @@ function fittedCurveToPathString(fittedLineData) {
 
 	return str;
 }
-function drawOnPannel(pannel, pathString, color, strokeColor = 'none'){
+function drawOnPannel(pannel, pathString, color){
 	pannel.path( pathString )
 	.fill(color)
-	.stroke({
-		width: 1,
-		color: strokeColor
-	 });
+	.stroke({width: 0});
 }

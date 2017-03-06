@@ -5,7 +5,8 @@ import CurveManagement from './CurveManagement';
 let gui, folders = [];
 let controls = [];
 export let state = {
-	trunkWidth: 15,
+	trunkHeadWidth: 15,
+	trunkTailWidth: 15,
 	intersect: false,
 	levelCurve :[
 		{
@@ -31,8 +32,11 @@ let features = {
 export function setGUI(){
 	gui = new dat.GUI();
 
-	let c = gui.add(state, 'trunkWidth', 1, 20);
-	controls.push(c);
+	let c1 = gui.add(state, 'trunkHeadWidth', 1, 20);
+	let c2 = gui.add(state, 'trunkTailWidth', 1, 20);
+
+	controls.push(c1);
+	controls.push(c2);
 	//gui.add(state, 'intersect');
 
 	levelFolder(0);
