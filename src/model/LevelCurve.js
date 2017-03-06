@@ -3,6 +3,7 @@ import MagneticCurve from '../model/MagneticCurve';
 import CurveManagement from './CurveManagement';
 import * as UI from '../model/UIManagement';
 
+let flowerString = require('../海石榴心.svg');
 
 export default class LevelCurve {
 	/**
@@ -67,7 +68,6 @@ export default class LevelCurve {
 		mag.drawOn(this.curveGroup);
 		if (level < this.levelParam.length-1 ) this.drawLevelCurve(mag.points, level+1);
 	}
-
 	drawOn( pannel ){
 		this.pannel = pannel;
 		this.curveGroup = pannel.group();
@@ -88,8 +88,7 @@ export default class LevelCurve {
 		this.drawStem( UI.state.trunkHeadWidth/1.111,UI.state.trunkTailWidth/1.111, '#CED5D0');
 		this.drawStem( UI.state.trunkHeadWidth/2,UI.state.trunkTailWidth/2, '#9FB9A8');
 		this.drawStem( UI.state.trunkHeadWidth/8,UI.state.trunkTailWidth/8, '#7C8168');
-
-
+		this.drawFlower();
 	}
 	drawStem(beginWidth, endWidth, color){
 		let basePath = this.basePath.map(c =>{
@@ -119,7 +118,19 @@ export default class LevelCurve {
 			let pathString = fittedCurveToPathString(b);
 			drawOnPannel( this.curveGroup, pathString, color );
 		});
-		
+	}
+	drawFlower(){
+		let circle = {
+			cx: this.basePath[this.basePath.length-1][3][0],
+			cy: this.basePath[this.basePath.length-1][3][1],
+			r:  UI.state.trunkTailWidth*2 
+		};
+		let g = this.curveGroup.group();
+		let flower = g.svg(flowerString)
+		let w = flower.node.getElementsByTagName('svg')[0].getAttribute('width');
+		let h = flower.node.getElementsByTagName('svg')[0].getAttribute('height');
+		flower.translate(circle.cx - w/2, circle.cy - h/2);
+		flower.rotate(45, w/2, h/2);
 	}
 	redraw() {
 		if( this.pannel === undefined ) {
@@ -129,7 +140,6 @@ export default class LevelCurve {
 		this.curveGroup.remove();
 		this.drawOn(this.pannel);
 	}
-
 	branchPosition(level){
 		let branches = [];
 		let branch = this.levelParam[level].branches;
