@@ -53,8 +53,8 @@ export default class MagneticCurve {
 
 		let pathString = fittedCurveToPathString(smoothBizer);
 
-		pannel.path(pathString).fill('none').stroke({ width: 3 }).stroke('#f00');
-		
+		// pannel.path(pathString).fill('none').stroke({ width: 3 }).stroke('#f00');
+		pannel.path(pathString).fill('none').stroke({ width: 10 }).stroke('#CED5D0');
 	}
 }
 function fittedCurveToPathString(fittedLineData) {

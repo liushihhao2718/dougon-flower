@@ -66,6 +66,8 @@ export default class LevelCurve {
 			sign: sign
 		});
 		mag.drawOn(this.curveGroup);
+		// this.drawStem( UI.state.trunkHeadWidth/1.111,UI.state.trunkTailWidth/1.111, '#CED5D0', mag.points);
+
 		if (level < this.levelParam.length-1 ) this.drawLevelCurve(mag.points, level+1);
 	}
 	drawOn( pannel ){
@@ -90,8 +92,8 @@ export default class LevelCurve {
 		this.drawStem( UI.state.trunkHeadWidth/8,UI.state.trunkTailWidth/8, '#7C8168');
 		this.drawFlower();
 	}
-	drawStem(beginWidth, endWidth, color){
-		let basePath = this.basePath.map(c =>{
+	drawStem(beginWidth, endWidth, color, _basePath = this.basePath){
+		let basePath = _basePath.map(c =>{
 			return new Bezier(
 				c[0][0], c[0][1],
 				c[1][0], c[1][1],
@@ -120,17 +122,29 @@ export default class LevelCurve {
 		});
 	}
 	drawFlower(){
-		let circle = {
+		let blackCircle = {
 			cx: this.basePath[this.basePath.length-1][3][0],
 			cy: this.basePath[this.basePath.length-1][3][1],
 			r:  UI.state.trunkTailWidth*2 
 		};
+	
 		let g = this.curveGroup.group();
-		let flower = g.svg(flowerString)
-		let w = flower.node.getElementsByTagName('svg')[0].getAttribute('width');
-		let h = flower.node.getElementsByTagName('svg')[0].getAttribute('height');
-		flower.translate(circle.cx - w/2, circle.cy - h/2);
-		flower.rotate(45, w/2, h/2);
+		let flower = g.svg(flowerString);
+		const boudingBoxWidth = flower.node.children[0].getAttribute('width');
+		const boudingBoxHeight = flower.node.children[0].getAttribute('height');
+		
+		const rate = 2*blackCircle.r*2/boudingBoxWidth;
+				
+		flower.transform({
+			x: blackCircle.cx - boudingBoxWidth/2,
+			y: blackCircle.cy - boudingBoxHeight/2
+		}).transform({
+			rotation: 30,
+			relative:true 
+		});
+		flower.transform({
+			scale: rate
+		});
 	}
 	redraw() {
 		if( this.pannel === undefined ) {
