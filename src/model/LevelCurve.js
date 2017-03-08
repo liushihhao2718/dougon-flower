@@ -34,7 +34,14 @@ export default class LevelCurve {
 		let totalLength = Bs.reduce( (length, B) =>{
 			return B.length() + length;
 		}, 0);
+		// Bs.forEach((b, index) => {
+		// 	b.extrema().x.forEach(posOnSinglebezier => {
 
+		// 		this.drawAt(posOnSinglebezier, Bs[index], sign, level);
+
+		// 		sign *= -1;
+		// 	});
+		// });
 		this.branchPosition(level).forEach((i) => {
 			if( totalLength === 0) return;
 
@@ -56,6 +63,7 @@ export default class LevelCurve {
 	drawAt(t, b, sign, level){
 		let start = b.get(t);
 		let v = b.derivative(t);
+
 		let mag = new MagneticCurve({
 			startX: start.x,
 			startY: start.y,
