@@ -10,16 +10,33 @@ export let state = {
 	intersect: false,
 	levelCurve :[
 		{
-			length: 100,
-			alpha: 0.9,
+			length: 400,
+			alpha: 0.8,
 			branches: 5
 		},
 		{
-			length: 20,
-			alpha: 0.8,
+			length: 200,
+			alpha: 0.75,
+			branches: 5
+		},
+		{
+			length: 100,
+			alpha: 0.7,
+			branches: 5
+		},
+		{
+			length: 50,
+			alpha: 0.65,
 			branches: 5
 		}
-	]
+	],
+	bound:{
+		x:0,
+		y:0,
+		w:0,
+		h:0
+	},
+	tool:'bound'
 };
 
 let features = {
@@ -31,16 +48,20 @@ let features = {
 
 export function setGUI(){
 	gui = new dat.GUI();
-
+	let c0 = gui.add(state, 'tool', ['paint', 'bound', 'select']);
 	let c1 = gui.add(state, 'trunkHeadWidth', 1, 20);
 	let c2 = gui.add(state, 'trunkTailWidth', 20, 40);
-
+	
+	controls.push(c0);
 	controls.push(c1);
 	controls.push(c2);
 	//gui.add(state, 'intersect');
 
 	levelFolder(0);
 	levelFolder(1);
+	levelFolder(2);
+	levelFolder(3);
+
 	setOnChange(controls);
 
 	gui.add(features, 'download');

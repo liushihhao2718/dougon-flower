@@ -34,31 +34,31 @@ export default class LevelCurve {
 		let totalLength = Bs.reduce( (length, B) =>{
 			return B.length() + length;
 		}, 0);
-		// Bs.forEach((b, index) => {
-		// 	b.extrema().x.forEach(posOnSinglebezier => {
+		Bs.forEach((b, index) => {
+			b.extrema().x.forEach(posOnSinglebezier => {
 
-		// 		this.drawAt(posOnSinglebezier, Bs[index], sign, level);
+				this.drawAt(posOnSinglebezier, Bs[index], sign, level);
 
-		// 		sign *= -1;
-		// 	});
-		// });
-		this.branchPosition(level).forEach((i) => {
-			if( totalLength === 0) return;
-
-			let bezierIndex = 0;
-
-			let pos = totalLength * i;
-			while( pos >= Bs[bezierIndex].length() ) {
-				pos -= Bs[bezierIndex].length();
-				bezierIndex++;
-			}
-
-			let posOnSinglebezier = pos / Bs[bezierIndex].length();
-
-			this.drawAt(posOnSinglebezier, Bs[bezierIndex], sign, level);
-
-			sign *= -1;
+				sign *= -1;
+			});
 		});
+		// this.branchPosition(level).forEach((i) => {
+		// 	if( totalLength === 0) return;
+
+		// 	let bezierIndex = 0;
+
+		// 	let pos = totalLength * i;
+		// 	while( pos >= Bs[bezierIndex].length() ) {
+		// 		pos -= Bs[bezierIndex].length();
+		// 		bezierIndex++;
+		// 	}
+
+		// 	let posOnSinglebezier = pos / Bs[bezierIndex].length();
+
+		// 	this.drawAt(posOnSinglebezier, Bs[bezierIndex], sign, level);
+
+		// 	sign *= -1;
+		// });
 	}
 	drawAt(t, b, sign, level){
 		let start = b.get(t);
@@ -92,15 +92,14 @@ export default class LevelCurve {
 			CurveManagement.selectedCurve.push(lvCurve);
 		});
 
-		this.drawFlower();
-		this.drawStem( 1,1, '#7C8168');
 
-		// this.drawLevelCurve(this.basePath, 0);
-		// this.drawStem( UI.state.trunkHeadWidth,UI.state.trunkTailWidth,'#7B5A62');
-		// this.drawStem( UI.state.trunkHeadWidth-1,UI.state.trunkTailWidth-1,'#F9F2F4');
-		// this.drawStem( UI.state.trunkHeadWidth/1.111,UI.state.trunkTailWidth/1.111, '#CED5D0');
-		// this.drawStem( UI.state.trunkHeadWidth/2,UI.state.trunkTailWidth/2, '#9FB9A8');
-		// this.drawStem( UI.state.trunkHeadWidth/8,UI.state.trunkTailWidth/8, '#7C8168');
+		this.drawLevelCurve(this.basePath, 0);
+		this.drawStem( UI.state.trunkHeadWidth,UI.state.trunkTailWidth,'#7B5A62');
+		this.drawStem( UI.state.trunkHeadWidth-1,UI.state.trunkTailWidth-1,'#F9F2F4');
+		this.drawStem( UI.state.trunkHeadWidth/1.111,UI.state.trunkTailWidth/1.111, '#CED5D0');
+		this.drawStem( UI.state.trunkHeadWidth/2,UI.state.trunkTailWidth/2, '#9FB9A8');
+		this.drawStem( UI.state.trunkHeadWidth/8,UI.state.trunkTailWidth/8, '#7C8168');
+		this.drawFlower();
 	}
 	drawStem(beginWidth, endWidth, color, _basePath = this.basePath){
 		let basePath = _basePath.map(c =>{
@@ -139,8 +138,8 @@ export default class LevelCurve {
 		};
 	
 		let g = this.curveGroup.group();
-		let c = this.curveGroup.circle(10);
-		c.cx(blackCircle.cx).cy(blackCircle.cy);
+		// let c = this.curveGroup.circle(10);
+		// c.cx(blackCircle.cx).cy(blackCircle.cy);
 		let flower = g.svg(flowerString);
 		const boundingCircle = flower.node.children[0].children[1].children[0].children[0];
 		// const boudingBoxWidth = flower.node.children[0].getAttribute('width');
@@ -150,10 +149,6 @@ export default class LevelCurve {
 		const rate = blackCircle.r*2/cr;
 				
 		flower
-		// .transform({
-		// 	x:  -1*cr,
-		// 	y: -1* cr
-		// })
 		.transform({
 			scale: rate,
 			cx: cr,
@@ -169,7 +164,6 @@ export default class LevelCurve {
 			cx: cr,
 			cy: cr,
 		})
-
 		;
 		// flower.center(blackCircle.cx,blackCircle.cy);
 	}
@@ -213,4 +207,10 @@ function drawOnPannel(pannel, pathString, color){
 	pannel.path( pathString )
 	.fill(color)
 	.stroke({width: 0});
+}
+function aabbCollision(rect1, rect2){
+	return (rect1.x < rect2.x + rect2.width &&
+		rect1.x + rect1.width > rect2.x &&
+		rect1.y < rect2.y + rect2.height &&
+		rect1.height + rect1.y > rect2.y);
 }
