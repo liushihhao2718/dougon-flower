@@ -10,7 +10,8 @@
 	</image> -->
 </g>
 <g id="&#x6D77;&#x77F3;&#x69B4;&#x83EF;">
-	<g id="invisible" style="display:none;">
+	<!-- display:none; -->
+	<g id="invisible" style="">
 		<circle class="boundingCircle" style="display:inline;fill:#6E86B1;" cx="148.932" cy="148.648" r="148.648"/>
 	</g>
 	<g id="&#x82B1;&#x67F1;">

@@ -92,13 +92,15 @@ export default class LevelCurve {
 			CurveManagement.selectedCurve.push(lvCurve);
 		});
 
-		this.drawLevelCurve(this.basePath, 0);
-		this.drawStem( UI.state.trunkHeadWidth,UI.state.trunkTailWidth,'#7B5A62');
-		this.drawStem( UI.state.trunkHeadWidth-1,UI.state.trunkTailWidth-1,'#F9F2F4');
-		this.drawStem( UI.state.trunkHeadWidth/1.111,UI.state.trunkTailWidth/1.111, '#CED5D0');
-		this.drawStem( UI.state.trunkHeadWidth/2,UI.state.trunkTailWidth/2, '#9FB9A8');
-		this.drawStem( UI.state.trunkHeadWidth/8,UI.state.trunkTailWidth/8, '#7C8168');
 		this.drawFlower();
+		this.drawStem( 1,1, '#7C8168');
+
+		// this.drawLevelCurve(this.basePath, 0);
+		// this.drawStem( UI.state.trunkHeadWidth,UI.state.trunkTailWidth,'#7B5A62');
+		// this.drawStem( UI.state.trunkHeadWidth-1,UI.state.trunkTailWidth-1,'#F9F2F4');
+		// this.drawStem( UI.state.trunkHeadWidth/1.111,UI.state.trunkTailWidth/1.111, '#CED5D0');
+		// this.drawStem( UI.state.trunkHeadWidth/2,UI.state.trunkTailWidth/2, '#9FB9A8');
+		// this.drawStem( UI.state.trunkHeadWidth/8,UI.state.trunkTailWidth/8, '#7C8168');
 	}
 	drawStem(beginWidth, endWidth, color, _basePath = this.basePath){
 		let basePath = _basePath.map(c =>{
@@ -137,22 +139,39 @@ export default class LevelCurve {
 		};
 	
 		let g = this.curveGroup.group();
+		let c = this.curveGroup.circle(10);
+		c.cx(blackCircle.cx).cy(blackCircle.cy);
 		let flower = g.svg(flowerString);
-		const boudingBoxWidth = flower.node.children[0].getAttribute('width');
-		const boudingBoxHeight = flower.node.children[0].getAttribute('height');
-		
-		const rate = 2*blackCircle.r*2/boudingBoxWidth;
+		const boundingCircle = flower.node.children[0].children[1].children[0].children[0];
+		// const boudingBoxWidth = flower.node.children[0].getAttribute('width');
+		// const boudingBoxHeight = flower.node.children[0].getAttribute('height');
+		const cr = boundingCircle.getAttribute('r');
+
+		const rate = blackCircle.r*2/cr;
 				
-		flower.transform({
-			x: blackCircle.cx - boudingBoxWidth/2,
-			y: blackCircle.cy - boudingBoxHeight/2
-		}).transform({
+		flower
+		// .transform({
+		// 	x:  -1*cr,
+		// 	y: -1* cr
+		// })
+		.transform({
+			scale: rate,
+			cx: cr,
+			cy: cr,
+		})
+		
+		.transform({
+			x: blackCircle.cx,
+			y: blackCircle.cy,
+		})
+		.transform({
 			rotation: 30,
-			relative:true 
-		});
-		flower.transform({
-			scale: rate
-		});
+			cx: cr,
+			cy: cr,
+		})
+
+		;
+		// flower.center(blackCircle.cx,blackCircle.cy);
 	}
 	redraw() {
 		if( this.pannel === undefined ) {
