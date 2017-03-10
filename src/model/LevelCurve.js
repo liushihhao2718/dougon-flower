@@ -18,7 +18,7 @@ export default class LevelCurve {
 		this.levelParam = levelParam;
 		this.curveGroup = undefined;
 	}
-	drawLevelCurve(beziers, level){
+	drawLevelCurve(beziers, level, parent){
 		if( !beziers ) return;
 		let sign = 1;
 
@@ -31,17 +31,18 @@ export default class LevelCurve {
 			);
 		});
 
-		let totalLength = Bs.reduce( (length, B) =>{
-			return B.length() + length;
-		}, 0);
+	
 		Bs.forEach((b, index) => {
 			b.extrema().x.forEach(posOnSinglebezier => {
 
-				this.drawAt(posOnSinglebezier, Bs[index], sign, level);
+				this.drawAt(posOnSinglebezier, Bs[index], sign, level, parent);
 
 				sign *= -1;
 			});
 		});
+		// let totalLength = Bs.reduce( (length, B) =>{
+		// 	return B.length() + length;
+		// }, 0);
 		// this.branchPosition(level).forEach((i) => {
 		// 	if( totalLength === 0) return;
 
@@ -60,9 +61,11 @@ export default class LevelCurve {
 		// 	sign *= -1;
 		// });
 	}
-	drawAt(t, b, sign, level){
+	drawAt(t, b, sign, level, parent){
 		let start = b.get(t);
 		let v = b.derivative(t);
+
+		// do collision
 
 		let mag = new MagneticCurve({
 			startX: start.x,
@@ -73,6 +76,12 @@ export default class LevelCurve {
 			alpha: this.levelParam[level].alpha,
 			sign: sign
 		});
+
+		if(collision(mag.bbox())) {
+			this.drawAt(t, b, sign, level+1);
+			return;
+		}
+
 		mag.drawOn(this.curveGroup);
 		// this.drawStem( UI.state.trunkHeadWidth/1.111,UI.state.trunkTailWidth/1.111, '#CED5D0', mag.points);
 
@@ -207,6 +216,9 @@ function drawOnPannel(pannel, pathString, color){
 	pannel.path( pathString )
 	.fill(color)
 	.stroke({width: 0});
+}
+function collision(bbox){
+
 }
 function aabbCollision(rect1, rect2){
 	return (rect1.x < rect2.x + rect2.width &&
