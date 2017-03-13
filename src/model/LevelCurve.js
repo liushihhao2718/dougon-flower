@@ -2,6 +2,7 @@ import Bezier from 'bezier-js';
 import MagneticCurve from '../model/MagneticCurve';
 import CurveManagement from './CurveManagement';
 import * as UI from '../model/UIManagement';
+import * as Collision from '../model/Collision';
 
 let flowerString = require('../海石榴心.svg');
 
@@ -32,34 +33,34 @@ export default class LevelCurve {
 		});
 
 	
-		Bs.forEach((b, index) => {
-			b.extrema().x.forEach(posOnSinglebezier => {
+		// Bs.forEach((b, index) => {
+		// 	b.extrema().x.forEach(posOnSinglebezier => {
 
-				this.drawAt(posOnSinglebezier, Bs[index], sign, level, parent);
+		// 		this.drawAt(posOnSinglebezier, Bs[index], sign, level, parent);
 
-				sign *= -1;
-			});
-		});
-		// let totalLength = Bs.reduce( (length, B) =>{
-		// 	return B.length() + length;
-		// }, 0);
-		// this.branchPosition(level).forEach((i) => {
-		// 	if( totalLength === 0) return;
-
-		// 	let bezierIndex = 0;
-
-		// 	let pos = totalLength * i;
-		// 	while( pos >= Bs[bezierIndex].length() ) {
-		// 		pos -= Bs[bezierIndex].length();
-		// 		bezierIndex++;
-		// 	}
-
-		// 	let posOnSinglebezier = pos / Bs[bezierIndex].length();
-
-		// 	this.drawAt(posOnSinglebezier, Bs[bezierIndex], sign, level);
-
-		// 	sign *= -1;
+		// 		sign *= -1;
+		// 	});
 		// });
+		let totalLength = Bs.reduce( (length, B) =>{
+			return B.length() + length;
+		}, 0);
+		this.branchPosition(level).forEach((i) => {
+			if( totalLength === 0) return;
+
+			let bezierIndex = 0;
+
+			let pos = totalLength * i;
+			while( pos >= Bs[bezierIndex].length() ) {
+				pos -= Bs[bezierIndex].length();
+				bezierIndex++;
+			}
+
+			let posOnSinglebezier = pos / Bs[bezierIndex].length();
+
+			this.drawAt(posOnSinglebezier, Bs[bezierIndex], sign, level);
+
+			sign *= -1;
+		});
 	}
 	drawAt(t, b, sign, level, parent){
 		let start = b.get(t);
@@ -77,15 +78,15 @@ export default class LevelCurve {
 			sign: sign
 		});
 
-		if(collision(mag.bbox())) {
-			this.drawAt(t, b, sign, level+1);
+		if( Collision.testCollision(mag.bbox(), parent ) ){
+			if (level < this.levelParam.length-1 ) this.drawAt(t, b, sign, level+1, parent);
 			return;
 		}
+		else{
+			mag.drawOn(this.curveGroup, level);
 
-		mag.drawOn(this.curveGroup);
-		// this.drawStem( UI.state.trunkHeadWidth/1.111,UI.state.trunkTailWidth/1.111, '#CED5D0', mag.points);
-
-		if (level < this.levelParam.length-1 ) this.drawLevelCurve(mag.points, level+1);
+			if (level < this.levelParam.length-1 ) this.drawLevelCurve(mag.points, level+1, mag.bbox() );
+		}
 	}
 	drawOn( pannel ){
 		this.pannel = pannel;
@@ -103,11 +104,11 @@ export default class LevelCurve {
 
 
 		this.drawLevelCurve(this.basePath, 0);
-		this.drawStem( UI.state.trunkHeadWidth,UI.state.trunkTailWidth,'#7B5A62');
-		this.drawStem( UI.state.trunkHeadWidth-1,UI.state.trunkTailWidth-1,'#F9F2F4');
-		this.drawStem( UI.state.trunkHeadWidth/1.111,UI.state.trunkTailWidth/1.111, '#CED5D0');
-		this.drawStem( UI.state.trunkHeadWidth/2,UI.state.trunkTailWidth/2, '#9FB9A8');
-		this.drawStem( UI.state.trunkHeadWidth/8,UI.state.trunkTailWidth/8, '#7C8168');
+		this.drawStem( UI.state.trunkHead,UI.state.trunkTail,'#7B5A62');
+		this.drawStem( UI.state.trunkHead-1,UI.state.trunkTail-1,'#F9F2F4');
+		this.drawStem( UI.state.trunkHead/1.111,UI.state.trunkTail/1.111, '#CED5D0');
+		this.drawStem( UI.state.trunkHead/2,UI.state.trunkTail/2, '#9FB9A8');
+		this.drawStem( UI.state.trunkHead/8,UI.state.trunkTail/8, '#7C8168');
 		this.drawFlower();
 	}
 	drawStem(beginWidth, endWidth, color, _basePath = this.basePath){
@@ -143,38 +144,28 @@ export default class LevelCurve {
 		let blackCircle = {
 			cx: this.basePath[this.basePath.length-1][3][0],
 			cy: this.basePath[this.basePath.length-1][3][1],
-			r:  UI.state.trunkTailWidth*2 
+			r:  UI.state.trunkTail*2 
 		};
 	
 		let g = this.curveGroup.group();
-		// let c = this.curveGroup.circle(10);
-		// c.cx(blackCircle.cx).cy(blackCircle.cy);
 		let flower = g.svg(flowerString);
 		const boundingCircle = flower.node.children[0].children[1].children[0].children[0];
-		// const boudingBoxWidth = flower.node.children[0].getAttribute('width');
-		// const boudingBoxHeight = flower.node.children[0].getAttribute('height');
 		const cr = boundingCircle.getAttribute('r');
 
-		const rate = blackCircle.r*2/cr;
+		const rate = blackCircle.r * 2/cr;
 				
-		flower
-		.transform({
+		flower.transform({
 			scale: rate,
 			cx: cr,
 			cy: cr,
-		})
-		
-		.transform({
+		}).transform({
 			x: blackCircle.cx,
 			y: blackCircle.cy,
-		})
-		.transform({
+		}).transform({
 			rotation: 30,
 			cx: cr,
 			cy: cr,
-		})
-		;
-		// flower.center(blackCircle.cx,blackCircle.cy);
+		});
 	}
 	redraw() {
 		if( this.pannel === undefined ) {
@@ -217,12 +208,4 @@ function drawOnPannel(pannel, pathString, color){
 	.fill(color)
 	.stroke({width: 0});
 }
-function collision(bbox){
 
-}
-function aabbCollision(rect1, rect2){
-	return (rect1.x < rect2.x + rect2.width &&
-		rect1.x + rect1.width > rect2.x &&
-		rect1.y < rect2.y + rect2.height &&
-		rect1.height + rect1.y > rect2.y);
-}

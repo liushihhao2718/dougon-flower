@@ -11,6 +11,7 @@ export default class MagneticCurve {
 		T : 總點數
 		alpha : 等角螺線參數
 		sign : 電荷正負
+		level
 		*/
 		this.param = param;
 	}
@@ -46,15 +47,50 @@ export default class MagneticCurve {
 		return points;
 	}
 
-	drawOn(pannel){
-		let mag = this.makeCurve();
+	getCurve() {
+		if( !this._curve ) this._curve = this.makeCurve();
+		return this._curve;
+	}
+	drawOn(pannel, level){
+		let mag = this.getCurve();
 		let smoothBizer = fitCurve( mag, error );
 		this.points = smoothBizer;
 
 		let pathString = fittedCurveToPathString(smoothBizer);
+		//debug color
+		let color = ['red', 'green', 'blue', 'orange'];
+		
+		pannel.path(pathString).fill('none').stroke({ width: 1 }).stroke(color[level]);
+		// const bbox = this.bbox();
+		// pannel.rect(bbox.width, bbox.height).x(bbox.x).y(bbox.y).fill('none').stroke({ width: 1 });
+		// true color
+		// pannel.path(pathString).fill('none').stroke({ width: 10 }).stroke('#CED5D0');
+	}
+	makeBBox(points){
+		let minX = Number.MAX_VALUE;
+		let minY = Number.MAX_VALUE;
+		let maxX = Number.MIN_VALUE;
+		let maxY = Number.MIN_VALUE;
+		points.forEach(p => {
+			let x = p[0];
+			let y = p[1];
 
-		// pannel.path(pathString).fill('none').stroke({ width: 3 }).stroke('#f00');
-		pannel.path(pathString).fill('none').stroke({ width: 10 }).stroke('#CED5D0');
+			if(x < minX) minX = x;
+			if(y < minY) minY = y;
+			if(x > maxX) maxX = x;
+			if(y > maxY) maxY = y;
+		});
+
+		return {
+			x: minX,
+			y: minY,
+			width: maxX - minX,
+			height: maxY - minY
+		};
+	}
+	bbox(){
+		if(!this._bbox) this._bbox = this.makeBBox( this.getCurve() );
+		return this._bbox;
 	}
 }
 function fittedCurveToPathString(fittedLineData) {

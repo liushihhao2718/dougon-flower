@@ -5,8 +5,8 @@ import CurveManagement from './CurveManagement';
 let gui, folders = [];
 let controls = [];
 export let state = {
-	trunkHeadWidth: 5,
-	trunkTailWidth: 30,
+	trunkHead: 5,
+	trunkTail: 30,
 	intersect: false,
 	levelCurve :[
 		{
@@ -16,17 +16,17 @@ export let state = {
 		},
 		{
 			length: 200,
-			alpha: 0.75,
-			branches: 5
-		},
-		{
-			length: 100,
 			alpha: 0.7,
 			branches: 5
 		},
 		{
+			length: 100,
+			alpha: 0.6,
+			branches: 5
+		},
+		{
 			length: 50,
-			alpha: 0.65,
+			alpha: 0.5,
 			branches: 5
 		}
 	],
@@ -36,7 +36,7 @@ export let state = {
 		w:0,
 		h:0
 	},
-	tool:'bound'
+	tool:'paint'
 };
 
 let features = {
@@ -49,8 +49,8 @@ let features = {
 export function setGUI(){
 	gui = new dat.GUI();
 	let c0 = gui.add(state, 'tool', ['paint', 'bound', 'select']);
-	let c1 = gui.add(state, 'trunkHeadWidth', 1, 20);
-	let c2 = gui.add(state, 'trunkTailWidth', 20, 40);
+	let c1 = gui.add(state, 'trunkHead', 1, 20);
+	let c2 = gui.add(state, 'trunkTail', 20, 40);
 	
 	controls.push(c0);
 	controls.push(c1);
