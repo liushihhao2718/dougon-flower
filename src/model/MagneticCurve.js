@@ -27,7 +27,7 @@ export default class MagneticCurve {
 
 		let T = this.param.T;
 		let t = 0;
-		let dt = 1;
+		let dt = 2;
 
 		while( t < T ) {
 			points.push( [x, y] );
@@ -48,21 +48,22 @@ export default class MagneticCurve {
 	}
 
 	getCurve() {
-		if( !this._curve ) this._curve = this.makeCurve();
+		if( !this._curve ){
+			this._curve = this.makeCurve();
+			let smoothBizer = fitCurve( this._curve, error );
+			this.points = smoothBizer;
+		} 
 		return this._curve;
 	}
 	drawOn(pannel, level){
 		let mag = this.getCurve();
-		let smoothBizer = fitCurve( mag, error );
-		this.points = smoothBizer;
-
-		let pathString = fittedCurveToPathString(smoothBizer);
+		let pathString = fittedCurveToPathString(this.points);
 		//debug color
-		let color = ['red', 'green', 'blue', 'orange'];
+		let color = ['red', 'green', 'blue', 'black'];
 		
 		pannel.path(pathString).fill('none').stroke({ width: 1 }).stroke(color[level]);
 		// const bbox = this.bbox();
-		// pannel.rect(bbox.width, bbox.height).x(bbox.x).y(bbox.y).fill('none').stroke({ width: 1 });
+		// pannel.rect(bbox.width, bbox.height).x(bbox.x).y(bbox.y).fill('none').stroke({ width: 1,'color':color[level] });
 		// true color
 		// pannel.path(pathString).fill('none').stroke({ width: 10 }).stroke('#CED5D0');
 	}

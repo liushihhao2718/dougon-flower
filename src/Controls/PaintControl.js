@@ -2,7 +2,7 @@ import fitCurve from 'fit-curve';
 import LevelCurve from '../model/LevelCurve';
 import * as UI from '../model/UIManagement';
 
-const error = 500;
+const error = 100;
 
 function PaintControl(pannel) {
 	let rawPointData = [];

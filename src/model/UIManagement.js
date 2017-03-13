@@ -5,30 +5,30 @@ import CurveManagement from './CurveManagement';
 let gui, folders = [];
 let controls = [];
 export let state = {
-	trunkHead: 5,
+	trunkHead: 2,
 	trunkTail: 30,
 	intersect: false,
 	levelCurve :[
 		{
-			length: 400,
+			length: 520,
 			alpha: 0.8,
 			branches: 5
 		},
 		{
-			length: 200,
-			alpha: 0.7,
-			branches: 5
-		},
-		{
 			length: 100,
-			alpha: 0.6,
+			alpha: 0.9,
 			branches: 5
 		},
 		{
-			length: 50,
-			alpha: 0.5,
-			branches: 5
-		}
+			length: 30,
+			alpha: 0.68,
+			branches: 2
+		},
+		// {
+		// 	length: 10,
+		// 	alpha: 0.5,
+		// 	branches: 5
+		// }
 	],
 	bound:{
 		x:0,
@@ -60,7 +60,7 @@ export function setGUI(){
 	levelFolder(0);
 	levelFolder(1);
 	levelFolder(2);
-	levelFolder(3);
+	// levelFolder(3);
 
 	setOnChange(controls);
 

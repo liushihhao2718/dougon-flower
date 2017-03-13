@@ -57,7 +57,7 @@ export default class LevelCurve {
 
 			let posOnSinglebezier = pos / Bs[bezierIndex].length();
 
-			this.drawAt(posOnSinglebezier, Bs[bezierIndex], sign, level);
+			this.drawAt(posOnSinglebezier, Bs[bezierIndex], sign, level, parent);
 
 			sign *= -1;
 		});
@@ -82,7 +82,8 @@ export default class LevelCurve {
 			if (level < this.levelParam.length-1 ) this.drawAt(t, b, sign, level+1, parent);
 			return;
 		}
-		else{
+		else
+		{		
 			mag.drawOn(this.curveGroup, level);
 
 			if (level < this.levelParam.length-1 ) this.drawLevelCurve(mag.points, level+1, mag.bbox() );
