@@ -10,7 +10,7 @@ export let state = {
 	intersect: false,
 	levelCurve :[
 		{
-			length: 520,
+			length: 200,
 			alpha: 0.8,
 			branches: 10
 		},
@@ -24,17 +24,17 @@ export let state = {
 			alpha: 0.68,
 			branches: 2
 		},
-		// {
-		// 	length: 10,
-		// 	alpha: 0.5,
-		// 	branches: 5
-		// }
+		{
+			length: 10,
+			alpha: 0.5,
+			branches: 5
+		}
 	],
 	bound:{
 		x:0,
 		y:0,
-		w:0,
-		h:0
+		width:0,
+		height:0
 	},
 	tool:'paint'
 };
@@ -60,7 +60,7 @@ export function setGUI(){
 	levelFolder(0);
 	levelFolder(1);
 	levelFolder(2);
-	// levelFolder(3);
+	levelFolder(3);
 
 	setOnChange(controls);
 

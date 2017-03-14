@@ -10,7 +10,13 @@ function BoundControl(pannel) {
 		rect.size(point[0] - rect.x(), point[1] - rect.y());
 	};
 
-	this.end = function(  ) {
+	this.end = function() {
+		UI.state.bound = {
+			x: rect.x(),
+			y: rect.y(),
+			width: rect.width(),
+			height: rect.height()
+		};
 	};
 }
 
