@@ -7,7 +7,7 @@ const error = 100;
 function PaintControl(pannel) {
 	let rawPointData = [];
 	let paintingPolyLine = undefined;
-
+	let scene = [];
 	this.start = function( point ) {
 		rawPointData.push( point );
 		paintingPolyLine = pannel.polyline().fill('none').stroke({ width: 1 });
@@ -28,7 +28,7 @@ function PaintControl(pannel) {
 
 		drawOnPannel(pannel, pathString);
 
-		let lvCurve = new LevelCurve( smoothBizer, 1, UI.state.levelCurve);
+		let lvCurve = new LevelCurve( smoothBizer, 1, UI.state.levelCurve, scene);
 		lvCurve.drawOn(pannel);
 
 		clearRawData();

@@ -13,11 +13,13 @@ export default class LevelCurve {
 		alpha : number
 		branches : number
 	*/
-	constructor(basePath, trunkWidth, levelParam){
+	constructor(basePath, trunkWidth, levelParam, _scene){
 		this.basePath = basePath;
 		this.trunkWidth = trunkWidth;
 		this.levelParam = levelParam;
 		this.curveGroup = undefined;
+		this.scene = _scene;
+		this.mags = [];
 	}
 	drawLevelCurve(beziers, level, parent){
 		if( !beziers ) return;
@@ -67,7 +69,6 @@ export default class LevelCurve {
 		let v = b.derivative(t);
 
 		// do collision
-
 		let mag = new MagneticCurve({
 			startX: start.x,
 			startY: start.y,
@@ -75,17 +76,17 @@ export default class LevelCurve {
 			vy: v.y,
 			T: this.levelParam[level].length,
 			alpha: this.levelParam[level].alpha,
-			sign: sign
+			sign
 		});
 
-		if( Collision.testCollision(mag.bbox(), parent ) ){
+		if( Collision.testCollision(mag.bbox(), this.scene, parent ) ){
 			if (level < this.levelParam.length-1 ) this.drawAt(t, b, sign, level+1, parent);
 			return;
 		}
 		else
 		{		
 			mag.drawOn(this.curveGroup, level);
-
+			// this.mags.push(mag);
 			if (level < this.levelParam.length-1 ) this.drawLevelCurve(mag.points, level+1, mag.bbox() );
 		}
 	}
@@ -105,6 +106,9 @@ export default class LevelCurve {
 
 
 		this.drawLevelCurve(this.basePath, 0);
+		// this.mags.forEach(mag =>{
+		// 	mag.drawOn(this.curveGroup);
+		// });
 		this.drawStem( UI.state.trunkHead,UI.state.trunkTail,'#7B5A62');
 		this.drawStem( UI.state.trunkHead-1,UI.state.trunkTail-1,'#F9F2F4');
 		this.drawStem( UI.state.trunkHead/1.111,UI.state.trunkTail/1.111, '#CED5D0');
@@ -173,6 +177,9 @@ export default class LevelCurve {
 			console.error('can not redraw!');
 			return;
 		}
+		this.scene.length = 0;
+		this.mags.length = 0;
+
 		this.curveGroup.remove();
 		this.drawOn(this.pannel);
 	}

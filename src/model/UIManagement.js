@@ -12,7 +12,7 @@ export let state = {
 		{
 			length: 520,
 			alpha: 0.8,
-			branches: 5
+			branches: 10
 		},
 		{
 			length: 100,
@@ -70,7 +70,7 @@ export function setGUI(){
 
 function levelFolder(index){
 	let folder = gui.addFolder(`Level ${index}`);
-	controls.push( folder.add(state.levelCurve[index], 'length') );
+	controls.push( folder.add(state.levelCurve[index], 'length',10,500) );
 	controls.push( folder.add(state.levelCurve[index], 'alpha') );
 	controls.push( folder.add(state.levelCurve[index], 'branches').step(1) );
 	folders.push(folder);
