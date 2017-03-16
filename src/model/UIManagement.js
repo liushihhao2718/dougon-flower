@@ -11,22 +11,22 @@ export let state = {
 	levelCurve :[
 		{
 			length: 200,
-			alpha: 0.8,
+			alpha: 0.9,
 			branches: 10
 		},
 		{
 			length: 100,
-			alpha: 0.9,
+			alpha: 0.8,
 			branches: 5
 		},
 		{
-			length: 30,
-			alpha: 0.68,
+			length: 50,
+			alpha: 0.6,
 			branches: 2
 		},
 		{
-			length: 10,
-			alpha: 0.5,
+			length: 25,
+			alpha: 0.6,
 			branches: 5
 		}
 	],
@@ -36,7 +36,7 @@ export let state = {
 		width:0,
 		height:0
 	},
-	tool:'paint'
+	tool:'bound'
 };
 
 let features = {

@@ -61,7 +61,10 @@ export default class LevelCurve {
 
 			this.drawAt(posOnSinglebezier, Bs[bezierIndex], sign, level, parent);
 
+
 			sign *= -1;
+			this.drawAt(posOnSinglebezier, Bs[bezierIndex], sign, level, parent);
+
 		});
 	}
 	drawAt(t, b, sign, level, parent){
@@ -87,7 +90,7 @@ export default class LevelCurve {
 		{		
 			mag.drawOn(this.curveGroup, level);
 			// this.mags.push(mag);
-			if (level < this.levelParam.length-1 ) this.drawLevelCurve(mag.points, level+1, mag.bbox() );
+			if (level < this.levelParam.length-1 ) this.drawLevelCurve(mag.points, level, mag.bbox() );
 		}
 	}
 	drawOn( pannel ){

@@ -1,6 +1,6 @@
 import fitCurve from 'fit-curve';
 
-const error = 1;
+const error = 10;
 
 
 export default class MagneticCurve {
@@ -66,7 +66,7 @@ export default class MagneticCurve {
 		// pannel.rect(bbox.width, bbox.height).x(bbox.x).y(bbox.y).fill('none').stroke({ width: 1,'color':color[level] });
 
 		// true color
-		pannel.path(pathString).fill('none').stroke({ width: 10 }).stroke('#CED5D0');
+		pannel.path(pathString).fill('none').stroke({ width: 5 }).stroke('#CED5D0');
 	}
 	makeBBox(points){
 		let minX = Number.MAX_VALUE;
