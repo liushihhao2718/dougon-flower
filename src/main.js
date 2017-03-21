@@ -2,13 +2,29 @@ import PaintControl from './Controls/PaintControl';
 import BoundControl from './Controls/BoundControl';
 import SVG from 'svg.js';
 import * as UI from './model/UIManagement';
+import CurveManagement from './model/CurveManagement';
 
 (function(){
 	let draw = SVG('drawing').size(1000, 1000);
 	UI.setGUI();
+	setSVGLayer(draw);
 	setControl(draw);
 
 })();
+
+function setSVGLayer(pannel) {
+	let drawingLayer = pannel.group();
+	let leafLayer = pannel.group();
+	let stemLayer = pannel.group();
+	let flowerLayer = pannel.group();
+	CurveManagement.layer = {drawingLayer, leafLayer, stemLayer, flowerLayer};
+	
+	// order is important
+	pannel.add( drawingLayer );
+	pannel.add( leafLayer );
+	pannel.add( stemLayer );
+	pannel.add( flowerLayer );
+}
 
 function setControl(_container) {
 	let isMouseDown = false;

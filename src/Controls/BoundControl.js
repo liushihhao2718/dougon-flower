@@ -1,9 +1,10 @@
-import LevelCurve from '../model/LevelCurve';
 import * as UI from '../model/UIManagement';
+import CurveManagement from '../model/CurveManagement';
+
 let rect;
 function BoundControl(pannel) {
 	this.start = function( point ) {
-		rect = pannel.rect().fill('#524B61');
+		rect = CurveManagement.layer.drawingLayer.rect().fill('#524B61');
 		rect.x(point[0]).y(point[1]);
 	};
 	this.update = function( point ) {

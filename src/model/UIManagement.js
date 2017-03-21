@@ -16,17 +16,17 @@ export let state = {
 		},
 		{
 			length: 100,
-			alpha: 0.8,
+			alpha: 0.9,
 			branches: 5
 		},
 		{
 			length: 50,
-			alpha: 0.6,
+			alpha: 0.9,
 			branches: 2
 		},
 		{
 			length: 25,
-			alpha: 0.6,
+			alpha: 0.9,
 			branches: 5
 		}
 	],

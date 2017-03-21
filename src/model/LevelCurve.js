@@ -4,6 +4,7 @@ import CurveManagement from './CurveManagement';
 import * as UI from '../model/UIManagement';
 import * as Collision from '../model/Collision';
 
+let shortid = require('shortid');
 let flowerString = require('../海石榴心.svg');
 
 export default class LevelCurve {
@@ -14,16 +15,20 @@ export default class LevelCurve {
 		branches : number
 	*/
 	constructor(basePath, trunkWidth, levelParam, _scene){
+		this.id = shortid.generate();
 		this.basePath = basePath;
 		this.trunkWidth = trunkWidth;
 		this.levelParam = levelParam;
-		this.curveGroup = undefined;
+
+		this.leafLayer = undefined;
+		this.stemLayer = undefined;
+		this.flowerLayer = undefined;
+
 		this.scene = _scene;
 		this.mags = [];
 	}
 	drawLevelCurve(beziers, level, parent){
 		if( !beziers ) return;
-		let sign = 1;
 
 		let Bs = beziers.map(b =>{
 			return new Bezier(
@@ -34,15 +39,6 @@ export default class LevelCurve {
 			);
 		});
 
-	
-		// Bs.forEach((b, index) => {
-		// 	b.extrema().x.forEach(posOnSinglebezier => {
-
-		// 		this.drawAt(posOnSinglebezier, Bs[index], sign, level, parent);
-
-		// 		sign *= -1;
-		// 	});
-		// });
 		let totalLength = Bs.reduce( (length, B) =>{
 			return B.length() + length;
 		}, 0);
@@ -56,15 +52,10 @@ export default class LevelCurve {
 				pos -= Bs[bezierIndex].length();
 				bezierIndex++;
 			}
+			let bezierAtIndex = Bs[bezierIndex];
+			let posOnSinglebezier = 1- pos / bezierAtIndex.length();
 
-			let posOnSinglebezier = pos / Bs[bezierIndex].length();
-
-			this.drawAt(posOnSinglebezier, Bs[bezierIndex], sign, level, parent);
-
-
-			sign *= -1;
-			this.drawAt(posOnSinglebezier, Bs[bezierIndex], sign, level, parent);
-
+			this.mags.push({posOnSinglebezier, bezierAtIndex, level, parent});
 		});
 	}
 	drawAt(t, b, sign, level, parent){
@@ -72,54 +63,92 @@ export default class LevelCurve {
 		let v = b.derivative(t);
 
 		// do collision
-		let mag = new MagneticCurve({
+		let mag1 = new MagneticCurve({
 			startX: start.x,
 			startY: start.y,
 			vx: v.x,
 			vy: v.y,
 			T: this.levelParam[level].length,
 			alpha: this.levelParam[level].alpha,
-			sign
+			sign:1
 		});
-
-		if( Collision.testCollision(mag.bbox(), this.scene, parent ) ){
+		let mag2 = new MagneticCurve({
+			startX: start.x,
+			startY: start.y,
+			vx: v.x,
+			vy: v.y,
+			T: this.levelParam[level].length,
+			alpha: this.levelParam[level].alpha,
+			sign: -1
+		});
+		//draw mag1 ignore mag2
+		if( Collision.testCollision(mag1.bbox(), this.scene, parent, mag2.bbox() ) ){
 			if (level < this.levelParam.length-1 ) this.drawAt(t, b, sign, level+1, parent);
 			return;
 		}
 		else
 		{		
-			mag.drawOn(this.curveGroup, level);
-			// this.mags.push(mag);
-			if (level < this.levelParam.length-1 ) this.drawLevelCurve(mag.points, level, mag.bbox() );
+			mag1.drawOn(this.leafLayer, level);
+			if (level < this.levelParam.length-1 ) this.drawLevelCurve(mag1.points, level, mag1.bbox() );
+		}
+		//draw mag2 ignore mag1
+		if( Collision.testCollision(mag2.bbox(), this.scene, parent, mag1.bbox() ) ){
+			if (level < this.levelParam.length-1 ) this.drawAt(t, b, sign, level+1, parent);
+			return;
+		}
+		else
+		{		
+			mag2.drawOn(this.leafLayer, level);
+			if (level < this.levelParam.length-1 ) this.drawLevelCurve(mag2.points, level, mag2.bbox() );
 		}
 	}
-	drawOn( pannel ){
+	drawOn( pannel , layer){
 		this.pannel = pannel;
-		this.curveGroup = pannel.group();
-		pannel.add(this.curveGroup);
-		CurveManagement[this.curveGroup.node.id] = this;
-		this.curveGroup.on('click', e => {
-			console.log('clecked');
+		let { leafLayer, stemLayer, flowerLayer } = CurveManagement.layer;
+		this.leafLayer = leafLayer;
+		this.stemLayer = stemLayer;
+		this.flowerLayer = flowerLayer;
 
-			let curve_id = e.target.parentElement.id;
-			let lvCurve = CurveManagement[ curve_id ];
-			CurveManagement.selectedCurve.length = 0;
-			CurveManagement.selectedCurve.push(lvCurve);
-		});
+		
 
+		CurveManagement[this.id] = this;
+
+		// const clickCallBack = e => {
+		// 	console.log('clecked');
+
+		// 	let curve_id = e.target.parentElement.id;
+		// 	let lvCurve = CurveManagement[ curve_id ];
+		// 	CurveManagement.selectedCurve.length = 0;
+		// 	CurveManagement.selectedCurve.push(lvCurve);
+		// };
+		
+		// this.leafLayer.on('click', clickCallBack);
+		// this.stemLayer.on('click', clickCallBack);
+		// this.flowerLayer.on('click', clickCallBack);
 
 		this.drawLevelCurve(this.basePath, 0);
-		// this.mags.forEach(mag =>{
-		// 	mag.drawOn(this.curveGroup);
-		// });
-		this.drawStem( UI.state.trunkHead,UI.state.trunkTail,'#7B5A62');
-		this.drawStem( UI.state.trunkHead-1,UI.state.trunkTail-1,'#F9F2F4');
-		this.drawStem( UI.state.trunkHead/1.111,UI.state.trunkTail/1.111, '#CED5D0');
-		this.drawStem( UI.state.trunkHead/2,UI.state.trunkTail/2, '#9FB9A8');
-		this.drawStem( UI.state.trunkHead/8,UI.state.trunkTail/8, '#7C8168');
+		while(this.mags.length > 0){
+			let { posOnSinglebezier, bezierAtIndex, level, parent } = this.mags[0];
+			this.drawAt( posOnSinglebezier, bezierAtIndex,  1, level, parent );
+			this.mags.shift();
+		}
+		this.drawStem();
 		this.drawFlower();
 	}
-	drawStem(beginWidth, endWidth, color, _basePath = this.basePath){
+	drawStem(){
+		let stem = this.stemLayer.group();
+		stem.addClass('clickable');
+		stem.data({ id:this.id });
+		stem.click(() =>{
+			CurveManagement.selectedCurve.push(this);
+		});
+		this.drawOutLine( stem, UI.state.trunkHead,UI.state.trunkTail,'#7B5A62');
+		this.drawOutLine( stem, UI.state.trunkHead-1,UI.state.trunkTail-1,'#F9F2F4');
+		this.drawOutLine( stem, UI.state.trunkHead/1.111,UI.state.trunkTail/1.111, '#CED5D0');
+		this.drawOutLine( stem, UI.state.trunkHead/2,UI.state.trunkTail/2, '#9FB9A8');
+		this.drawOutLine( stem, UI.state.trunkHead/8,UI.state.trunkTail/8, '#7C8168');
+	}
+	drawOutLine(pannel, beginWidth, endWidth, color, _basePath = this.basePath){
 		let basePath = _basePath.map(c =>{
 			return new Bezier(
 				c[0][0], c[0][1],
@@ -145,7 +174,7 @@ export default class LevelCurve {
 		});
 		outline.forEach(b => {
 			let pathString = fittedCurveToPathString(b);
-			drawOnPannel( this.curveGroup, pathString, color );
+			drawOnPannel( pannel, pathString, color );
 		});
 	}
 	drawFlower(){
@@ -155,7 +184,12 @@ export default class LevelCurve {
 			r:  UI.state.trunkTail*2 
 		};
 	
-		let g = this.curveGroup.group();
+		let g = this.flowerLayer.group();
+		g.addClass('clickable');
+		g.data({ id:this.id });
+		g.click(()=>{
+			CurveManagement.selectedCurve.push(this);
+		});
 		let flower = g.svg(flowerString);
 		const boundingCircle = flower.node.children[0].children[1].children[0].children[0];
 		const cr = boundingCircle.getAttribute('r');
@@ -183,7 +217,9 @@ export default class LevelCurve {
 		this.scene.length = 0;
 		this.mags.length = 0;
 
-		this.curveGroup.remove();
+		this.flowerLayer.clear();
+		this.stemLayer.clear();
+		this.leafLayer.clear();
 		this.drawOn(this.pannel);
 	}
 	branchPosition(level){

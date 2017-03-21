@@ -1,12 +1,12 @@
 import * as UI from '../model/UIManagement';
 
-export function testCollision(test_bbox,bboxes,ignore){
+export function testCollision(test_bbox, bboxes, ...ignore){
 	let isCollision = false;
 
 	if(!insideBound(test_bbox)) return true;
 
 	for (var i = 0; i < bboxes.length; i++) {
-		if (ignore === bboxes[i]) continue; 
+		if (ignore.includes( bboxes[i] )) continue; 
 		isCollision = aabbCollision(test_bbox, bboxes[i]);
 		if(isCollision)break;
 	}

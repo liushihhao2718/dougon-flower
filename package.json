@@ -5,8 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "ava",
-    "dev": 
-    "watchify src/main.js -v --debug -t [ stringify --extensions [.svg] ] -t babelify -o docs/js/main.js",
+    "dev": "watchify src/main.js -v --debug -t [ stringify --extensions [.svg] ] -t babelify -o docs/js/main.js",
     "start": "http-server docs"
   },
   "author": "",
@@ -21,6 +20,7 @@
     "bezier-js": "^2.2.2",
     "fit-curve": "^0.1.4",
     "mathjs": "^3.4.1",
+    "shortid": "^2.2.8",
     "stringify": "^5.1.0",
     "svg.js": "*"
   },
