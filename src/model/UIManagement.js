@@ -24,11 +24,11 @@ export let state = {
 			alpha: 0.9,
 			branches: 2
 		},
-		{
-			length: 25,
-			alpha: 0.9,
-			branches: 5
-		}
+		// {
+		// 	length: 25,
+		// 	alpha: 0.9,
+		// 	branches: 5
+		// }
 	],
 	bound:{
 		x:0,
@@ -60,7 +60,7 @@ export function setGUI(){
 	levelFolder(0);
 	levelFolder(1);
 	levelFolder(2);
-	levelFolder(3);
+	// levelFolder(3);
 
 	setOnChange(controls);
 

@@ -5,7 +5,7 @@ import * as UI from '../model/UIManagement';
 import * as Collision from '../model/Collision';
 
 let shortid = require('shortid');
-let flowerString = require('../海石榴心.svg');
+let flowerString = require('../images/海石榴心.svg');
 
 export default class LevelCurve {
 	/**
@@ -88,7 +88,14 @@ export default class LevelCurve {
 		}
 		else
 		{		
-			mag1.drawOn(this.leafLayer, level);
+			let curve = mag1.getCurve();
+			const x1 = curve[0][0];
+			const y1 = curve[0][1];
+			const x2 = curve[curve.length-1][0];
+			const y2 = curve[curve.length-1][1];
+			this.drawLeaf(x1, y1, x2, y2, sign);
+			// mag1.drawOn(this.leafLayer, level);
+
 			if (level < this.levelParam.length-1 ) this.drawLevelCurve(mag1.points, level, mag1.bbox() );
 		}
 		//draw mag2 ignore mag1
@@ -98,7 +105,14 @@ export default class LevelCurve {
 		}
 		else
 		{		
-			mag2.drawOn(this.leafLayer, level);
+			let curve = mag2.getCurve();
+			const x1 = curve[0][0];
+			const y1 = curve[0][1];
+			const x2 = curve[curve.length-1][0];
+			const y2 = curve[curve.length-1][1];
+			this.drawLeaf(x1, y1, x2, y2, -sign);
+			// mag2.drawOn(this.leafLayer, level);
+
 			if (level < this.levelParam.length-1 ) this.drawLevelCurve(mag2.points, level, mag2.bbox() );
 		}
 	}
@@ -109,22 +123,7 @@ export default class LevelCurve {
 		this.stemLayer = stemLayer;
 		this.flowerLayer = flowerLayer;
 
-		
-
 		CurveManagement[this.id] = this;
-
-		// const clickCallBack = e => {
-		// 	console.log('clecked');
-
-		// 	let curve_id = e.target.parentElement.id;
-		// 	let lvCurve = CurveManagement[ curve_id ];
-		// 	CurveManagement.selectedCurve.length = 0;
-		// 	CurveManagement.selectedCurve.push(lvCurve);
-		// };
-		
-		// this.leafLayer.on('click', clickCallBack);
-		// this.stemLayer.on('click', clickCallBack);
-		// this.flowerLayer.on('click', clickCallBack);
 
 		this.drawLevelCurve(this.basePath, 0);
 		while(this.mags.length > 0){
@@ -209,6 +208,53 @@ export default class LevelCurve {
 			cy: cr,
 		});
 	}
+	drawLeaf(x1, y1, x2, y2, sign){
+		let num = Math.floor(Math.random() * ((6-2)+1) + 1);
+		let leafString = require('../images/leaf2.svg');
+		let g = this.leafLayer.group();
+		let leaf = g.svg(leafString);
+		const direct = leaf.node.children[0].getElementById('direct');
+		const direct_x1 = direct.getAttribute('x1');
+		const direct_y1 = direct.getAttribute('y1');
+		const direct_x2 = direct.getAttribute('x2');
+		const direct_y2 = direct.getAttribute('y2');
+
+		const skeletonLength = distance(x1, y1, x2, y2);
+		const directLength = distance(direct_x1, direct_y1, direct_x2, direct_y2);
+
+		const toDeg = 180/Math.PI;
+
+		const redLineAngle = Math.atan2( direct_y2 - direct_y1, direct_x2-direct_x1 )* toDeg;
+		const leafCurveAngle = Math.atan2( y2 - y1, x2 - x1)* toDeg;
+		const roateAngle = (leafCurveAngle - redLineAngle );
+		// const dot = (x1-x2) * (direct_x1 - direct_x2) + (y1-y2) * (direct_y1 - direct_y2);
+		// const vectorAngle = Math.acos( dot / (skeletonLength*directLength) )* toDeg;
+		// console.log("redLineAngle"+redLineAngle);
+
+		if(sign > 0) 
+			leaf.flip('y').transform({
+				scale: skeletonLength / directLength
+			}).transform({
+				x: x1,
+				y: y1,
+			}).transform({
+				rotation: +roateAngle +180-(leafCurveAngle*2),
+				cx: direct_x1,
+				cy: direct_y1,
+			});
+
+		else
+			leaf.transform({
+				scale: skeletonLength / directLength
+			}).transform({
+				x: x1,
+				y: y1,
+			}).transform({
+				rotation: roateAngle ,
+				cx: direct_x1,
+				cy: direct_y1,
+			});
+	}
 	redraw() {
 		if( this.pannel === undefined ) {
 			console.error('can not redraw!');
@@ -255,4 +301,9 @@ function drawOnPannel(pannel, pathString, color){
 	.fill(color)
 	.stroke({width: 0});
 }
+function distance(x1, y1, x2, y2) {
+	const a = x1 - x2;
+	const b = y1 - y2;
 
+	return Math.sqrt( a*a + b*b );
+}
