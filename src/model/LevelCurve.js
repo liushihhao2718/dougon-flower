@@ -3,6 +3,7 @@ import MagneticCurve from '../model/MagneticCurve';
 import CurveManagement from './CurveManagement';
 import * as UI from '../model/UIManagement';
 import * as Collision from '../model/Collision';
+import LeafImage from '../images/LeafImage';
 
 let shortid = require('shortid');
 let flowerString = require('../images/海石榴心.svg');
@@ -23,9 +24,11 @@ export default class LevelCurve {
 		this.leafLayer = undefined;
 		this.stemLayer = undefined;
 		this.flowerLayer = undefined;
+		this.debugCurveLayer = undefined;
 
 		this.scene = _scene;
 		this.mags = [];
+		this.leafQueue = [];
 	}
 	drawLevelCurve(beziers, level, parent){
 		if( !beziers ) return;
@@ -93,8 +96,9 @@ export default class LevelCurve {
 			const y1 = curve[0][1];
 			const x2 = curve[curve.length-1][0];
 			const y2 = curve[curve.length-1][1];
-			this.drawLeaf(x1, y1, x2, y2, sign);
-			// mag1.drawOn(this.leafLayer, level);
+			// this.drawLeaf(x1, y1, x2, y2, sign);
+			this.leafQueue.push({x1, y1, x2, y2, sign});
+			mag1.drawOn(this.debugCurveLayer, level);
 
 			if (level < this.levelParam.length-1 ) this.drawLevelCurve(mag1.points, level, mag1.bbox() );
 		}
@@ -110,18 +114,21 @@ export default class LevelCurve {
 			const y1 = curve[0][1];
 			const x2 = curve[curve.length-1][0];
 			const y2 = curve[curve.length-1][1];
-			this.drawLeaf(x1, y1, x2, y2, -sign);
-			// mag2.drawOn(this.leafLayer, level);
+			// this.drawLeaf(x1, y1, x2, y2, -sign);
+			this.leafQueue.push({x1, y1, x2, y2, sign});
+
+			mag2.drawOn(this.debugCurveLayer, level);
 
 			if (level < this.levelParam.length-1 ) this.drawLevelCurve(mag2.points, level, mag2.bbox() );
 		}
 	}
-	drawOn( pannel , layer){
+	drawOn( pannel ){
 		this.pannel = pannel;
-		let { leafLayer, stemLayer, flowerLayer } = CurveManagement.layer;
+		let { leafLayer, stemLayer, flowerLayer, debugCurveLayer } = CurveManagement.layer;
 		this.leafLayer = leafLayer;
 		this.stemLayer = stemLayer;
 		this.flowerLayer = flowerLayer;
+		this.debugCurveLayer = debugCurveLayer;
 
 		CurveManagement[this.id] = this;
 
@@ -131,6 +138,10 @@ export default class LevelCurve {
 			this.drawAt( posOnSinglebezier, bezierAtIndex,  1, level, parent );
 			this.mags.shift();
 		}
+
+		this.leafQueue.reverse();
+		this.leafQueue.forEach(			({x1, y1, x2, y2, sign}) => this.drawLeaf(x1, y1, x2, y2, sign));
+		this.leafQueue.length = 0;
 		this.drawStem();
 		this.drawFlower();
 	}
@@ -210,7 +221,7 @@ export default class LevelCurve {
 	}
 	drawLeaf(x1, y1, x2, y2, sign){
 		let num = Math.floor(Math.random() * ((6-2)+1) + 1);
-		let leafString = require('../images/leaf2.svg');
+		let leafString = LeafImage[num];
 		let g = this.leafLayer.group();
 		let leaf = g.svg(leafString);
 		const direct = leaf.node.children[0].getElementById('direct');
@@ -227,9 +238,6 @@ export default class LevelCurve {
 		const redLineAngle = Math.atan2( direct_y2 - direct_y1, direct_x2-direct_x1 )* toDeg;
 		const leafCurveAngle = Math.atan2( y2 - y1, x2 - x1)* toDeg;
 		const roateAngle = (leafCurveAngle - redLineAngle );
-		// const dot = (x1-x2) * (direct_x1 - direct_x2) + (y1-y2) * (direct_y1 - direct_y2);
-		// const vectorAngle = Math.acos( dot / (skeletonLength*directLength) )* toDeg;
-		// console.log("redLineAngle"+redLineAngle);
 
 		if(sign > 0) 
 			leaf.flip('y').transform({

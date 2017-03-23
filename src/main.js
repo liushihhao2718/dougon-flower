@@ -15,13 +15,15 @@ import CurveManagement from './model/CurveManagement';
 function setSVGLayer(pannel) {
 	let drawingLayer = pannel.group();
 	let leafLayer = pannel.group();
+	let debugCurveLayer = pannel.group();
 	let stemLayer = pannel.group();
 	let flowerLayer = pannel.group();
-	CurveManagement.layer = {drawingLayer, leafLayer, stemLayer, flowerLayer};
-	
+	CurveManagement.layer = {drawingLayer, leafLayer, stemLayer, flowerLayer, debugCurveLayer};
+
 	// order is important
 	pannel.add( drawingLayer );
 	pannel.add( leafLayer );
+	pannel.add( debugCurveLayer );
 	pannel.add( stemLayer );
 	pannel.add( flowerLayer );
 }

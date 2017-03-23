@@ -36,13 +36,20 @@ export let state = {
 		width:0,
 		height:0
 	},
-	tool:'bound'
+	tool:'bound',
+	'show':{
+		'debugCurveLayer':true	
+	}
 };
 
 let features = {
 	download : function(){
 		let svg = document.getElementsByTagName('svg')[0];
 		download(svg.outerHTML, 'file.svg', 'text/plain');
+	},
+	toggleLayer: function(){
+		let layer = CurveManagement.layer.debugCurveLayer;
+		layer.visible() ? layer.hide() : layer.show();
 	}
 };
 
@@ -65,6 +72,7 @@ export function setGUI(){
 	setOnChange(controls);
 
 	gui.add(features, 'download');
+	gui.add(features, 'toggleLayer');
 
 }
 
