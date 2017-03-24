@@ -5,22 +5,22 @@ import CurveManagement from './CurveManagement';
 let gui, folders = [];
 let controls = [];
 export let state = {
-	trunkHead: 2,
+	trunkHead: 5,
 	trunkTail: 30,
 	intersect: false,
 	levelCurve :[
 		{
-			length: 200,
+			length: 100,
 			alpha: 0.9,
 			branches: 10
 		},
 		{
-			length: 100,
+			length: 62,
 			alpha: 0.9,
 			branches: 5
 		},
 		{
-			length: 50,
+			length: 38,
 			alpha: 0.9,
 			branches: 2
 		},
