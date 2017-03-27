@@ -4,6 +4,7 @@ import CurveManagement from './CurveManagement';
 import * as UI from '../model/UIManagement';
 import * as Collision from '../model/Collision';
 import LeafImage from '../images/LeafImage';
+import nextType from './MarkovLeaf';
 
 let shortid = require('shortid');
 let flowerString = require('../images/海石榴心.svg');
@@ -30,7 +31,7 @@ export default class LevelCurve {
 		this.mags = [];
 		this.leafQueue = [];
 	}
-	drawLevelCurve(beziers, level, parent){
+	drawLevelCurve(beziers, level, type, parent){
 		if( !beziers ) return;
 
 		let Bs = beziers.map(b =>{
@@ -59,12 +60,12 @@ export default class LevelCurve {
 			let bezierAtIndex = Bs[bezierIndex];
 			let posOnSinglebezier = pos / bezierAtIndex.length();
 
-			tempMags.push({posOnSinglebezier, bezierAtIndex, level, parent});
+			tempMags.push({posOnSinglebezier, bezierAtIndex, level, parent, type});
 		});
 		tempMags.reverse();
 		this.mags = this.mags.concat(tempMags);
 	}
-	drawAt(t, b, sign, level, parent){
+	drawAt(t, b, sign, level, type, parent){
 		let start = b.get(t);
 		let v = b.derivative(t);
 
@@ -90,36 +91,25 @@ export default class LevelCurve {
 		//draw mag1 ignore mag2
 		if( Collision.testCollision(mag1.bbox(), this.scene, parent, mag2.bbox() ) ){
 			//retry
-			if (level < this.levelParam.length-1 ) this.drawAt(t, b, sign, level+1, parent);
+			if (level < this.levelParam.length-1 ) this.drawAt(t, b, sign, level+1, type, parent);
 			return;
 		}
 		else
 		{	
-			// for(let i = -3; i<=6;++i){
-			// 	mag1.vx+=i*10;
-			// 	let curve = mag1.getCurve();
-			// 	const x1 = curve[0][0];
-			// 	const y1 = curve[0][1];
-			// 	const x2 = curve[curve.length-1][0];
-			// 	const y2 = curve[curve.length-1][1];
-			// 	// this.drawLeaf(x1, y1, x2, y2, sign);
-			// 	this.leafQueue.push({x1, y1, x2, y2, sign});
-			// 	mag1.drawOn(this.debugCurveLayer, level);
-			// }
 			let curve = mag1.getCurve();
 			const x1 = curve[0][0];
 			const y1 = curve[0][1];
 			const x2 = curve[curve.length-1][0];
 			const y2 = curve[curve.length-1][1];
-			// this.drawLeaf(x1, y1, x2, y2, sign);
-			this.leafQueue.push({x1, y1, x2, y2, sign});
+			sign = 1;
+			this.leafQueue.push({x1, y1, x2, y2, sign, type});
 			mag1.drawOn(this.debugCurveLayer, level);
 
-			if (level < this.levelParam.length-1 ) this.drawLevelCurve(mag1.points, level, mag1.bbox() );
+			if (level < this.levelParam.length-1 ) this.drawLevelCurve(mag1.points, level, nextType(type), mag1.bbox() );
 		}
 		//draw mag2 ignore mag1
 		if( Collision.testCollision(mag2.bbox(), this.scene, parent, mag1.bbox() ) ){
-			if (level < this.levelParam.length-1 ) this.drawAt(t, b, sign, level+1, parent);
+			if (level < this.levelParam.length-1 ) this.drawAt(t, b, -1*sign, level+1, type, parent);
 			return;
 		}
 		else
@@ -129,12 +119,12 @@ export default class LevelCurve {
 			const y1 = curve[0][1];
 			const x2 = curve[curve.length-1][0];
 			const y2 = curve[curve.length-1][1];
-			// this.drawLeaf(x1, y1, x2, y2, -sign);
-			this.leafQueue.push({x1, y1, x2, y2, sign});
+			sign = -1*sign;
+			this.leafQueue.push({x1, y1, x2, y2, sign, type});
 
 			mag2.drawOn(this.debugCurveLayer, level);
 
-			if (level < this.levelParam.length-1 ) this.drawLevelCurve(mag2.points, level, mag2.bbox() );
+			if (level < this.levelParam.length-1 ) this.drawLevelCurve(mag2.points, level, nextType(type), mag2.bbox() );
 		}
 	}
 	drawOn( pannel ){
@@ -147,15 +137,15 @@ export default class LevelCurve {
 
 		CurveManagement[this.id] = this;
 
-		this.drawLevelCurve(this.basePath, 0);
+		this.drawLevelCurve(this.basePath, 0, 0);
 		while(this.mags.length > 0){
-			let { posOnSinglebezier, bezierAtIndex, level, parent } = this.mags[0];
-			this.drawAt( posOnSinglebezier, bezierAtIndex,  1, level, parent );
+			let { posOnSinglebezier, bezierAtIndex, level, parent, type } = this.mags[0];
+			this.drawAt( posOnSinglebezier, bezierAtIndex,  1, level, type, parent );
 			this.mags.shift();
 		}
 
 		this.leafQueue.reverse();
-		this.leafQueue.forEach(	({x1, y1, x2, y2, sign}) => this.drawLeaf(x1, y1, x2, y2, sign) );
+		this.leafQueue.forEach(	({x1, y1, x2, y2, sign, type}) => this.drawLeaf(x1, y1, x2, y2, sign, type) );
 		this.leafQueue.length = 0;
 		this.drawStem();
 		this.drawFlower();
@@ -235,8 +225,8 @@ export default class LevelCurve {
 		});
 	}
 	drawLeaf(x1, y1, x2, y2, sign, type){
-		let num = Math.floor(Math.random() * ((6-2)+1) + 1);
-		let leafString = LeafImage[num];
+		// let num = Math.floor(Math.random() * ((6-2)+1) + 1);
+		let leafString = LeafImage[type];
 
 		// let leafString = LeafImage[type];		
 		let g = this.leafLayer.group();
