@@ -56,7 +56,7 @@ export default class MagneticCurve {
 		return this._curve;
 	}
 	drawOn(pannel, level=0){
-		let mag = this.getCurve();
+		this.getCurve();
 		let pathString = fittedCurveToPathString(this.points);
 		//debug color
 		let color = ['red', 'green', 'blue', 'black'];

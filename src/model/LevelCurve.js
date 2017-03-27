@@ -45,6 +45,7 @@ export default class LevelCurve {
 		let totalLength = Bs.reduce( (length, B) =>{
 			return B.length() + length;
 		}, 0);
+		let tempMags = [];
 		this.branchPosition(level).forEach((i) => {
 			if( totalLength === 0) return;
 
@@ -56,10 +57,12 @@ export default class LevelCurve {
 				bezierIndex++;
 			}
 			let bezierAtIndex = Bs[bezierIndex];
-			let posOnSinglebezier = 1- pos / bezierAtIndex.length();
+			let posOnSinglebezier = pos / bezierAtIndex.length();
 
-			this.mags.push({posOnSinglebezier, bezierAtIndex, level, parent});
+			tempMags.push({posOnSinglebezier, bezierAtIndex, level, parent});
 		});
+		tempMags.reverse();
+		this.mags = this.mags.concat(tempMags);
 	}
 	drawAt(t, b, sign, level, parent){
 		let start = b.get(t);
@@ -92,18 +95,17 @@ export default class LevelCurve {
 		}
 		else
 		{	
-		  //   for(let i = -3; i<=6;++i){
-		  //   	mag1.vx+=i*10;
-				// let curve = mag1.getCurve();
-				// const x1 = curve[0][0];
-				// const y1 = curve[0][1];
-				// const x2 = curve[curve.length-1][0];
-				// const y2 = curve[curve.length-1][1];
-				// // this.drawLeaf(x1, y1, x2, y2, sign);
-				// this.leafQueue.push({x1, y1, x2, y2, sign});
-				// mag1.drawOn(this.debugCurveLayer, level);
-
-		  //   }	
+			// for(let i = -3; i<=6;++i){
+			// 	mag1.vx+=i*10;
+			// 	let curve = mag1.getCurve();
+			// 	const x1 = curve[0][0];
+			// 	const y1 = curve[0][1];
+			// 	const x2 = curve[curve.length-1][0];
+			// 	const y2 = curve[curve.length-1][1];
+			// 	// this.drawLeaf(x1, y1, x2, y2, sign);
+			// 	this.leafQueue.push({x1, y1, x2, y2, sign});
+			// 	mag1.drawOn(this.debugCurveLayer, level);
+			// }
 			let curve = mag1.getCurve();
 			const x1 = curve[0][0];
 			const y1 = curve[0][1];
@@ -238,6 +240,7 @@ export default class LevelCurve {
 
 		// let leafString = LeafImage[type];		
 		let g = this.leafLayer.group();
+		// g.hide();
 		let leaf = g.svg(leafString);
 		const direct = leaf.node.children[0].getElementById('direct');
 		const direct_x1 = direct.getAttribute('x1');
@@ -285,10 +288,12 @@ export default class LevelCurve {
 		}
 		this.scene.length = 0;
 		this.mags.length = 0;
+		this.leafQueue.length = 0;
 
 		this.flowerLayer.clear();
 		this.stemLayer.clear();
 		this.leafLayer.clear();
+		this.debugCurveLayer.clear();
 		this.drawOn(this.pannel);
 	}
 	branchPosition(level){

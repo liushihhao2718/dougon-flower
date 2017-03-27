@@ -42,5 +42,5 @@
 			c1.276,2.385,10.711,11.572,13.888,12.881C42.417,79.761,47.303,79.337,51.89,75.667z"/>
 	</g>
 </g>
-<line id="direct" style="fill:none;stroke:#FF0000;stroke-miterlimit:10;" x1="205.304" y1="74.822" x2="17.969" y2="33.693"/>
+<line id="direct" style="display:none;fill:none;stroke:#FF0000;stroke-miterlimit:10;" x1="205.304" y1="74.822" x2="17.969" y2="33.693"/>
 </svg>
