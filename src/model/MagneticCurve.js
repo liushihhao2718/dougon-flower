@@ -1,8 +1,7 @@
 import fitCurve from 'fit-curve';
 
 const error = 10;
-
-
+let timeout = 20;
 export default class MagneticCurve {
 	constructor(param) {
 		/*
@@ -11,7 +10,7 @@ export default class MagneticCurve {
 		T : 總點數
 		alpha : 等角螺線參數
 		sign : 電荷正負
-		level
+		level : curve lv
 		*/
 		this.param = param;
 	}
@@ -60,13 +59,16 @@ export default class MagneticCurve {
 		let pathString = fittedCurveToPathString(this.points);
 		//debug color
 		let color = ['red', 'green', 'blue', 'black'];
-		pannel.path(pathString).fill('none').stroke({ width: 5 }).stroke(color[level]);
-		//bbox
-		// const bbox = this.bbox();
-		// pannel.rect(bbox.width, bbox.height).x(bbox.x).y(bbox.y).fill('none').stroke({ width: 1,'color':color[level] });
+		// pannel.path(pathString).fill('none').stroke({ width: 5 }).stroke(color[level]);
 
-		// true color
-		// pannel.path(pathString).fill('none').stroke({ width: 5 }).stroke('#CED5D0');
+		window.setTimeout(()=>{
+			pannel.path(pathString).fill('none').stroke({ width: 5 }).stroke(color[level]);
+			const bbox = this.bbox();
+			pannel.rect(bbox.width, bbox.height).x(bbox.x).y(bbox.y).fill('none').stroke({ width: 1,'color':color[level] });
+		}, timeout);
+		timeout+=100;
+		//bbox
+		
 	}
 	makeBBox(points){
 		let minX = Number.MAX_VALUE;

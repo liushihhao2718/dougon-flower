@@ -1,6 +1,7 @@
 import * as dat from '../lib/dat.gui';
 import download from '../lib/download';
 import CurveManagement from './CurveManagement';
+import dougonBounding from '../images/dougonBounding';
 
 let gui, folders = [];
 let controls = [];
@@ -30,13 +31,9 @@ export let state = {
 		// 	branches: 5
 		// }
 	],
-	bound:{
-		x:0,
-		y:0,
-		width:0,
-		height:0
-	},
-	tool:'bound',
+	bound: '令栱',
+	inside: [],
+	tool:'paint',
 	'show':{
 		'debugCurveLayer':true	
 	}
@@ -56,6 +53,9 @@ let features = {
 export function setGUI(){
 	gui = new dat.GUI();
 	let c0 = gui.add(state, 'tool', ['paint', 'bound', 'select']);
+	let bound =	gui.add(state, 'bound', Object.keys(dougonBounding));
+	bound.onChange(value => setBounding(value) );
+	setBounding(state.bound);
 	let c1 = gui.add(state, 'trunkHead', 1, 20);
 	let c2 = gui.add(state, 'trunkTail', 20, 40);
 	
@@ -63,6 +63,7 @@ export function setGUI(){
 	controls.push(c1);
 	controls.push(c2);
 	//gui.add(state, 'intersect');
+
 
 	levelFolder(0);
 	levelFolder(1);
@@ -92,4 +93,10 @@ function setOnChange(controls){
 			}
 		});
 	});
+}
+
+function setBounding(value){
+	let svgString = dougonBounding[value];
+	CurveManagement.layer.drawingLayer.clear();
+	CurveManagement.layer.drawingLayer.path(svgString).fill('#524B61');
 }

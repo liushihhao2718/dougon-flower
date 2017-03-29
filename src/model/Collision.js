@@ -1,9 +1,13 @@
 import * as UI from '../model/UIManagement';
+import dougonBounding from '../images/dougonBounding';
+let inside = require('point-in-polygon');
+
 
 export function testCollision(test_bbox, bboxes, ...ignore){
 	let isCollision = false;
 
-	if(!insideBound(test_bbox)) return true;
+	// if(!insideBound(test_bbox)) return true;
+	if(!rectInsidePolygon(test_bbox)) return true;
 
 	for (var i = 0; i < bboxes.length; i++) {
 		if (ignore.includes( bboxes[i] )) continue; 
@@ -48,4 +52,15 @@ function insideBound(rect){
 		rect.y > bound.y &&
 		rect.y + rect.height < bound.y + bound.height
 	);
+}
+
+function rectInsidePolygon(rect){
+	const polygon = dougonBounding[UI.state.bound + 'Nodes'];
+	let rectPoints = [
+		[rect.x, rect.y],
+		[rect.x+rect.width, rect.y],
+		[rect.x, rect.y + rect.height],
+		[rect.x + rect.width, rect.y + rect.height]
+	];
+	return rectPoints.every(p => inside(p, polygon));
 }

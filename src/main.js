@@ -6,10 +6,9 @@ import CurveManagement from './model/CurveManagement';
 
 (function(){
 	let draw = SVG('drawing').size(1000, 1000);
-	UI.setGUI();
 	setSVGLayer(draw);
 	setControl(draw);
-
+	UI.setGUI();
 })();
 
 function setSVGLayer(pannel) {
@@ -23,17 +22,17 @@ function setSVGLayer(pannel) {
 	// order is important
 	pannel.add( drawingLayer );
 	pannel.add( leafLayer );
-	pannel.add( debugCurveLayer );
 	pannel.add( stemLayer );
 	pannel.add( flowerLayer );
+	pannel.add( debugCurveLayer );
 }
 
 function setControl(_container) {
 	let isMouseDown = false;
 	let tools = {
-		'paint':new PaintControl(_container),
-		'bound':new BoundControl(_container),
-		'select': undefined
+		paint : new PaintControl(_container),
+		bound : new BoundControl(_container),
+		select : undefined
 	};
 
 	const top = _container.node.getBoundingClientRect().top;

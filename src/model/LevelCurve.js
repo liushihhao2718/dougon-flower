@@ -65,6 +65,7 @@ export default class LevelCurve {
 		tempMags.reverse();
 		this.mags = this.mags.concat(tempMags);
 	}
+
 	drawAt(t, b, sign, level, type, parent){
 		let start = b.get(t);
 		let v = b.derivative(t);
@@ -102,6 +103,7 @@ export default class LevelCurve {
 			const x2 = curve[curve.length-1][0];
 			const y2 = curve[curve.length-1][1];
 			sign = 1;
+			type = nextType(type);
 			this.leafQueue.push({x1, y1, x2, y2, sign, type});
 			mag1.drawOn(this.debugCurveLayer, level);
 
@@ -120,6 +122,7 @@ export default class LevelCurve {
 			const x2 = curve[curve.length-1][0];
 			const y2 = curve[curve.length-1][1];
 			sign = -1*sign;
+			type = nextType(type);
 			this.leafQueue.push({x1, y1, x2, y2, sign, type});
 
 			mag2.drawOn(this.debugCurveLayer, level);
@@ -141,9 +144,10 @@ export default class LevelCurve {
 		while(this.mags.length > 0){
 			let { posOnSinglebezier, bezierAtIndex, level, parent, type } = this.mags[0];
 			this.drawAt( posOnSinglebezier, bezierAtIndex,  1, level, type, parent );
+
 			this.mags.shift();
 		}
-
+		
 		this.leafQueue.reverse();
 		this.leafQueue.forEach(	({x1, y1, x2, y2, sign, type}) => this.drawLeaf(x1, y1, x2, y2, sign, type) );
 		this.leafQueue.length = 0;

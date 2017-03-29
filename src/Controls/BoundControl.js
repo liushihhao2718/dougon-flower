@@ -1,5 +1,6 @@
 import * as UI from '../model/UIManagement';
 import CurveManagement from '../model/CurveManagement';
+import dougonBounding from '../images/dougonBounding';
 
 let rect;
 function BoundControl(pannel) {
