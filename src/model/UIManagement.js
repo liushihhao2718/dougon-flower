@@ -1,7 +1,7 @@
 import * as dat from '../lib/dat.gui';
 import download from '../lib/download';
 import CurveManagement from './CurveManagement';
-import dougonBounding from '../images/dougonBounding';
+import {dougonBounding} from '../images/dougonBounding';
 
 let gui, folders = [];
 let controls = [];

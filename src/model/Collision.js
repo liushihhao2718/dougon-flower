@@ -1,5 +1,5 @@
 import * as UI from '../model/UIManagement';
-import dougonBounding from '../images/dougonBounding';
+import {dougonBoundingNodes} from '../images/dougonBounding';
 let inside = require('point-in-polygon');
 
 
@@ -55,7 +55,7 @@ function insideBound(rect){
 }
 
 function rectInsidePolygon(rect){
-	const polygon = dougonBounding[UI.state.bound + 'Nodes'];
+	const polygon = dougonBoundingNodes[ UI.state.bound ];
 	let rectPoints = [
 		[rect.x, rect.y],
 		[rect.x+rect.width, rect.y],
