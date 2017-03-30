@@ -97,6 +97,10 @@ function setOnChange(controls){
 
 function setBounding(value){
 	let svgString = dougonBounding[value];
-	CurveManagement.layer.drawingLayer.clear();
+	clearAllLayer();
 	CurveManagement.layer.drawingLayer.path(svgString).fill('#524B61');
+}
+
+function clearAllLayer() {
+	Object.values(CurveManagement.layer).forEach( layer => layer.clear() );
 }
