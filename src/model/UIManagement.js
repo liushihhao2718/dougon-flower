@@ -6,9 +6,9 @@ import {dougonBounding} from '../images/dougonBounding';
 let gui, folders = [];
 let controls = [];
 export let state = {
+	flowerSize: 90,
 	trunkHead: 5,
 	trunkTail: 30,
-	intersect: false,
 	levelCurve :[
 		{
 			length: 100,
@@ -32,7 +32,6 @@ export let state = {
 		// }
 	],
 	bound: '令栱',
-	inside: [],
 	tool:'paint',
 	'show':{
 		'debugCurveLayer':true	
@@ -57,13 +56,13 @@ export function setGUI(){
 	bound.onChange(value => setBounding(value) );
 	setBounding(state.bound);
 	let c1 = gui.add(state, 'trunkHead', 1, 20);
-	let c2 = gui.add(state, 'trunkTail', 20, 40);
-	
+	let c2 = gui.add(state, 'trunkTail', 5, 40);
+	let c3 = gui.add(state, 'flowerSize', 10, 80);
+
 	controls.push(c0);
 	controls.push(c1);
 	controls.push(c2);
-	//gui.add(state, 'intersect');
-
+	controls.push(c3);
 
 	levelFolder(0);
 	levelFolder(1);

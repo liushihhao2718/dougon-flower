@@ -200,7 +200,7 @@ export default class LevelCurve {
 		let blackCircle = {
 			cx: this.basePath[this.basePath.length-1][3][0],
 			cy: this.basePath[this.basePath.length-1][3][1],
-			r:  UI.state.trunkTail*2 
+			r:  UI.state.flowerSize 
 		};
 	
 		let g = this.flowerLayer.group();

@@ -1,7 +1,7 @@
 import fitCurve from 'fit-curve';
 
 const error = 10;
-let timeout = 20;
+// let timeout = 20;
 export default class MagneticCurve {
 	constructor(param) {
 		/*
@@ -61,12 +61,12 @@ export default class MagneticCurve {
 		let color = ['red', 'green', 'blue', 'black'];
 		// pannel.path(pathString).fill('none').stroke({ width: 5 }).stroke(color[level]);
 
-		window.setTimeout(()=>{
-			pannel.path(pathString).fill('none').stroke({ width: 5 }).stroke(color[level]);
-			const bbox = this.bbox();
-			pannel.rect(bbox.width, bbox.height).x(bbox.x).y(bbox.y).fill('none').stroke({ width: 1,'color':color[level] });
-		}, timeout);
-		timeout+=100;
+		// window.setTimeout(()=>{
+		pannel.path(pathString).fill('none').stroke({ width: 5 }).stroke(color[level]);
+		const bbox = this.bbox();
+		pannel.rect(bbox.width, bbox.height).x(bbox.x).y(bbox.y).fill('none').stroke({ width: 1,'color':color[level] });
+		// }, timeout);
+		// timeout+=100;
 		//bbox
 		
 	}
