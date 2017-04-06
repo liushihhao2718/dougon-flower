@@ -1,3 +1,4 @@
 export default {
-	selectedCurve :[]
+	selectedCurve :[],
+	scene :[]
 };

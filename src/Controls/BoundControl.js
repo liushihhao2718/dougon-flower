@@ -1,9 +1,8 @@
 import * as UI from '../model/UIManagement';
 import CurveManagement from '../model/CurveManagement';
-import dougonBounding from '../images/dougonBounding';
 
 let rect;
-function BoundControl(pannel) {
+function BoundControl() {
 	this.start = function( point ) {
 		rect = CurveManagement.layer.drawingLayer.rect().fill('#524B61');
 		rect.x(point[0]).y(point[1]);
