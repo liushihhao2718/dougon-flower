@@ -6,5 +6,5 @@ const leaf5 = require('../images/leaf5.svg');
 const leaf6 = require('../images/leaf6.svg');
 
 
-const LeafImage = [leaf1, leaf2,leaf3, leaf4, leaf5,leaf6];
+const LeafImage = [leaf1, leaf2,leaf3, leaf4, leaf5,leaf1];
 export default LeafImage;
