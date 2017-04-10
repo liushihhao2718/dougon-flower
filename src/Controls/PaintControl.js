@@ -29,9 +29,10 @@ function PaintControl(pannel) {
 
 		drawOnPannel(pannel, pathString);
 
-		let lvCurve = new LevelCurve( smoothBizer, 1, UI.state.levelCurve, CurveManagement.scene);
-		lvCurve.drawOn( pannel );
-
+		let floral = new LevelCurve( smoothBizer, 1, UI.state.levelCurve );
+		floral.drawOn( pannel );
+		CurveManagement.floralScene.push(floral);
+		
 		clearRawData();
 	};
 

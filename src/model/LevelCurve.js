@@ -16,7 +16,7 @@ export default class LevelCurve {
 		alpha : number
 		branches : number
 	*/
-	constructor(basePath, trunkWidth, levelParam, _scene){
+	constructor(basePath, trunkWidth, levelParam ){
 		this.id = shortid.generate();
 		this.basePath = basePath;
 		this.trunkWidth = trunkWidth;
@@ -27,7 +27,6 @@ export default class LevelCurve {
 		this.flowerLayer = undefined;
 		this.debugCurveLayer = undefined;
 
-		this.scene = _scene;
 		this.mags = [];
 		this.leafQueue = [];
 	}
@@ -90,7 +89,7 @@ export default class LevelCurve {
 			sign: -1
 		});
 		//draw mag1 ignore mag2
-		if( Collision.testCollision(mag1.bbox(), this.scene, parent, mag2.bbox() ) ){
+		if( Collision.testCollision(mag1.bbox(), CurveManagement.leafCollisionScene, parent, mag2.bbox() ) ){
 			//retry
 			if (level < this.levelParam.length-1 ) this.drawAt(t, b, sign, level+1, type, parent);
 			return;
@@ -110,7 +109,7 @@ export default class LevelCurve {
 			if (level < this.levelParam.length-1 ) this.drawLevelCurve(mag1.points, level, nextType(type), mag1.bbox() );
 		}
 		//draw mag2 ignore mag1
-		if( Collision.testCollision(mag2.bbox(), this.scene, parent, mag1.bbox() ) ){
+		if( Collision.testCollision(mag2.bbox(), CurveManagement.leafCollisionScene, parent, mag1.bbox() ) ){
 			if (level < this.levelParam.length-1 ) this.drawAt(t, b, -1*sign, level+1, type, parent);
 			return;
 		}
@@ -230,9 +229,8 @@ export default class LevelCurve {
 	}
 	drawLeaf(x1, y1, x2, y2, sign, type){
 		// let num = Math.floor(Math.random() * ((6-2)+1) + 1);
+		// let leafString = LeafImage[num];
 		let leafString = LeafImage[type];
-
-		// let leafString = LeafImage[type];		
 		let g = this.leafLayer.group();
 		// g.hide();
 		let leaf = g.svg(leafString);
@@ -280,7 +278,7 @@ export default class LevelCurve {
 			console.error('can not redraw!');
 			return;
 		}
-		this.scene.length = 0;
+		CurveManagement.leafCollisionScene.length = 0;
 		this.mags.length = 0;
 		this.leafQueue.length = 0;
 

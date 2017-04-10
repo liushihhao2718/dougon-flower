@@ -1,4 +1,8 @@
 export default {
 	selectedCurve :[],
-	scene :[]
+	scene :[],
+	leafCollisionScene:[],
+	floralScene:[],
+	layer:undefined,
+	levelDrawingQueue:[]
 };
