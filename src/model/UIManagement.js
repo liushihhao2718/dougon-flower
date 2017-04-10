@@ -35,7 +35,8 @@ export let state = {
 	tool:'paint',
 	'show':{
 		'debugCurveLayer':true	
-	}
+	},
+	color:'鋪地捲成'
 };
 
 let features = {
@@ -71,6 +72,8 @@ export function setGUI(){
 
 	setOnChange(controls);
 
+	let colorControl = gui.add(state, 'color', ['青緣紅地', '綠緣青地', '鋪地捲成']);
+	colorControl.onChange(value => changeColor(value));
 	gui.add(features, 'download');
 	gui.add(features, 'toggleLayer');
 
@@ -98,9 +101,36 @@ function setBounding(value){
 	let svgString = dougonBounding[value];
 	clearAllLayer();
 	CurveManagement.scene.length = 0;
-	CurveManagement.layer.drawingLayer.path(svgString).fill('#524B61');
+	CurveManagement.layer.drawingLayer.path(svgString).addClass('background');
 }
 
 function clearAllLayer() {
 	Object.values(CurveManagement.layer).forEach( layer => layer.clear() );
+}
+
+function changeColor(value) {
+	const styleMap = require('../color/StyleMap.json');
+	const colorMap = require('../color/colorHex.json');
+
+	let colorTags = styleMap['五彩遍裝'][value];
+	Object.keys( colorTags ).forEach(key =>{
+		changeBGColor( key, colorMap[colorTags[key]] );
+	});
+
+	function changeBGColor(class_name,new_color) {
+		const reg = /[A-Z]6/;
+		const cols = document.getElementsByClassName(class_name);
+
+		if( reg.test(class_name) ){
+			for(const graph of cols) {
+				graph.style.stroke = new_color;
+			}
+		}
+		else{
+			for(const graph of cols) {
+				graph.style.fill = new_color;
+			}
+		}
+		
+	}
 }
