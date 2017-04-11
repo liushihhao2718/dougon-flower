@@ -101,7 +101,7 @@ function setBounding(value){
 	let svgString = dougonBounding[value];
 	clearAllLayer();
 	CurveManagement.scene.length = 0;
-	CurveManagement.layer.drawingLayer.path(svgString).addClass('background');
+	CurveManagement.layer.dougonLayer.path(svgString).addClass('background');
 	let backgroundColorKey = styleMap['五彩遍裝'][state.color].background;
 	state.flowerSize = dougonBoundingParam[value].flowerSize;
 	state.trunkHead = dougonBoundingParam[value].trunkHead;

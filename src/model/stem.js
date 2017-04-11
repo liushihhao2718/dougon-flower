@@ -1,8 +1,12 @@
-import fitCurve from 'fit-curve';
 import MagneticCurve from '../model/MagneticCurve';
 
-const error = 10;
-// let timeout = 20;
+export class Floral{
+	constructor(basePath, flowerType='海石榴華', flowerRotation=45){
+		this.basePath = basePath;
+		this.flowerType = flowerType;
+		this.flowerRotation = flowerRotation;
+	}
+}
 export class Burgeon{
 	constructor(x,y,direction){
 		this.x=x;
@@ -78,33 +82,6 @@ function makeBBox(points){
 		width: maxX - minX,
 		height: maxY - minY
 	};
-}
-function branchPosition(level){
-	let branches = [];
-	let branch = this.levelParam[level].branches;
-
-	let pos = 1 / (branch + 1);
-	for (let i = 1; i <= branch; i++) {
-		branches.push(pos * i);
-	}
-
-	return branches;
-}
-function fittedCurveToPathString(fittedLineData) {
-	var str = '';
-	//bezier : [ [c0], [c1], [c2], [c3] ]
-	fittedLineData.forEach(function (bezier, i) {
-		if (i == 0) {
-			str += 'M ' + bezier[0][0] + ' ' + bezier[0][1];
-		}
-
-		str += 'C ' + bezier[1][0] + ' ' + bezier[1][1] + ', ' +
-		bezier[2][0] + ' ' + bezier[2][1] + ', ' +
-		bezier[3][0] + ' ' + bezier[3][1] + ' ';	
-
-	});
-
-	return str;
 }
 
 function normalize(vector) {

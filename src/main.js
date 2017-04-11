@@ -12,13 +12,13 @@ import CurveManagement from './model/CurveManagement';
 })();
 
 function setSVGLayer(panel) {
-	let drawingLayer = panel.group();
+	let dougonLayer = panel.group();
 	let leafLayer = panel.group();
 	let stemLayer = panel.group();
 	let flowerLayer = panel.group();
 	let debugCurveLayer = panel.group().hide();
 
-	CurveManagement.layer = {drawingLayer, leafLayer, stemLayer, flowerLayer, debugCurveLayer};
+	CurveManagement.layer = {dougonLayer, leafLayer, stemLayer, flowerLayer, debugCurveLayer};
 }
 
 function setControl(_container) {
