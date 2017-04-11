@@ -27,12 +27,12 @@ function PaintControl(pannel) {
 		}
 		let pathString = fittedCurveToPathString(smoothBizer);
 
-		drawOnPannel(pannel, pathString);
+		drawBasePath(pathString);
 
 		let floral = new LevelCurve( smoothBizer, 1, UI.state.levelCurve );
-		floral.drawOn( pannel );
+		floral.draw();
 		CurveManagement.floralScene.push(floral);
-		
+
 		clearRawData();
 	};
 
@@ -55,8 +55,8 @@ function PaintControl(pannel) {
 
 		return str;
 	}
-	function drawOnPannel(pannel, pathString){
-		CurveManagement.layer.drawingLayer.path( pathString ).fill('none').stroke({ width: 3 }).stroke('#f06');
+	function drawBasePath(pathString){
+		CurveManagement.layer.debugCurveLayer.path( pathString ).fill('none').stroke({ width: 3 }).stroke('#f06');
 	}
 	function clearRawData(){
 		rawPointData.length = 0;

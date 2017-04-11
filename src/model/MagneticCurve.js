@@ -1,6 +1,7 @@
 import fitCurve from 'fit-curve';
+import Bezier from 'bezier-js';
 
-const error = 10;
+const error = 20;
 // let timeout = 20;
 export default class MagneticCurve {
 	constructor(param) {
@@ -14,7 +15,41 @@ export default class MagneticCurve {
 		*/
 		this.param = param;
 	}
+	sample(number){
+		let Bs = this.controlPoints.map(b =>{
+			return new Bezier(
+				b[0][0], b[0][1],
+				b[1][0], b[1][1],
+				b[2][0], b[2][1],
+				b[3][0], b[3][1]
+			);
+		});
+		let totalLength = Bs.reduce( (length, B) =>{
+			return B.length() + length;
+		}, 0);
+		let branches = [];
+		let pos = 1 / (number + 1);
+		for (let i = 1; i <= number; i++) {
+			branches.push(pos * i);
+		}
+		let sample = [];
+		branches.forEach((i) => {
+			if( totalLength === 0) return;
 
+			let bezierIndex = 0;
+
+			let pos = totalLength * i;
+			while( pos >= Bs[bezierIndex].length() ) {
+				pos -= Bs[bezierIndex].length();
+				bezierIndex++;
+			}
+			let bezierAtIndex = Bs[bezierIndex];
+			let posOnSinglebezier = pos / bezierAtIndex.length();
+
+			sample.push( bezierAtIndex.compute(posOnSinglebezier) );
+		});
+		return sample;
+	}
 	makeCurve() {
 		const points = [];
 		
@@ -48,15 +83,17 @@ export default class MagneticCurve {
 	getCurve() {
 		if( !this._curve ){
 			this._curve = this.makeCurve();
-			let smoothBizer = fitCurve( this._curve, error );
-			this.points = smoothBizer;
-			// this.points = this._curve;
 		} 
 		return this._curve;
 	}
+	get controlPoints(){
+		if(!this._controlPoints)
+			this._controlPoints = fitCurve( this._curve, error );		
+		return this._controlPoints;
+	}
 	drawOn(pannel, level=0){
 		this.getCurve();
-		let pathString = fittedCurveToPathString(this.points);
+		let pathString = fittedCurveToPathString(this.controlPoints);
 		//debug color
 		let color = ['red', 'green', 'blue', 'black'];
 		// pannel.path(pathString).fill('none').stroke({ width: 5 }).stroke(color[level]);

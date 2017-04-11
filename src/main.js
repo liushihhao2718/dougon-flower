@@ -11,20 +11,14 @@ import CurveManagement from './model/CurveManagement';
 	UI.setGUI();
 })();
 
-function setSVGLayer(pannel) {
-	let drawingLayer = pannel.group();
-	let leafLayer = pannel.group();
-	let debugCurveLayer = pannel.group();
-	let stemLayer = pannel.group();
-	let flowerLayer = pannel.group();
-	CurveManagement.layer = {drawingLayer, leafLayer, stemLayer, flowerLayer, debugCurveLayer};
+function setSVGLayer(panel) {
+	let drawingLayer = panel.group();
+	let leafLayer = panel.group();
+	let stemLayer = panel.group();
+	let flowerLayer = panel.group();
+	let debugCurveLayer = panel.group().hide();
 
-	// order is important
-	pannel.add( drawingLayer );
-	pannel.add( leafLayer );
-	pannel.add( stemLayer );
-	pannel.add( flowerLayer );
-	pannel.add( debugCurveLayer );
+	CurveManagement.layer = {drawingLayer, leafLayer, stemLayer, flowerLayer, debugCurveLayer};
 }
 
 function setControl(_container) {

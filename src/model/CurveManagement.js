@@ -3,6 +3,12 @@ export default {
 	scene :[],
 	leafCollisionScene:[],
 	floralScene:[],
-	layer:undefined,
-	levelDrawingQueue:[]
+	layer:{},
+	leafDrawingQueue:[],
+	growBranches(){
+		// this.floralScene.map()
+	},
+	clearLayer(){
+		Object.values(this.layer).forEach(layer=> layer.clear());
+	}
 };

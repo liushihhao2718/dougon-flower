@@ -1,7 +1,7 @@
 import * as dat from '../lib/dat.gui';
 import download from '../lib/download';
 import CurveManagement from './CurveManagement';
-import {dougonBounding} from '../images/dougonBounding';
+import {dougonBounding, dougonBoundingParam} from '../images/dougonBounding';
 const styleMap = require('../color/StyleMap.json');
 const colorMap = require('../color/colorHex.json');
 
@@ -26,17 +26,12 @@ export let state = {
 			length: 38,
 			alpha: 0.9,
 			branches: 2
-		},
-		// {
-		// 	length: 25,
-		// 	alpha: 0.9,
-		// 	branches: 5
-		// }
+		}
 	],
 	bound: '令栱',
 	tool:'paint',
 	show:{
-		'debugCurveLayer':true	
+		'debugCurveLayer':false	
 	},
 	color:'鋪地捲成'
 };
@@ -54,10 +49,10 @@ let features = {
 
 export function setGUI(){
 	gui = new dat.GUI();
-	let c0 = gui.add(state, 'tool', ['paint', 'bound', 'select']);
 	let bound =	gui.add(state, 'bound', Object.keys(dougonBounding));
-	bound.onChange(value => setBounding(value) );
-	setBounding(state.bound);
+
+
+	let c0 = gui.add(state, 'tool', ['paint', 'bound', 'select']);
 	let c1 = gui.add(state, 'trunkHead', 1, 20);
 	let c2 = gui.add(state, 'trunkTail', 5, 40);
 	let c3 = gui.add(state, 'flowerSize', 10, 80);
@@ -74,11 +69,13 @@ export function setGUI(){
 
 	setOnChange(controls);
 
+
 	let colorControl = gui.add(state, 'color', ['青緣紅地', '綠緣青地', '鋪地捲成']);
 	colorControl.onChange(value => changeColor(value));
 	gui.add(features, 'download');
 	gui.add(features, 'toggleLayer');
-
+	bound.onChange(value => setBounding(value) );
+	setBounding(state.bound);
 }
 
 function levelFolder(index){
@@ -106,7 +103,12 @@ function setBounding(value){
 	CurveManagement.scene.length = 0;
 	CurveManagement.layer.drawingLayer.path(svgString).addClass('background');
 	let backgroundColorKey = styleMap['五彩遍裝'][state.color].background;
-
+	state.flowerSize = dougonBoundingParam[value].flowerSize;
+	state.trunkHead = dougonBoundingParam[value].trunkHead;
+	state.trunkTail = dougonBoundingParam[value].trunkTail;
+	gui.__controllers[2].updateDisplay();
+	gui.__controllers[3].updateDisplay();
+	gui.__controllers[4].updateDisplay();
 	changeBGColor('background',colorMap[backgroundColorKey]);
 }
 

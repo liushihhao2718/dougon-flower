@@ -22,15 +22,10 @@ export default class LevelCurve {
 		this.trunkWidth = trunkWidth;
 		this.levelParam = levelParam;
 
-		this.leafLayer = undefined;
-		this.stemLayer = undefined;
-		this.flowerLayer = undefined;
-		this.debugCurveLayer = undefined;
-
 		this.mags = [];
 		this.leafQueue = [];
 	}
-	drawLevelCurve(beziers, level, type, parent){
+	makeGrowthPoints(beziers, level, type, parent){
 		if( !beziers ) return;
 
 		let Bs = beziers.map(b =>{
@@ -61,8 +56,10 @@ export default class LevelCurve {
 
 			tempMags.push({posOnSinglebezier, bezierAtIndex, level, parent, type});
 		});
+
 		tempMags.reverse();
 		this.mags = this.mags.concat(tempMags);
+		return this.mags;
 	}
 
 	drawAt(t, b, sign, level, type, parent){
@@ -104,9 +101,10 @@ export default class LevelCurve {
 			sign = 1;
 			type = nextType(type);
 			this.leafQueue.push({x1, y1, x2, y2, sign, type});
-			mag1.drawOn(this.debugCurveLayer, level);
+			mag1.drawOn(CurveManagement.layer.debugCurveLayer, level);
 
-			if (level < this.levelParam.length-1 ) this.drawLevelCurve(mag1.points, level, nextType(type), mag1.bbox() );
+			if (level < this.levelParam.length-1 ) 
+				this.makeGrowthPoints(mag1.controlPoints, level, nextType(type), mag1.bbox() );
 		}
 		//draw mag2 ignore mag1
 		if( Collision.testCollision(mag2.bbox(), CurveManagement.leafCollisionScene, parent, mag1.bbox() ) ){
@@ -124,22 +122,18 @@ export default class LevelCurve {
 			type = nextType(type);
 			this.leafQueue.push({x1, y1, x2, y2, sign, type});
 
-			mag2.drawOn(this.debugCurveLayer, level);
+			mag2.drawOn(CurveManagement.layer.debugCurveLayer, level);
 
-			if (level < this.levelParam.length-1 ) this.drawLevelCurve(mag2.points, level, nextType(type), mag2.bbox() );
+			if (level < this.levelParam.length-1 ) this.makeGrowthPoints(mag2.controlPoints, level, nextType(type), mag2.bbox() );
 		}
 	}
-	drawOn( pannel ){
-		this.pannel = pannel;
-		let { leafLayer, stemLayer, flowerLayer, debugCurveLayer } = CurveManagement.layer;
-		this.leafLayer = leafLayer;
-		this.stemLayer = stemLayer;
-		this.flowerLayer = flowerLayer;
-		this.debugCurveLayer = debugCurveLayer;
-
+	growPointOnBasePath(){
+		return this.makeGrowthPoints(this.basePath, 0, 0);
+	}
+	draw(){
 		CurveManagement[this.id] = this;
 
-		this.drawLevelCurve(this.basePath, 0, 0);
+		this.makeGrowthPoints(this.basePath, 0, 0);
 		while(this.mags.length > 0){
 			let { posOnSinglebezier, bezierAtIndex, level, parent, type } = this.mags[0];
 			this.drawAt( posOnSinglebezier, bezierAtIndex,  1, level, type, parent );
@@ -154,7 +148,7 @@ export default class LevelCurve {
 		this.drawFlower();
 	}
 	drawStem(){
-		let stem = this.stemLayer.group();
+		let stem = CurveManagement.layer.stemLayer.group();
 		stem.addClass('clickable');
 		stem.data({ id:this.id });
 		stem.click(() =>{
@@ -166,7 +160,7 @@ export default class LevelCurve {
 		this.drawOutLine( stem, UI.state.trunkHead/2,UI.state.trunkTail/2, '#9FB9A8');
 		this.drawOutLine( stem, UI.state.trunkHead/8,UI.state.trunkTail/8, '#7C8168');
 	}
-	drawOutLine(pannel, beginWidth, endWidth, color, _basePath = this.basePath){
+	drawOutLine( layer, beginWidth, endWidth, color, _basePath = this.basePath){
 		let basePath = _basePath.map(c =>{
 			return new Bezier(
 				c[0][0], c[0][1],
@@ -192,7 +186,7 @@ export default class LevelCurve {
 		});
 		outline.forEach(b => {
 			let pathString = fittedCurveToPathString(b);
-			drawOnPannel( pannel, pathString, color );
+			drawOnPannel( layer, pathString, color );
 		});
 	}
 	drawFlower(){
@@ -202,7 +196,7 @@ export default class LevelCurve {
 			r:  UI.state.flowerSize 
 		};
 	
-		let g = this.flowerLayer.group();
+		let g = CurveManagement.layer.flowerLayer.group();
 		g.addClass('clickable');
 		g.data({ id:this.id });
 		g.click(()=>{
@@ -231,7 +225,7 @@ export default class LevelCurve {
 		// let num = Math.floor(Math.random() * ((6-2)+1) + 1);
 		// let leafString = LeafImage[num];
 		let leafString = LeafImage[type];
-		let g = this.leafLayer.group();
+		let g = CurveManagement.layer.leafLayer.group();
 		// g.hide();
 		let leaf = g.svg(leafString);
 		const direct = leaf.node.children[0].getElementById('direct');
@@ -274,19 +268,16 @@ export default class LevelCurve {
 			});
 	}
 	redraw() {
-		if( this.pannel === undefined ) {
-			console.error('can not redraw!');
-			return;
-		}
 		CurveManagement.leafCollisionScene.length = 0;
 		this.mags.length = 0;
 		this.leafQueue.length = 0;
 
-		this.flowerLayer.clear();
-		this.stemLayer.clear();
-		this.leafLayer.clear();
-		this.debugCurveLayer.clear();
-		this.drawOn(this.pannel);
+		CurveManagement.layer.flowerLayer.clear();
+		CurveManagement.layer.stemLayer.clear();
+		CurveManagement.layer.leafLayer.clear();
+		CurveManagement.layer.debugCurveLayer.clear();
+
+		this.draw();
 	}
 	branchPosition(level){
 		let branches = [];
