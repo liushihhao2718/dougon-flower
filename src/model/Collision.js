@@ -44,16 +44,6 @@ export function bezierIntersects(polyBezier, others){
 	return flag;
 }
 
-function insideBound(rect){
-	let bound = UI.state.bound;
-	return (
-		rect.x > bound.x &&
-		rect.x + rect.width < bound.x + bound.width &&
-		rect.y > bound.y &&
-		rect.y + rect.height < bound.y + bound.height
-	);
-}
-
 function rectInsidePolygon(rect){
 	const polygon = dougonBoundingNodes[ UI.state.bound ];
 	let rectPoints = [

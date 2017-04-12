@@ -1,8 +1,9 @@
-import fitCurve from 'fit-curve';
 import LevelCurve from '../model/LevelCurve';
+import {BezierSpline} from '../model/Spline';
+import {Floral} from '../model/stem';
 import * as UI from '../model/UIManagement';
 import CurveManagement from '../model/CurveManagement';
-
+import {drawFlower, drawStem} from '../model/Drawer';
 const error = 100;
 
 function PaintControl(pannel) {
@@ -20,41 +21,28 @@ function PaintControl(pannel) {
 	};
 
 	this.end = function() {
-		let smoothBizer = fitCurve( rawPointData, error );
+		let smoothBizer = new BezierSpline( rawPointData, error );
 		if(smoothBizer.length == 0) {
 			clearRawData();
 			return;
 		}
-		let pathString = fittedCurveToPathString(smoothBizer);
+		let pathString = smoothBizer.svgString();
 
 		drawBasePath(pathString);
 
-		let floral = new LevelCurve( smoothBizer, 1, UI.state.levelCurve );
-		floral.draw();
+		// let floral = new LevelCurve( smoothBizer, 1, UI.state.levelCurve );
+		// floral.draw();
+		let floral = new Floral(smoothBizer);
 		CurveManagement.floralScene.push(floral);
-
+		drawFlower(floral);
+		drawStem(floral);
 		clearRawData();
 	};
 
 	function updateLines(paintingPolyLine, rawPointData) {
 		paintingPolyLine.plot( rawPointData );
 	}
-	function fittedCurveToPathString(fittedLineData) {
-		var str = '';
-		//bezier : [ [c0], [c1], [c2], [c3] ]
-		fittedLineData.map(function (bezier, i) {
-			if (i == 0) {
-				str += 'M ' + bezier[0][0] + ' ' + bezier[0][1];
-			}
-
-			str += 'C ' + bezier[1][0] + ' ' + bezier[1][1] + ', ' +
-			bezier[2][0] + ' ' + bezier[2][1] + ', ' +
-			bezier[3][0] + ' ' + bezier[3][1] + ' ';	
-						
-		});
-
-		return str;
-	}
+	
 	function drawBasePath(pathString){
 		CurveManagement.layer.debugCurveLayer.path( pathString ).fill('none').stroke({ width: 3 }).stroke('#f06');
 	}

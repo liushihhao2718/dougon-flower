@@ -15,6 +15,7 @@ export default class MagneticCurve {
 		*/
 		this.param = param;
 	}
+
 	sample(number){
 		let Bs = this.controlPoints.map(b =>{
 			return new Bezier(
@@ -33,7 +34,7 @@ export default class MagneticCurve {
 			branches.push(pos * i);
 		}
 		let sample = [];
-		branches.forEach((i) => {
+		branches.forEach( i => {
 			if( totalLength === 0) return;
 
 			let bezierIndex = 0;
@@ -46,7 +47,7 @@ export default class MagneticCurve {
 			let bezierAtIndex = Bs[bezierIndex];
 			let posOnSinglebezier = pos / bezierAtIndex.length();
 
-			sample.push( bezierAtIndex.compute(posOnSinglebezier) );
+			sample.push( bezierAtIndex.compute(posOnSinglebezier) );// [x, y]
 		});
 		return sample;
 	}

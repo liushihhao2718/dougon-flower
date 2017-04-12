@@ -1,0 +1,171 @@
+import CurveManagement from './CurveManagement';
+import * as UI from './UIManagement';
+let flowerString = require('../images/海石榴心.svg');
+
+
+export function	draw(){
+	CurveManagement[this.id] = this;
+
+	this.makeGrowthPoints(this.basePath, 0, 0);
+	let sign = 1;
+	while(this.mags.length > 0){
+		let { posOnSinglebezier, bezierAtIndex, level, parent, type } = this.mags[0];
+		this.drawAt( posOnSinglebezier, bezierAtIndex,  sign, level, type, parent );
+		sign *= -1;
+
+		this.mags.shift();
+	}
+	
+	this.leafQueue.reverse();
+	this.leafQueue.forEach(	({x1, y1, x2, y2, sign, type}) => this.drawLeaf(x1, y1, x2, y2, sign, type) );
+	this.leafQueue.length = 0;
+	this.drawStem();
+	this.drawFlower();
+}
+export function	drawStem(floral){
+	let stem = CurveManagement.layer.stemLayer.group();
+	stem.addClass('clickable');
+	stem.data({ id:floral.id });
+	stem.click(() =>{
+		CurveManagement.selectedCurve.push(floral);
+	});
+	drawOutLine( stem, UI.state.trunkHead,UI.state.trunkTail,'#7B5A62', floral.basePath);
+	drawOutLine( stem, UI.state.trunkHead-1,UI.state.trunkTail-1,'#F9F2F4',floral.basePath);
+	drawOutLine( stem, UI.state.trunkHead/1.111,UI.state.trunkTail/1.111, '#CED5D0',floral.basePath);
+	drawOutLine( stem, UI.state.trunkHead/2,UI.state.trunkTail/2, '#9FB9A8',floral.basePath);
+	drawOutLine( stem, UI.state.trunkHead/8,UI.state.trunkTail/8, '#7C8168',floral.basePath);
+}
+function drawOutLine( layer, beginWidth, endWidth, color, basePath){
+	let totalLength = basePath.length;
+
+	let l = 0;
+	let w = (endWidth-beginWidth)/totalLength;
+	let outline = basePath.beziers.map(b => {
+		let d1 = beginWidth + l * w;
+		l += b.length();
+		let d2 = beginWidth + l * w;
+		if(d1 === 0) d1 = 1;
+		return b.outline(d1, d1, d2, d2);
+	});
+	let f = [];
+	let r = [];
+	let fs;
+	let fe;
+	outline.forEach((b,i) => {
+
+		const length = Math.floor(b.curves.length/2 - 1);
+		if (i === 0) fs = b.curves[0];
+		if(i=== outline.length-1) fe = b.curves[length];
+		
+		f = f.concat(b.curves.slice(0, length) );
+		r = r.concat(b.curves.slice(length, b.curves.length));
+	});
+	let pathString = fittedCurveToPathString([fs].concat(f).concat([fe]).concat(r));
+	drawOnPannel( layer, pathString, color );
+}
+function drawOnPannel(pannel, pathString, color){
+	pannel.path( pathString )
+	.fill(color)
+	.stroke({width: 0});
+}
+function fittedCurveToPathString(fittedLineData) {
+	var str = '';
+	//bezier : [ [c0], [c1], [c2], [c3] ]
+	fittedLineData.map(function (bezier, i) {
+		if (i == 0) {
+			str += 'M ' + bezier.points[0].x + ' ' + bezier.points[0].y;
+		}
+
+		str += 'C ' + bezier.points[1].x + ' ' + bezier.points[1].y + ', ' +
+		bezier.points[2].x + ' ' + bezier.points[2].y + ', ' +
+		bezier.points[3].x + ' ' + bezier.points[3].y + ' ';	
+					
+	});
+
+	return str;
+}
+export function	drawFlower(floral){
+	let blackCircle = {
+		cx: floral.flowerPosition.x,
+		cy: floral.flowerPosition.y,
+		r:  UI.state.flowerSize 
+	};
+
+	let g = CurveManagement.layer.flowerLayer.group();
+	g.addClass('clickable');
+	g.data({ id:floral.id });
+	g.click(()=>{
+		CurveManagement.selectedCurve.push(floral);
+	});
+	let flower = g.svg(flowerString);
+	const boundingCircle = flower.node.children[0].children[1].children[0].children[0];
+	const cr = boundingCircle.getAttribute('r');
+
+	const rate = blackCircle.r * 2/cr;
+			
+	flower.transform({
+		scale: rate,
+		cx: cr,
+		cy: cr,
+	}).transform({
+		x: blackCircle.cx,
+		y: blackCircle.cy,
+	}).transform({
+		rotation: 30,
+		cx: cr,
+		cy: cr,
+	});
+}
+export function	drawLeaf(x1, y1, x2, y2, sign, type){
+	// let num = Math.floor(Math.random() * ((6-2)+1) + 1);
+	// let leafString = LeafImage[num];
+	let leafString = LeafImage[type];
+	let g = CurveManagement.layer.leafLayer.group();
+	// g.hide();
+	let leaf = g.svg(leafString);
+	const direct = leaf.node.children[0].getElementById('direct');
+	const direct_x1 = direct.getAttribute('x1');
+	const direct_y1 = direct.getAttribute('y1');
+	const direct_x2 = direct.getAttribute('x2');
+	const direct_y2 = direct.getAttribute('y2');
+
+	const skeletonLength = distance(x1, y1, x2, y2);
+	const directLength = distance(direct_x1, direct_y1, direct_x2, direct_y2);
+
+	const toDeg = 180/Math.PI;
+
+	const redLineAngle = Math.atan2( direct_y2 - direct_y1, direct_x2-direct_x1 )* toDeg;
+	const leafCurveAngle = Math.atan2( y2 - y1, x2 - x1)* toDeg;
+	const roateAngle = (leafCurveAngle - redLineAngle );
+
+	if(sign > 0) 
+		leaf.flip('y').transform({
+			scale: skeletonLength / directLength
+		}).transform({
+			x: x1,
+			y: y1,
+		}).transform({
+			rotation: +roateAngle +180-(leafCurveAngle*2),
+			cx: direct_x1,
+			cy: direct_y1,
+		});
+
+	else
+		leaf.transform({
+			scale: skeletonLength / directLength
+		}).transform({
+			x: x1,
+			y: y1,
+		}).transform({
+			rotation: roateAngle ,
+			cx: direct_x1,
+			cy: direct_y1,
+		});
+}
+
+function distance(x1, y1, x2, y2) {
+	const a = x1 - x2;
+	const b = y1 - y2;
+
+	return Math.sqrt( a*a + b*b );
+}

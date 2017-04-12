@@ -74,7 +74,7 @@ export default class LevelCurve {
 			vy: v.y,
 			T: this.levelParam[level].length,
 			alpha: this.levelParam[level].alpha,
-			sign:1
+			sign:sign
 		});
 		let mag2 = new MagneticCurve({
 			startX: start.x,
@@ -107,25 +107,25 @@ export default class LevelCurve {
 				this.makeGrowthPoints(mag1.controlPoints, level, nextType(type), mag1.bbox() );
 		}
 		//draw mag2 ignore mag1
-		if( Collision.testCollision(mag2.bbox(), CurveManagement.leafCollisionScene, parent, mag1.bbox() ) ){
-			if (level < this.levelParam.length-1 ) this.drawAt(t, b, -1*sign, level+1, type, parent);
-			return;
-		}
-		else
-		{		
-			let curve = mag2.getCurve();
-			const x1 = curve[0][0];
-			const y1 = curve[0][1];
-			const x2 = curve[curve.length-1][0];
-			const y2 = curve[curve.length-1][1];
-			sign = -1*sign;
-			type = nextType(type);
-			this.leafQueue.push({x1, y1, x2, y2, sign, type});
+		// if( Collision.testCollision(mag2.bbox(), CurveManagement.leafCollisionScene, parent, mag1.bbox() ) ){
+		// 	if (level < this.levelParam.length-1 ) this.drawAt(t, b, -1*sign, level+1, type, parent);
+		// 	return;
+		// }
+		// else
+		// {		
+		// 	let curve = mag2.getCurve();
+		// 	const x1 = curve[0][0];
+		// 	const y1 = curve[0][1];
+		// 	const x2 = curve[curve.length-1][0];
+		// 	const y2 = curve[curve.length-1][1];
+		// 	sign = -1*sign;
+		// 	type = nextType(type);
+		// 	this.leafQueue.push({x1, y1, x2, y2, sign, type});
 
-			mag2.drawOn(CurveManagement.layer.debugCurveLayer, level);
+		// 	mag2.drawOn(CurveManagement.layer.debugCurveLayer, level);
 
-			if (level < this.levelParam.length-1 ) this.makeGrowthPoints(mag2.controlPoints, level, nextType(type), mag2.bbox() );
-		}
+		// 	if (level < this.levelParam.length-1 ) this.makeGrowthPoints(mag2.controlPoints, level, nextType(type), mag2.bbox() );
+		// }
 	}
 	growPointOnBasePath(){
 		return this.makeGrowthPoints(this.basePath, 0, 0);
@@ -134,9 +134,11 @@ export default class LevelCurve {
 		CurveManagement[this.id] = this;
 
 		this.makeGrowthPoints(this.basePath, 0, 0);
+		let sign = 1;
 		while(this.mags.length > 0){
 			let { posOnSinglebezier, bezierAtIndex, level, parent, type } = this.mags[0];
-			this.drawAt( posOnSinglebezier, bezierAtIndex,  1, level, type, parent );
+			this.drawAt( posOnSinglebezier, bezierAtIndex,  sign, level, type, parent );
+			sign *= -1;
 
 			this.mags.shift();
 		}
