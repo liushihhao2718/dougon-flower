@@ -29,11 +29,11 @@ export function	drawStem(floral){
 	stem.click(() =>{
 		CurveManagement.selectedCurve.push(floral);
 	});
-	drawOutLine( stem, UI.state.trunkHead,UI.state.trunkTail,'#7B5A62', floral.basePath);
-	drawOutLine( stem, UI.state.trunkHead-1,UI.state.trunkTail-1,'#F9F2F4',floral.basePath);
-	drawOutLine( stem, UI.state.trunkHead/1.111,UI.state.trunkTail/1.111, '#CED5D0',floral.basePath);
-	drawOutLine( stem, UI.state.trunkHead/2,UI.state.trunkTail/2, '#9FB9A8',floral.basePath);
-	drawOutLine( stem, UI.state.trunkHead/8,UI.state.trunkTail/8, '#7C8168',floral.basePath);
+	drawOutLine( stem, UI.state.trunkHead,UI.state.trunkTail,'#7B5A62', floral.curve);
+	drawOutLine( stem, UI.state.trunkHead-1,UI.state.trunkTail-1,'#F9F2F4',floral.curve);
+	drawOutLine( stem, UI.state.trunkHead/1.111,UI.state.trunkTail/1.111, '#CED5D0',floral.curve);
+	drawOutLine( stem, UI.state.trunkHead/2,UI.state.trunkTail/2, '#9FB9A8',floral.curve);
+	drawOutLine( stem, UI.state.trunkHead/8,UI.state.trunkTail/8, '#7C8168',floral.curve);
 }
 function drawOutLine( layer, beginWidth, endWidth, color, basePath){
 	let totalLength = basePath.length;
@@ -121,7 +121,12 @@ export function	drawFlower(floral){
 	});
 }
 export function	drawLeaf(leaf){
-	let x1, y1, x2, y2, sign, type;
+	let x1 = leaf.startX;
+	let y1 = leaf.startY;
+	let x2 = leaf.endX;
+	let y2 = leaf.endY;
+	let sign = leaf.sign;
+	let type = leaf.type;
 
 	let leafString = LeafImage[type];
 	let g = CurveManagement.layer.leafLayer.group();

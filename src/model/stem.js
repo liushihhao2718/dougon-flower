@@ -1,6 +1,4 @@
 import MagneticCurve from './MagneticCurve';
-import * as UI from './UIManagement';
-import CurveManagement from './CurveManagement';
 import { BezierSpline } from './Spline';
 import shortid from 'shortid';
 import nextType from './MarkovLeaf';
@@ -8,21 +6,24 @@ import nextType from './MarkovLeaf';
 export class Floral{
 	constructor(basePath, flowerType='海石榴華', flowerRotation=45){
 		this.id = shortid.generate();
-		this.basePath = basePath;
+		this.curve = basePath;
 		this.flowerType = flowerType;
 		this.flowerRotation = flowerRotation;
-
-		let points = this.basePath.points;
+		this.colliders = ()=>{
+			console.error('wow!!!');
+			return ;
+		};
+		let points = this.curve.points;
 		this.flowerPosition = {
 			x: points[points.length-1][0],
 			y: points[points.length-1][1]
 		};
 	}
 	burgeons(amount){
-		let samples = this.basePath.sample(amount);
+		let samples = this.curve.sample(amount);
 		return samples.map(s => {
 			const {point, direction} = s;
-			return (new Burgeon(point.x, point.y, direction) );
+			return (new Burgeon(point.x, point.y, direction, 0, this) );
 		});
 	}
 }
@@ -33,21 +34,19 @@ export class Burgeon{
 		this.y=y;
 		this.direction = direction;
 		this.parent = parent;
+		this.type = type;
 	}
 
-	germinate(level, sign, ...params){
-		if(level === max) return;
-
+	germinate( length,alpha,sign){
 		let leaf = new Leaf(this.x, this.y, 
 			this.direction.x, this.direction.y,
-
-			level,
-			sign
+			length,
+			alpha,
+			sign,
+			this.type
 		);
 
-		else{
-			return leaf;
-		}
+		return leaf;
 	}
 }
 
@@ -64,23 +63,21 @@ export class Leaf {
 		});
 		this.startX = startX;
 		this.startY = startY;
-		this.endX = mag.getCurve(length-1)[0];
-		this.endY = mag.getCurve(length-1)[1];
+		this.endX = mag.getCurve()[length-1][0];
+		this.endY = mag.getCurve()[length-1][1];
 		this.type = type;
 		this.curve = new BezierSpline(mag.getCurve() );
-		this.boundingBox = mag.bbox();
+		this.colliders = this.curve.colliders;
 	}
 	/*
-		@param segment : number 
+		@param amount : number 
 		number of branch
 	*/
-	burgeons(segment){
-		//currently generate from root
-		//inverse the iterator order to generate from tail
-		let sample = this.curve.sample(segment);
-		// for (var i = sample.length - 1; i >= 0; i--) {
-		// 	yield sample[i];
-		// }
-		return sample.map(p=>new Burgeon(p[0],p[1],));
+	burgeons(amount){
+		let samples = this.curve.sample(amount);
+		return samples.map(s => {
+			const {point, direction} = s;
+			return (new Burgeon(point.x, point.y, direction, nextType(this.type), this) );
+		});
 	}
 }

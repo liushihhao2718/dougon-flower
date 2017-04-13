@@ -1,7 +1,6 @@
 // import LevelCurve from '../model/LevelCurve';
 import {BezierSpline} from '../model/Spline';
 import {Floral} from '../model/stem';
-import * as UI from '../model/UIManagement';
 import CurveManagement from '../model/CurveManagement';
 import {drawFlower, drawStem, drawLeaf} from '../model/Drawer';
 const error = 100;

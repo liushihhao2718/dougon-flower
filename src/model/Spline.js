@@ -46,6 +46,8 @@ export class BezierSpline {
 				return {point, direction};
 			});
 		};
+
+		this.colliders = this.controlPoints;
 	}
 	svgString() {
 		var str = '';

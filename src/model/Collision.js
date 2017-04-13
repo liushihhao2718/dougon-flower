@@ -4,21 +4,25 @@ let inside = require('point-in-polygon');
 
 
 export function testCollision(test_bbox, bboxes, ...ignore){
-	let isCollision = false;
+	// let isCollision = false;
 
 	// if(!insideBound(test_bbox)) return true;
-	if(!rectInsidePolygon(test_bbox)) return true;
+	const dougon = dougonBoundingNodes[ UI.state.bound ];
+	if(!polygonInsidePolygon(test_bbox, dougon)) return true;
 
-	for (var i = 0; i < bboxes.length; i++) {
-		if (ignore.includes( bboxes[i] )) continue; 
-		isCollision = aabbCollision(test_bbox, bboxes[i]);
-		if(isCollision)break;
-	}
-	if( !isCollision  && !bboxes.includes(test_bbox) ) {
-		bboxes.push(test_bbox);
-	} 
+	return !!bboxes.find(poly=> !ignore.includes(poly) && polygonCollision(test_bbox, poly));
+
+	// for (var i = 0; i < bboxes.length; i++) {
+	// 	if (ignore.includes( bboxes[i] )) continue; 
+	// 	// isCollision = aabbCollision(test_bbox, bboxes[i]);
+	// 	isCollision = polygonCollision(test_bbox, bboxes[i]);
+	// 	if(isCollision)break;
+	// }
+	// if( !isCollision  && !bboxes.includes(test_bbox) ) {
+	// 	bboxes.push(test_bbox);
+	// } 
 	
-	return isCollision;
+	// return isCollision;
 }
 
 export function aabbCollision(rect1, rect2){
@@ -31,6 +35,11 @@ export function aabbCollision(rect1, rect2){
    );
 }
 
+export function polygonCollision(polygon1, polygon2){
+
+	return polygonInsidePolygon(polygon1, polygon2) 
+		|| polygonInsidePolygon(polygon2, polygon1);
+}
 export function bezierIntersects(polyBezier, others){
 	let flag = false;
 	for (var i = 0; i < others.length; i++) {
@@ -43,7 +52,9 @@ export function bezierIntersects(polyBezier, others){
 	}
 	return flag;
 }
-
+function polygonInsidePolygon(poly,fixedPoly){
+	return !!poly.find(p => inside(p, fixedPoly));
+}
 function rectInsidePolygon(rect){
 	const polygon = dougonBoundingNodes[ UI.state.bound ];
 	let rectPoints = [
