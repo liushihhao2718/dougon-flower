@@ -34,7 +34,7 @@ function PaintControl(pannel) {
 		// floral.draw();
 		let floral = new Floral(smoothBizer);
 		CurveManagement.floralScene.push(floral);
-		drawFlower(floral);
+		// drawFlower(floral);
 		drawStem(floral);
 		clearRawData();
 	};

@@ -47,20 +47,31 @@ function drawOutLine( layer, beginWidth, endWidth, color, basePath){
 		if(d1 === 0) d1 = 1;
 		return b.outline(d1, d1, d2, d2);
 	});
+	// outline.forEach(c => c.curves.forEach(bezier=>{
+	// 	let str = '';
+	// 	str += 'M ' + bezier.points[0].x + ' ' + bezier.points[0].y;
+	// 	str += 'C ' + bezier.points[1].x + ' ' + bezier.points[1].y + ', ' +
+	// 	bezier.points[2].x + ' ' + bezier.points[2].y + ', ' +
+	// 	bezier.points[3].x + ' ' + bezier.points[3].y + ' ';
+	// 	// let pathString = svgPathString(b);
+	// 	drawOnPannel( layer, str, color );
+	// }));
 	let f = [];
 	let r = [];
-	let fs;
-	let fe;
-	outline.forEach((b,i) => {
+	let head=outline[0].curves[0];
+	let tail;
+	const lastPath = outline[outline.length-1];
+	tail = lastPath.curves[lastPath.curves.length/2];
 
-		const length = Math.floor(b.curves.length/2 - 1);
-		if (i === 0) fs = b.curves[0];
-		if(i=== outline.length-1) fe = b.curves[length];
-		
-		f = f.concat(b.curves.slice(0, length) );
-		r = r.concat(b.curves.slice(length, b.curves.length));
+	outline.forEach(b => {
+		const length = Math.floor(b.curves.length/2)- 1;
+		f = f.concat(b.curves.slice(1, length+1));
+		r = r.concat(b.curves.slice(length+2).reverse());
 	});
-	let pathString = fittedCurveToPathString([fs].concat(f).concat([fe]).concat(r));
+	let fullPath = [].concat([head],f,[tail], r.reverse());
+	
+
+	let pathString = svgPathString(fullPath);
 	drawOnPannel( layer, pathString, color );
 }
 function drawOnPannel(pannel, pathString, color){
@@ -68,10 +79,10 @@ function drawOnPannel(pannel, pathString, color){
 	.fill(color)
 	.stroke({width: 0});
 }
-function fittedCurveToPathString(fittedLineData) {
+function svgPathString(fittedLineData) {
 	var str = '';
 	//bezier : [ [c0], [c1], [c2], [c3] ]
-	fittedLineData.map(function (bezier, i) {
+	fittedLineData.forEach(function (bezier, i) {
 		if (i == 0) {
 			str += 'M ' + bezier.points[0].x + ' ' + bezier.points[0].y;
 		}
