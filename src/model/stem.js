@@ -1,8 +1,9 @@
-import MagneticCurve from '../model/MagneticCurve';
-import * as Collision from '../model/Collision';
-import * as UI from '../model/UIManagement';
+import MagneticCurve from './MagneticCurve';
+import * as UI from './UIManagement';
 import CurveManagement from './CurveManagement';
-let shortid = require('shortid');
+import { BezierSpline } from './Spline';
+import shortid from 'shortid';
+import nextType from './MarkovLeaf';
 
 export class Floral{
 	constructor(basePath, flowerType='海石榴華', flowerRotation=45){
@@ -19,55 +20,55 @@ export class Floral{
 	}
 	burgeons(amount){
 		let samples = this.basePath.sample(amount);
-		let burgeons = [];
-		samples.forEach(s => {
-			const {posOnSinglebezier, bezierIndex} = s;
-			let bezier = this.basePath[ bezierIndex ];
-			let point = bezier.get( posOnSinglebezier );
-			let direction = bezier.derivative( posOnSinglebezier );
-
-			burgeons.push( new Burgeon(point[0], point[1], direction) );
+		return samples.map(s => {
+			const {point, direction} = s;
+			return (new Burgeon(point.x, point.y, direction) );
 		});
 	}
 }
+
 export class Burgeon{
-	constructor(x,y,direction, parent){
+	constructor(x,y,direction,type,parent){
 		this.x=x;
 		this.y=y;
 		this.direction = direction;
 		this.parent = parent;
 	}
 
-	germinate(level, max, sign){
+	germinate(level, sign, ...params){
 		if(level === max) return;
 
-		let stem = new Stem(this.x, this.y, 
+		let leaf = new Leaf(this.x, this.y, 
 			this.direction.x, this.direction.y,
+
 			level,
 			sign
 		);
 
-		if( Collision.testCollision(stem.boundingBox, CurveManagement.leafCollisionScene, this.parent )){
-			return this.germinate(level+1 , max, sign);
-		}else{
-			return stem;
+		else{
+			return leaf;
 		}
 	}
 }
 
-export class Stem {
-	constructor(startX,startY,vx,vy,level,sign) {
-		const levelParam = UI.state.levelCurve[level];
-
-		this.curve = new MagneticCurve({
+export class Leaf {
+	constructor(startX,startY,vx,vy,length, alpha, sign,type) {
+		let mag = new MagneticCurve({
 			startX,
 			startY,
 			vx,
 			vy,
-			T: levelParam.length,
-			alpha:levelParam.alpha,
+			T: length,
+			alpha,
 			sign
 		});
+		this.startX = startX;
+		this.startY = startY;
+		this.endX = mag.getCurve(length-1)[0];
+		this.endY = mag.getCurve(length-1)[1];
+		this.type = type;
+		this.curve = new BezierSpline(mag.getCurve() );
+		this.boundingBox = mag.bbox();
 	}
 	/*
 		@param segment : number 
@@ -80,34 +81,6 @@ export class Stem {
 		// for (var i = sample.length - 1; i >= 0; i--) {
 		// 	yield sample[i];
 		// }
-		return sample;
+		return sample.map(p=>new Burgeon(p[0],p[1],));
 	}
-	
-	get boundingBox(){
-		delete this.boundingBox;
-		return this.boundingBox = makeBBox( this.getCurve() );
-	}
-}
-
-function makeBBox(points){
-	let minX = Number.MAX_VALUE;
-	let minY = Number.MAX_VALUE;
-	let maxX = Number.MIN_VALUE;
-	let maxY = Number.MIN_VALUE;
-	points.forEach(p => {
-		let x = p[0];
-		let y = p[1];
-
-		if(x < minX) minX = x;
-		if(y < minY) minY = y;
-		if(x > maxX) maxX = x;
-		if(y > maxY) maxY = y;
-	});
-
-	return {
-		x: minX,
-		y: minY,
-		width: maxX - minX,
-		height: maxY - minY
-	};
 }

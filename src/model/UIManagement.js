@@ -28,7 +28,7 @@ export let state = {
 			branches: 2
 		}
 	],
-	bound: '令栱',
+	bound: '撩擔方',
 	tool:'paint',
 	show:{
 		'debugCurveLayer':false	

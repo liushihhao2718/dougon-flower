@@ -1,7 +1,7 @@
 import CurveManagement from './CurveManagement';
 import * as UI from './UIManagement';
-let flowerString = require('../images/海石榴心.svg');
-
+import flowerString from '../images/海石榴心.svg';
+import LeafImage from '../images/LeafImage';
 
 export function	draw(){
 	CurveManagement[this.id] = this;
@@ -47,15 +47,7 @@ function drawOutLine( layer, beginWidth, endWidth, color, basePath){
 		if(d1 === 0) d1 = 1;
 		return b.outline(d1, d1, d2, d2);
 	});
-	// outline.forEach(c => c.curves.forEach(bezier=>{
-	// 	let str = '';
-	// 	str += 'M ' + bezier.points[0].x + ' ' + bezier.points[0].y;
-	// 	str += 'C ' + bezier.points[1].x + ' ' + bezier.points[1].y + ', ' +
-	// 	bezier.points[2].x + ' ' + bezier.points[2].y + ', ' +
-	// 	bezier.points[3].x + ' ' + bezier.points[3].y + ' ';
-	// 	// let pathString = svgPathString(b);
-	// 	drawOnPannel( layer, str, color );
-	// }));
+
 	let f = [];
 	let r = [];
 	let head=outline[0].curves[0];
@@ -68,6 +60,7 @@ function drawOutLine( layer, beginWidth, endWidth, color, basePath){
 		f = f.concat(b.curves.slice(1, length+1));
 		r = r.concat(b.curves.slice(length+2).reverse());
 	});
+
 	let fullPath = [].concat([head],f,[tail], r.reverse());
 	
 
@@ -127,14 +120,14 @@ export function	drawFlower(floral){
 		cy: cr,
 	});
 }
-export function	drawLeaf(x1, y1, x2, y2, sign, type){
-	// let num = Math.floor(Math.random() * ((6-2)+1) + 1);
-	// let leafString = LeafImage[num];
+export function	drawLeaf(leaf){
+	let x1, y1, x2, y2, sign, type;
+
 	let leafString = LeafImage[type];
 	let g = CurveManagement.layer.leafLayer.group();
 	// g.hide();
-	let leaf = g.svg(leafString);
-	const direct = leaf.node.children[0].getElementById('direct');
+	let leafSVG = g.svg(leafString);
+	const direct = leafSVG.node.children[0].getElementById('direct');
 	const direct_x1 = direct.getAttribute('x1');
 	const direct_y1 = direct.getAttribute('y1');
 	const direct_x2 = direct.getAttribute('x2');
@@ -150,7 +143,7 @@ export function	drawLeaf(x1, y1, x2, y2, sign, type){
 	const roateAngle = (leafCurveAngle - redLineAngle );
 
 	if(sign > 0) 
-		leaf.flip('y').transform({
+		leafSVG.flip('y').transform({
 			scale: skeletonLength / directLength
 		}).transform({
 			x: x1,
@@ -162,7 +155,7 @@ export function	drawLeaf(x1, y1, x2, y2, sign, type){
 		});
 
 	else
-		leaf.transform({
+		leafSVG.transform({
 			scale: skeletonLength / directLength
 		}).transform({
 			x: x1,

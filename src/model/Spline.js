@@ -26,7 +26,7 @@ export class BezierSpline {
 			for (let i = 1; i <= density; i++) {
 				burgeons.push(pos * i);
 			}
-			burgeons.forEach(i => {
+			return burgeons.map(i => {
 				if( totalLength === 0) return;
 
 				let bezierIndex = 0;
@@ -39,10 +39,12 @@ export class BezierSpline {
 				let bezierAtIndex = Bs[bezierIndex];
 				let posOnSinglebezier = pos / bezierAtIndex.length();
 
-				burgeons.push({posOnSinglebezier, bezierIndex});
-			});
+				let bezier = Bs[ bezierIndex ];
+				let point = bezier.get( posOnSinglebezier );
+				let direction = bezier.derivative( posOnSinglebezier );
 
-			return burgeons;
+				return {point, direction};
+			});
 		};
 	}
 	svgString() {

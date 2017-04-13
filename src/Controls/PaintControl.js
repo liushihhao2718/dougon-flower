@@ -1,9 +1,9 @@
-import LevelCurve from '../model/LevelCurve';
+// import LevelCurve from '../model/LevelCurve';
 import {BezierSpline} from '../model/Spline';
 import {Floral} from '../model/stem';
 import * as UI from '../model/UIManagement';
 import CurveManagement from '../model/CurveManagement';
-import {drawFlower, drawStem} from '../model/Drawer';
+import {drawFlower, drawStem, drawLeaf} from '../model/Drawer';
 const error = 100;
 
 function PaintControl(pannel) {
@@ -34,8 +34,13 @@ function PaintControl(pannel) {
 		// floral.draw();
 		let floral = new Floral(smoothBizer);
 		CurveManagement.floralScene.push(floral);
-		// drawFlower(floral);
+		drawFlower(floral);
 		drawStem(floral);
+
+
+		let stems = CurveManagement.growBranches();
+
+		stems.forEach(s => drawLeaf(s) );
 		clearRawData();
 	};
 
