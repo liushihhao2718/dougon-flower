@@ -9,10 +9,7 @@ export class Floral{
 		this.curve = basePath;
 		this.flowerType = flowerType;
 		this.flowerRotation = flowerRotation;
-		this.colliders = ()=>{
-			console.error('wow!!!');
-			return ;
-		};
+		this.colliders = undefined;
 		let points = this.curve.points;
 		this.flowerPosition = {
 			x: points[points.length-1][0],
@@ -63,11 +60,15 @@ export class Leaf {
 		});
 		this.startX = startX;
 		this.startY = startY;
-		this.endX = mag.getCurve()[length-1][0];
-		this.endY = mag.getCurve()[length-1][1];
+		const lastOne = mag.getCurve().length -1;
+		this.endX = mag.getCurve()[lastOne][0];
+		this.endY = mag.getCurve()[lastOne][1];
 		this.type = type;
 		this.curve = new BezierSpline(mag.getCurve() );
 		this.colliders = this.curve.colliders;
+		this.sign = sign;
+
+		this.mag = mag;
 	}
 	/*
 		@param amount : number 

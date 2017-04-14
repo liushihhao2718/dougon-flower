@@ -47,7 +47,7 @@ export class BezierSpline {
 			});
 		};
 
-		this.colliders = this.controlPoints;
+		this.colliders = this.controlPoints.reduce((acc, val)=>acc.concat(val),[]);
 	}
 	svgString() {
 		var str = '';

@@ -10,6 +10,8 @@ function PaintControl(pannel) {
 	let paintingPolyLine = undefined;	
 
 	this.start = function( point ) {
+				// clearRawData();
+
 		rawPointData.push( point );
 		paintingPolyLine = pannel.polyline().fill('none').stroke({ width: 1 });
 
@@ -51,7 +53,7 @@ function PaintControl(pannel) {
 		CurveManagement.layer.debugCurveLayer.path( pathString ).fill('none').stroke({ width: 3 }).stroke('#f06');
 	}
 	function clearRawData(){
-		rawPointData.length = 0;
+		rawPointData = [];
 		paintingPolyLine.remove();
 	}	
 }

@@ -128,6 +128,8 @@ export function	drawLeaf(leaf){
 	let sign = leaf.sign;
 	let type = leaf.type;
 
+	leaf.mag.drawOn(CurveManagement.layer.debugCurveLayer, leaf.level);
+
 	let leafString = LeafImage[type];
 	let g = CurveManagement.layer.leafLayer.group();
 	// g.hide();

@@ -15,7 +15,7 @@ export let state = {
 		{
 			length: 100,
 			alpha: 0.9,
-			branches: 10
+			branches: 3
 		},
 		{
 			length: 62,
