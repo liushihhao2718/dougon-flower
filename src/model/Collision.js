@@ -5,7 +5,8 @@ let inside = require('point-in-polygon');
 
 export function testCollision(test_bbox, bboxes, ...ignore){
 	const dougon = dougonBoundingNodes[ UI.state.bound ];
-	if(!polygonInsidePolygon(test_bbox, dougon)) return true;
+	const all_inside = true;
+	if(!polygonInsidePolygon(test_bbox, dougon, all_inside)) return true;
 
 	return !!bboxes.find(poly=> !ignore.includes(poly) && polygonCollision(test_bbox, poly));
 }
@@ -37,8 +38,10 @@ export function bezierIntersects(polyBezier, others){
 	}
 	return flag;
 }
-function polygonInsidePolygon(poly,fixedPoly){
-	return !!poly.find(p => inside(p, fixedPoly));
+function polygonInsidePolygon(poly,fixedPoly, all_inside){
+	return all_inside?
+		poly.every(p => inside(p, fixedPoly))
+		:!!poly.find(p => inside(p, fixedPoly));
 }
 function rectInsidePolygon(rect){
 	const polygon = dougonBoundingNodes[ UI.state.bound ];

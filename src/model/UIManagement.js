@@ -7,6 +7,7 @@ const colorMap = require('../color/colorHex.json');
 
 let gui, folders = [];
 let controls = [];
+let leafControls = [];
 export let state = {
 	flowerSize: 90,
 	trunkHead: 5,
@@ -65,10 +66,8 @@ export function setGUI(){
 	levelFolder(0);
 	levelFolder(1);
 	levelFolder(2);
-	// levelFolder(3);
 
-	setOnChange(controls);
-
+	setOnChange(controls, leafControls);
 
 	let colorControl = gui.add(state, 'color', ['青緣紅地', '綠緣青地', '鋪地捲成']);
 	colorControl.onChange(value => changeColor(value));
@@ -80,29 +79,33 @@ export function setGUI(){
 
 function levelFolder(index){
 	let folder = gui.addFolder(`Level ${index}`);
-	controls.push( folder.add(state.levelCurve[index], 'length',10,500) );
-	controls.push( folder.add(state.levelCurve[index], 'alpha') );
-	controls.push( folder.add(state.levelCurve[index], 'branches').step(1) );
+	leafControls.push( folder.add(state.levelCurve[index], 'length',10,500) );
+	leafControls.push( folder.add(state.levelCurve[index], 'alpha') );
+	leafControls.push( folder.add(state.levelCurve[index], 'branches').step(1) );
 	folders.push(folder);
 }
 
-function setOnChange(controls){
+function setOnChange(controls, leafControls){
 	controls.forEach( c => {
 		c.onChange( () => {
-			if( CurveManagement.selectedCurve.length === 1 ){
-				CurveManagement.selectedCurve[0].redraw();
-				changeColor( state.color );
-			}
+			CurveManagement.redrawFlower();
+			changeColor( state.color );
+		});
+	});
+	leafControls.forEach( c => {
+		c.onChange( () => {
+			CurveManagement.draw();
+			changeColor( state.color );
 		});
 	});
 }
 
 function setBounding(value){
 	let svgString = dougonBounding[value];
-	clearAllLayer();
-	CurveManagement.scene.length = 0;
+	CurveManagement.clearAllLayer();
+	CurveManagement.clearScene();
+
 	CurveManagement.layer.dougonLayer.path(svgString).addClass('background');
-	CurveManagement.leafCollisionScene.length = 0;
 
 	let backgroundColorKey = styleMap['五彩遍裝'][state.color].background;
 	state.flowerSize = dougonBoundingParam[value].flowerSize;
@@ -112,10 +115,6 @@ function setBounding(value){
 	gui.__controllers[3].updateDisplay();
 	gui.__controllers[4].updateDisplay();
 	changeBGColor('background',colorMap[backgroundColorKey]);
-}
-
-function clearAllLayer() {
-	Object.values(CurveManagement.layer).forEach( layer => layer.clear() );
 }
 
 function changeColor(value) {

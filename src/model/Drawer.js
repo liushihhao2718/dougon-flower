@@ -98,14 +98,17 @@ export function	drawFlower(floral){
 	let g = CurveManagement.layer.flowerLayer.group();
 	g.addClass('clickable');
 	g.data({ id:floral.id });
-	g.click(()=>{
-		CurveManagement.selectedCurve.push(floral);
-	});
 	let flower = g.svg(flowerString);
 	const boundingCircle = flower.node.children[0].children[1].children[0].children[0];
+
+	g.click(()=>{
+		CurveManagement.selectedCurve = floral;
+		console.log(`${floral.id} clicked`);
+		CurveManagement.drawHint();
+	});
 	const cr = boundingCircle.getAttribute('r');
 
-	const rate = blackCircle.r * 2/cr;
+	const rate = blackCircle.r/cr;
 			
 	flower.transform({
 		scale: rate,
@@ -128,7 +131,7 @@ export function	drawLeaf(leaf){
 	let sign = leaf.sign;
 	let type = leaf.type;
 
-	leaf.mag.drawOn(CurveManagement.layer.debugCurveLayer, leaf.level);
+	// leaf.mag.drawOn(CurveManagement.layer.debugCurveLayer, leaf.level);
 
 	let leafString = LeafImage[type];
 	let g = CurveManagement.layer.leafLayer.group();
@@ -174,6 +177,12 @@ export function	drawLeaf(leaf){
 		});
 }
 
+export 	function drawBasePath(pathString){
+	CurveManagement.layer.debugCurveLayer.path( pathString ).fill('none').stroke({ width: 3 }).stroke('#f06');
+}
+export function drawPolygon(polygon){
+	CurveManagement.layer.debugCurveLayer.polygon().plot(polygon).fill('none').stroke({ width: 1,color:'red' });
+}
 function distance(x1, y1, x2, y2) {
 	const a = x1 - x2;
 	const b = y1 - y2;

@@ -4,7 +4,7 @@ import shortid from 'shortid';
 import nextType from './MarkovLeaf';
 
 export class Floral{
-	constructor(basePath, flowerType='海石榴華', flowerRotation=45){
+	constructor(basePath, r,flowerType='海石榴華', flowerRotation=45){
 		this.id = shortid.generate();
 		this.curve = basePath;
 		this.flowerType = flowerType;
@@ -13,7 +13,8 @@ export class Floral{
 		let points = this.curve.points;
 		this.flowerPosition = {
 			x: points[points.length-1][0],
-			y: points[points.length-1][1]
+			y: points[points.length-1][1],
+			r
 		};
 	}
 	burgeons(amount){
