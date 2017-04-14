@@ -1,8 +1,9 @@
 import fitCurve from 'fit-curve';
 import Bezier from 'bezier-js';
+let glm = require('glm-js');
 
 export class BezierSpline {
-	constructor(points, error){
+	constructor(points, error=50){
 		this.points = points;
 		this.controlPoints = fitCurve(points, error);//[ [c0,c1,c2,c3], ... ]
 		this.beziers = this.controlPoints.map(b =>	
@@ -47,7 +48,10 @@ export class BezierSpline {
 			});
 		};
 
-		this.colliders = this.controlPoints.reduce((acc, val)=>acc.concat(val),[]);
+		this.colliders = this.controlPoints.reduce((acc, val)=>{
+			let collider = makeCollider(val);
+			return acc.concat( collider );
+		},[]);
 	}
 	svgString() {
 		var str = '';
@@ -65,4 +69,24 @@ export class BezierSpline {
 
 		return str;
 	}
+}
+function makeCollider(controlPoint){
+	let c0 = glm.vec2(controlPoint[0][0], controlPoint[0][1]);
+	let c1 = glm.vec2(controlPoint[1][0], controlPoint[1][1]);
+	let c2 = glm.vec2(controlPoint[2][0], controlPoint[2][1]);
+	let c3 = glm.vec2(controlPoint[3][0], controlPoint[3][1]);
+
+	let proj_C1 = reflecttPoint(c0,c1,c3 );
+	let proj_C2 = reflecttPoint(c0,c2,c3 );
+
+	let collider = controlPoint.concat([proj_C2, proj_C1]);
+	return collider;
+}
+function reflecttPoint(p0,p1,p2){
+	let a = glm.sub(p1,p0);
+	let b = glm.normalize(glm.sub(p2,p0));
+	let proj_a_b = glm.mul( b , glm.dot(a, b) );
+	let reflect = glm.sub( glm.mul(proj_a_b,2),a );
+	let reflect_p = glm.add(p1, reflect);
+	return [ reflect_p.x, reflect_p.y ];
 }

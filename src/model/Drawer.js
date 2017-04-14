@@ -92,7 +92,7 @@ export function	drawFlower(floral){
 	let blackCircle = {
 		cx: floral.flowerPosition.x,
 		cy: floral.flowerPosition.y,
-		r:  UI.state.flowerSize 
+		r:  floral.flowerPosition.r
 	};
 
 	let g = CurveManagement.layer.flowerLayer.group();
@@ -102,7 +102,7 @@ export function	drawFlower(floral){
 	const boundingCircle = flower.node.children[0].children[1].children[0].children[0];
 
 	g.click(()=>{
-		CurveManagement.selectedCurve = floral;
+		CurveManagement.selectedCurve.push(floral);
 		console.log(`${floral.id} clicked`);
 		CurveManagement.drawHint();
 	});

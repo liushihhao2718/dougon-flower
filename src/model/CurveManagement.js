@@ -24,15 +24,16 @@ export default {
 
 				let leaf = burgeon.germinate(levelParam.length,levelParam.alpha, sign=-1*sign);
 
-				if( Collision.testCollision(leaf.colliders, leafCollisionScene, burgeon.parent.colliders )){
-					nextLevelBurgeons.push(burgeon);
-				}
-				else{
+				// if( Collision.testCollision(leaf.colliders, leafCollisionScene, this.floralScene.map(f=>f.flowerPosition),burgeon.parent.colliders )){
+					// nextLevelBurgeons.push(burgeon);
+				// }
+				// else{
 					leafDrawingQueue.push(leaf);
 					leafCollisionScene.push(leaf.colliders);
-					burgeons = burgeons.concat( leaf.burgeons( levelParam.branches ) );
-				}
+					// burgeons = burgeons.concat( leaf.burgeons( levelParam.branches ) );
+				// }
 			}
+			burgeons = burgeons.concat( nextLevelBurgeons );
 		}
 		
 
@@ -61,22 +62,32 @@ export default {
 			stems.forEach(s => Drawer.drawLeaf(s) );
 			stems.forEach(s => Drawer.drawPolygon(s.colliders) );
 		});
+		this.drawHint();
+
 	},
 	redrawFlower(){
 		this.layer.flowerLayer.clear();
+		this.layer.stemLayer.clear();
+
 		this.floralScene.forEach(floral=>{
 
 			Drawer.drawFlower(floral);
 			Drawer.drawStem(floral);
 			Drawer.drawBasePath(floral.curve.svgString());
 		});
+		this.drawHint();
 	},
 	drawHint(){
 		this.layer.hintLayer.clear();
-		const position = this.selectedCurve.flowerPosition;
-		this.layer.hintLayer.circle(position.r * 2)
-			.cx(position.x).cy(position.y)
-			.fill('none').stroke({color:'red'});
+
+		for(let floral of this.selectedCurve){
+			const position = floral.flowerPosition;
+
+			this.layer.hintLayer.circle(position.r * 2)
+				.cx(position.x).cy(position.y)
+				.fill('none').stroke({color:'orange', width:10});
+		}
+		
 	},
 	clearScene(){
 		this.floralScene.length = [];

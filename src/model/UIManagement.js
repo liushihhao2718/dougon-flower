@@ -9,7 +9,7 @@ let gui, folders = [];
 let controls = [];
 let leafControls = [];
 export let state = {
-	flowerSize: 90,
+	flowerSize: 100,
 	trunkHead: 5,
 	trunkTail: 30,
 	levelCurve :[
@@ -56,12 +56,20 @@ export function setGUI(){
 	let c0 = gui.add(state, 'tool', ['paint', 'bound', 'select']);
 	let c1 = gui.add(state, 'trunkHead', 1, 20);
 	let c2 = gui.add(state, 'trunkTail', 5, 40);
-	let c3 = gui.add(state, 'flowerSize', 10, 80);
+	let c3 = gui.add(state, 'flowerSize', 10, 200);
 
 	controls.push(c0);
 	controls.push(c1);
 	controls.push(c2);
-	controls.push(c3);
+
+	c3.onChange(r =>{
+		for(let floral of CurveManagement.selectedCurve){
+			floral.flowerPosition.r = r;	
+		}
+		
+		CurveManagement.draw();
+		changeColor( state.color );
+	});
 
 	levelFolder(0);
 	levelFolder(1);

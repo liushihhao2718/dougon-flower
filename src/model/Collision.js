@@ -3,12 +3,12 @@ import {dougonBoundingNodes} from '../images/dougonBounding';
 let inside = require('point-in-polygon');
 
 
-export function testCollision(test_bbox, bboxes, ...ignore){
+export function testCollision(test_polygon, polygons, circles, ...ignore){
 	const dougon = dougonBoundingNodes[ UI.state.bound ];
 	const all_inside = true;
-	if(!polygonInsidePolygon(test_bbox, dougon, all_inside)) return true;
-
-	return !!bboxes.find(poly=> !ignore.includes(poly) && polygonCollision(test_bbox, poly));
+	if(!polygonInsidePolygon(test_polygon, dougon, all_inside)) return true;
+	return !!polygons.find(poly=> !ignore.includes(poly)&& polygonCollision(test_polygon, poly))
+		|| !!circles.find(c => circlePolygonCollision(c, test_polygon) );
 }
 
 export function aabbCollision(rect1, rect2){
@@ -52,4 +52,15 @@ function rectInsidePolygon(rect){
 		[rect.x + rect.width, rect.y + rect.height]
 	];
 	return rectPoints.every(p => inside(p, polygon));
+}
+
+function circlePolygonCollision(circle, polygon) {
+	return !!polygon.find(p => distance(circle.x, circle.y, p[0], p[1]) < circle.r);
+}
+
+function distance(x1, y1, x2, y2) {
+	const a = x1 - x2;
+	const b = y1 - y2;
+
+	return Math.sqrt( a*a + b*b );
 }
