@@ -52,7 +52,6 @@ export default {
 	draw(){
 		this.clearDrawing();
 		this.floralScene.forEach(floral=>{
-
 			Drawer.drawFlower(floral);
 			Drawer.drawStem(floral);
 			Drawer.drawBasePath(floral.curve.svgString());

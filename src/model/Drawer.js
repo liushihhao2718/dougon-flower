@@ -1,7 +1,7 @@
 import CurveManagement from './CurveManagement';
 import * as UI from './UIManagement';
 import flowerString from '../images/海石榴心.svg';
-import LeafImage from '../images/LeafImage';
+import {LeafImage, cap} from '../images/LeafImage';
 
 export function	draw(){
 	CurveManagement[this.id] = this;
@@ -22,6 +22,43 @@ export function	draw(){
 	this.drawStem();
 	this.drawFlower();
 }
+export function drawCap(floral) {
+	let width = UI.state.trunkTail / 2;
+
+	let lastBezier = floral.curve.beziers[floral.curve.beziers.length-1];
+	let normal = lastBezier.normal(1);//{x, y}
+	let lastPoint = lastBezier.get(1);//{x, y}
+	let x1 = lastPoint.x - normal.x * width;
+	let y1 = lastPoint.y - normal.y * width;
+	let x2 = lastPoint.x + normal.x * width;
+	let y2 = lastPoint.y + normal.y * width;
+	let capString = cap;
+	let g = CurveManagement.layer.stemLayer.group();
+	let capSVG = g.svg(capString);
+	let direct = capSVG.node.children[0].getElementById('direct');
+	const direct_x1 = direct.getAttribute('x1');
+	const direct_y1 = direct.getAttribute('y1');
+	const direct_x2 = direct.getAttribute('x2');
+	const direct_y2 = direct.getAttribute('y2');
+
+	const rate = 2 * width / distance(direct_x1, direct_y1, direct_x2, direct_y2);
+
+	const toDeg = 180/Math.PI;
+
+	const redLineAngle = Math.atan2( direct_y2 - direct_y1, direct_x2-direct_x1 )* toDeg;
+	const leafCurveAngle = Math.atan2( y2 - y1, x2 - x1)* toDeg;
+	const roateAngle = (leafCurveAngle - redLineAngle );
+	capSVG.transform({
+		scale: rate
+	}).transform({
+		x: x1,
+		y: y1,
+	}).transform({
+		rotation: roateAngle ,
+		cx: direct_x1,
+		cy: direct_y1,
+	});
+}
 export function	drawStem(floral){
 	let stem = CurveManagement.layer.stemLayer.group();
 	stem.addClass('clickable');
@@ -29,11 +66,20 @@ export function	drawStem(floral){
 	stem.click(() =>{
 		CurveManagement.selectedCurve.push(floral);
 	});
-	drawOutLine( stem, UI.state.trunkHead,UI.state.trunkTail,'#7B5A62', floral.curve);
-	drawOutLine( stem, UI.state.trunkHead-1,UI.state.trunkTail-1,'#F9F2F4',floral.curve);
-	drawOutLine( stem, UI.state.trunkHead/1.111,UI.state.trunkTail/1.111, '#CED5D0',floral.curve);
-	drawOutLine( stem, UI.state.trunkHead/2,UI.state.trunkTail/2, '#9FB9A8',floral.curve);
-	drawOutLine( stem, UI.state.trunkHead/8,UI.state.trunkTail/8, '#7C8168',floral.curve);
+
+	let tailWidth = UI.state.trunkTail;
+	if(floral.aspect == '側面')tailWidth*=0.5;
+	drawOutLine( stem, UI.state.trunkHead,tailWidth,'#7B5A62', floral.curve);
+	// drawOutLine( stem, UI.state.trunkHead-1,UI.state.trunkTail-1,'#F9F2F4',floral.curve);
+	drawOutLine( stem, UI.state.trunkHead/1.111,tailWidth/1.111, '#CED5D0',floral.curve);
+	drawOutLine( stem, UI.state.trunkHead/2,tailWidth/2, '#9FB9A8',floral.curve);
+	drawOutLine( stem, UI.state.trunkHead/8,tailWidth/8, '#7C8168',floral.curve);
+	// drawOutLine( stem, UI.state.trunkHead,UI.state.trunkTail,'#7B5A62', floral.curve);
+	// // drawOutLine( stem, UI.state.trunkHead-1,UI.state.trunkTail-1,'#F9F2F4',floral.curve);
+	// drawOutLine( stem, UI.state.trunkHead/1.111,UI.state.trunkTail/1.111, '#CED5D0',floral.curve);
+	// drawOutLine( stem, UI.state.trunkHead/2,UI.state.trunkTail/2, '#9FB9A8',floral.curve);
+	// drawOutLine( stem, UI.state.trunkHead/8,UI.state.trunkTail/8, '#7C8168',floral.curve);
+
 }
 function drawOutLine( layer, beginWidth, endWidth, color, basePath){
 	let totalLength = basePath.length;
@@ -89,6 +135,11 @@ function svgPathString(fittedLineData) {
 	return str;
 }
 export function	drawFlower(floral){
+
+	if (floral.aspect === '側面') {
+		drawCap(floral);
+		return;
+	}
 	let blackCircle = {
 		cx: floral.flowerPosition.x,
 		cy: floral.flowerPosition.y,
