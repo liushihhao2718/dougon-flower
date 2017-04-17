@@ -87,6 +87,6 @@ function reflecttPoint(p0,p1,p2){
 	let b = glm.normalize(glm.sub(p2,p0));
 	let proj_a_b = glm.mul( b , glm.dot(a, b) );
 	let reflect = glm.sub( glm.mul(proj_a_b,2),a );
-	let reflect_p = glm.add(p1, reflect);
+	let reflect_p = glm.add(p0, reflect);
 	return [ reflect_p.x, reflect_p.y ];
 }

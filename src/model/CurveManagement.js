@@ -24,14 +24,14 @@ export default {
 
 				let leaf = burgeon.germinate(levelParam.length,levelParam.alpha, sign=-1*sign);
 
-				// if( Collision.testCollision(leaf.colliders, leafCollisionScene, this.floralScene.map(f=>f.flowerPosition),burgeon.parent.colliders )){
-					// nextLevelBurgeons.push(burgeon);
-				// }
-				// else{
+				if( Collision.testCollision(leaf.colliders, leafCollisionScene, this.floralScene.map(f=>f.flowerPosition),burgeon.parent.colliders )){
+					nextLevelBurgeons.push(burgeon);
+				}
+				else{
 					leafDrawingQueue.push(leaf);
 					leafCollisionScene.push(leaf.colliders);
-					// burgeons = burgeons.concat( leaf.burgeons( levelParam.branches ) );
-				// }
+					burgeons = burgeons.concat( leaf.burgeons( levelParam.branches ) );
+				}
 			}
 			burgeons = burgeons.concat( nextLevelBurgeons );
 		}

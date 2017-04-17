@@ -151,7 +151,6 @@ export function	drawLeaf(leaf){
 	const redLineAngle = Math.atan2( direct_y2 - direct_y1, direct_x2-direct_x1 )* toDeg;
 	const leafCurveAngle = Math.atan2( y2 - y1, x2 - x1)* toDeg;
 	const roateAngle = (leafCurveAngle - redLineAngle );
-
 	if(sign > 0) 
 		leafSVG.flip('y').transform({
 			scale: skeletonLength / directLength
