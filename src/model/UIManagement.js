@@ -34,7 +34,8 @@ export let state = {
 	show:{
 		'debugCurveLayer':false	
 	},
-	color:'鋪地捲成'
+	color:'鋪地捲成',
+	aspect: '正面'
 };
 
 let features = {
@@ -79,6 +80,9 @@ export function setGUI(){
 
 	let colorControl = gui.add(state, 'color', ['青緣紅地', '綠緣青地', '鋪地捲成']);
 	colorControl.onChange(value => changeColor(value));
+
+	gui.add(state, 'aspect', ['正面', '側面']);
+
 	gui.add(features, 'download');
 	gui.add(features, 'toggleLayer');
 	bound.onChange(value => setBounding(value) );

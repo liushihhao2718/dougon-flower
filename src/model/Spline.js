@@ -76,11 +76,20 @@ function makeCollider(controlPoint){
 	let c2 = glm.vec2(controlPoint[2][0], controlPoint[2][1]);
 	let c3 = glm.vec2(controlPoint[3][0], controlPoint[3][1]);
 
-	let proj_C1 = reflecttPoint(c0,c1,c3 );
-	let proj_C2 = reflecttPoint(c0,c2,c3 );
+	let reflect_C1 = reflecttPoint(c0,c1,c3 );
+	let reflect_C2 = reflecttPoint(c0,c2,c3 );
 
-	let collider = controlPoint.concat([proj_C2, proj_C1]);
+	let collider = controlPoint.concat([reflect_C2, reflect_C1]);
+	[collider[1],collider[5]]=longer(collider[1],collider[5]);
+	[collider[2],collider[4]]=longer(collider[2],collider[4]);
 	return collider;
+}
+function longer(p0,p1){
+	let v0 = glm.vec2(p0[0], p0[1]);
+	let v1 = glm.vec2(p1[0], p1[1]);
+	let a = glm.mul(glm.sub(v0,v1),0.8);
+	let b = glm.mul(glm.add(v0,v1),0.5);
+	return [p0,p1]=[glm.add(b,a).elements,glm.sub(b,a).elements];
 }
 function reflecttPoint(p0,p1,p2){
 	let a = glm.sub(p1,p0);

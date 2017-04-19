@@ -22,9 +22,7 @@ export function aabbCollision(rect1, rect2){
 }
 
 export function polygonCollision(polygon1, polygon2){
-
 	return polygonInsidePolygon(polygon1, polygon2);
-		// || polygonInsidePolygon(polygon2, polygon1);
 }
 export function bezierIntersects(polyBezier, others){
 	let flag = false;
@@ -42,16 +40,6 @@ function polygonInsidePolygon(poly,fixedPoly, all_inside){
 	return all_inside?
 		poly.every(p => inside(p, fixedPoly))
 		:!!poly.find(p => inside(p, fixedPoly));
-}
-function rectInsidePolygon(rect){
-	const polygon = dougonBoundingNodes[ UI.state.bound ];
-	let rectPoints = [
-		[rect.x, rect.y],
-		[rect.x+rect.width, rect.y],
-		[rect.x, rect.y + rect.height],
-		[rect.x + rect.width, rect.y + rect.height]
-	];
-	return rectPoints.every(p => inside(p, polygon));
 }
 
 function circlePolygonCollision(circle, polygon) {

@@ -4,8 +4,7 @@ import shortid from 'shortid';
 import nextType from './MarkovLeaf';
 
 export class Floral{
-	constructor(basePath, r,flowerType='海石榴華', flowerRotation=45, aspect = '側面'){
-		// aspect='正面';
+	constructor(basePath, r,flowerType='海石榴華', aspect = '正面',flowerRotation=45){
 		this.id = shortid.generate();
 		this.curve = basePath;
 		this.flowerType = flowerType;

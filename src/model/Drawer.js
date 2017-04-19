@@ -3,25 +3,6 @@ import * as UI from './UIManagement';
 import flowerString from '../images/海石榴心.svg';
 import {LeafImage, cap} from '../images/LeafImage';
 
-export function	draw(){
-	CurveManagement[this.id] = this;
-
-	this.makeGrowthPoints(this.basePath, 0, 0);
-	let sign = 1;
-	while(this.mags.length > 0){
-		let { posOnSinglebezier, bezierAtIndex, level, parent, type } = this.mags[0];
-		this.drawAt( posOnSinglebezier, bezierAtIndex,  sign, level, type, parent );
-		sign *= -1;
-
-		this.mags.shift();
-	}
-	
-	this.leafQueue.reverse();
-	this.leafQueue.forEach(	({x1, y1, x2, y2, sign, type}) => this.drawLeaf(x1, y1, x2, y2, sign, type) );
-	this.leafQueue.length = 0;
-	this.drawStem();
-	this.drawFlower();
-}
 export function drawCap(floral) {
 	let width = UI.state.trunkTail / 2;
 
@@ -34,6 +15,11 @@ export function drawCap(floral) {
 	let y2 = lastPoint.y + normal.y * width;
 	let capString = cap;
 	let g = CurveManagement.layer.stemLayer.group();
+	g.click(()=>{
+		CurveManagement.selectedCurve.push(floral);
+		console.log(`${floral.id} clicked`);
+		CurveManagement.drawHint();
+	});
 	let capSVG = g.svg(capString);
 	let direct = capSVG.node.children[0].getElementById('direct');
 	const direct_x1 = direct.getAttribute('x1');
@@ -42,12 +28,18 @@ export function drawCap(floral) {
 	const direct_y2 = direct.getAttribute('y2');
 
 	const rate = 2 * width / distance(direct_x1, direct_y1, direct_x2, direct_y2);
+	const boundingCircle = capSVG.node.children[0].getElementById('boundingCircle');
+	const cx = Number(boundingCircle.getAttribute('cx'));
+	const cy = Number(boundingCircle.getAttribute('cy'));
+
+
 
 	const toDeg = 180/Math.PI;
 
 	const redLineAngle = Math.atan2( direct_y2 - direct_y1, direct_x2-direct_x1 )* toDeg;
 	const leafCurveAngle = Math.atan2( y2 - y1, x2 - x1)* toDeg;
 	const roateAngle = (leafCurveAngle - redLineAngle );
+	
 	capSVG.transform({
 		scale: rate
 	}).transform({
@@ -58,7 +50,16 @@ export function drawCap(floral) {
 		cx: direct_x1,
 		cy: direct_y1,
 	});
+
+
+	let matrix = capSVG.node.getAttribute('transform').split(/[^\-\d.]+/).filter(x=>x !== '');
+
+	let pos = multiplyMatrixAndPoint(matrix, [cx,cy,1]);
+	floral.flowerPosition.x = pos[0];
+	floral.flowerPosition.y = pos[1];
+	floral.flowerPosition.r = UI.state.trunkTail;
 }
+
 export function	drawStem(floral){
 	let stem = CurveManagement.layer.stemLayer.group();
 	stem.addClass('clickable');
@@ -70,16 +71,9 @@ export function	drawStem(floral){
 	let tailWidth = UI.state.trunkTail;
 	if(floral.aspect == '側面')tailWidth*=0.5;
 	drawOutLine( stem, UI.state.trunkHead,tailWidth,'#7B5A62', floral.curve);
-	// drawOutLine( stem, UI.state.trunkHead-1,UI.state.trunkTail-1,'#F9F2F4',floral.curve);
 	drawOutLine( stem, UI.state.trunkHead/1.111,tailWidth/1.111, '#CED5D0',floral.curve);
 	drawOutLine( stem, UI.state.trunkHead/2,tailWidth/2, '#9FB9A8',floral.curve);
 	drawOutLine( stem, UI.state.trunkHead/8,tailWidth/8, '#7C8168',floral.curve);
-	// drawOutLine( stem, UI.state.trunkHead,UI.state.trunkTail,'#7B5A62', floral.curve);
-	// // drawOutLine( stem, UI.state.trunkHead-1,UI.state.trunkTail-1,'#F9F2F4',floral.curve);
-	// drawOutLine( stem, UI.state.trunkHead/1.111,UI.state.trunkTail/1.111, '#CED5D0',floral.curve);
-	// drawOutLine( stem, UI.state.trunkHead/2,UI.state.trunkTail/2, '#9FB9A8',floral.curve);
-	// drawOutLine( stem, UI.state.trunkHead/8,UI.state.trunkTail/8, '#7C8168',floral.curve);
-
 }
 function drawOutLine( layer, beginWidth, endWidth, color, basePath){
 	let totalLength = basePath.length;
@@ -209,7 +203,7 @@ export function	drawLeaf(leaf){
 			x: x1,
 			y: y1,
 		}).transform({
-			rotation: +roateAngle +180-(leafCurveAngle*2),
+			rotation: roateAngle +180-(leafCurveAngle*2),
 			cx: direct_x1,
 			cy: direct_y1,
 		});
@@ -238,4 +232,27 @@ function distance(x1, y1, x2, y2) {
 	const b = y1 - y2;
 
 	return Math.sqrt( a*a + b*b );
+}
+function multiplyMatrixAndPoint(matrix, point) {
+  
+	//Give a simple variable name to each part of the matrix, a column and row number
+	var c0r0 = matrix[ 0], c1r0 = matrix[ 2], c2r0 = matrix[ 4];
+	var c0r1 = matrix[ 1], c1r1 = matrix[ 3], c2r1 = matrix[ 5];
+	var c0r2 = 0, c1r2 = 0, c2r2 = 1;
+
+	//Now set some simple names for the point
+	var x = point[0];
+	var y = point[1];
+	var z = point[2];
+
+	//Multiply the point against each part of the 1st column, then add together
+	var resultX = (x * c0r0) + (y * c1r0) + (z * c2r0);
+
+	//Multiply the point against each part of the 2nd column, then add together
+	var resultY = (x * c0r1) + (y * c1r1) + (z * c2r1);
+
+	//Multiply the point against each part of the 3rd column, then add together
+	var resultZ = (x * c0r2) + (y * c1r2) + (z * c2r2);
+
+	return [resultX, resultY, resultZ];
 }

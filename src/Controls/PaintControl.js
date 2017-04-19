@@ -24,8 +24,8 @@ function PaintControl(pannel) {
 			clearRawData();
 			return;
 		}
-
-		CurveManagement.floralScene.push( new Floral(smoothBizer, UI.state.flowerSize) );
+		let aspect = UI.state.aspect;
+		CurveManagement.floralScene.push( new Floral(smoothBizer, UI.state.flowerSize,'海石榴華', aspect) );
 		
 		CurveManagement.draw();
 		clearRawData();
