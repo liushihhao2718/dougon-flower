@@ -31,6 +31,7 @@ export function drawCap(floral) {
 	const boundingCircle = capSVG.node.children[0].getElementById('boundingCircle');
 	const cx = Number(boundingCircle.getAttribute('cx'));
 	const cy = Number(boundingCircle.getAttribute('cy'));
+	const r = Number(boundingCircle.getAttribute('r'));
 
 
 
@@ -57,7 +58,7 @@ export function drawCap(floral) {
 	let pos = multiplyMatrixAndPoint(matrix, [cx,cy,1]);
 	floral.flowerPosition.x = pos[0];
 	floral.flowerPosition.y = pos[1];
-	floral.flowerPosition.r = UI.state.trunkTail;
+	floral.flowerPosition.r = rate * r;
 }
 
 export function	drawStem(floral){
