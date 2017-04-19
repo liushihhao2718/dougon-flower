@@ -2,7 +2,17 @@ import CurveManagement from './CurveManagement';
 import * as UI from './UIManagement';
 import flowerString from '../images/海石榴心.svg';
 import {LeafImage, cap} from '../images/LeafImage';
-
+function handleClick(floral) {
+	if(CurveManagement.selectedCurve.includes(floral)){
+		const index = CurveManagement.selectedCurve.indexOf(floral);
+		CurveManagement.selectedCurve.splice(index, 1);
+	}
+	else{
+		CurveManagement.selectedCurve.push(floral);
+		console.log(`${floral.id} clicked`);
+	}
+	CurveManagement.drawHint();
+}
 export function drawCap(floral) {
 	let width = UI.state.trunkTail / 2;
 
@@ -15,11 +25,7 @@ export function drawCap(floral) {
 	let y2 = lastPoint.y + normal.y * width;
 	let capString = cap;
 	let g = CurveManagement.layer.stemLayer.group();
-	g.click(()=>{
-		CurveManagement.selectedCurve.push(floral);
-		console.log(`${floral.id} clicked`);
-		CurveManagement.drawHint();
-	});
+	g.click(()=> handleClick(floral));
 	let capSVG = g.svg(capString);
 	let direct = capSVG.node.children[0].getElementById('direct');
 	const direct_x1 = direct.getAttribute('x1');
@@ -147,11 +153,7 @@ export function	drawFlower(floral){
 	let flower = g.svg(flowerString);
 	const boundingCircle = flower.node.children[0].children[1].children[0].children[0];
 
-	g.click(()=>{
-		CurveManagement.selectedCurve.push(floral);
-		console.log(`${floral.id} clicked`);
-		CurveManagement.drawHint();
-	});
+	g.click(()=> handleClick(floral));
 	const cr = boundingCircle.getAttribute('r');
 
 	const rate = blackCircle.r/cr;
