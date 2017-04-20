@@ -21,6 +21,7 @@ function setSVGLayer(panel) {
 	let hintLayer = panel.group();
 
 	CurveManagement.layer = {dougonLayer, leafLayer, stemLayer, flowerLayer, debugCurveLayer, hintLayer};
+	
 }
 
 function setControl(_container) {
@@ -30,7 +31,7 @@ function setControl(_container) {
 		bound : new BoundControl(_container),
 		select : undefined
 	};
-
+	
 	const top = _container.node.getBoundingClientRect().top;
 	const left = _container.node.getBoundingClientRect().left;
 

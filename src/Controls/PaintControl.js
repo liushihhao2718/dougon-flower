@@ -25,7 +25,7 @@ function PaintControl(pannel) {
 			return;
 		}
 		let aspect = UI.state.aspect;
-		CurveManagement.floralScene.push( new Floral(smoothBizer, UI.state.flowerSize,'海石榴華', aspect) );
+		CurveManagement.floralScene.push( new Floral(smoothBizer,UI.state.flowerSize, UI.state.trunkHead, UI.state.trunkTail,'海石榴華', aspect) );
 		
 		CurveManagement.draw();
 		clearRawData();

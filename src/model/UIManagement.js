@@ -2,6 +2,7 @@ import * as dat from '../lib/dat.gui';
 import download from '../lib/download';
 import CurveManagement from './CurveManagement';
 import {dougonBounding, dougonBoundingParam} from '../images/dougonBounding';
+
 const styleMap = require('../color/StyleMap.json');
 const colorMap = require('../color/colorHex.json');
 
@@ -32,7 +33,6 @@ export let state = {
 	bound: '撩擔方',
 	tool:'paint',
 	show:{
-		'debugCurveLayer':false	
 	},
 	color:'鋪地捲成',
 	aspect: '正面'
@@ -43,8 +43,7 @@ let features = {
 		let svg = document.getElementsByTagName('svg')[0];
 		download(svg.outerHTML, 'file.svg', 'text/plain');
 	},
-	toggleLayer: function(){
-		let layer = CurveManagement.layer.debugCurveLayer;
+	toggleLayer: function(layer){
 		layer.visible() ? layer.hide() : layer.show();
 	}
 };
@@ -53,16 +52,30 @@ export function setGUI(){
 	gui = new dat.GUI();
 	let bound =	gui.add(state, 'bound', Object.keys(dougonBounding));
 
-
 	let c0 = gui.add(state, 'tool', ['paint', 'bound', 'select']);
 	let c1 = gui.add(state, 'trunkHead', 1, 20);
 	let c2 = gui.add(state, 'trunkTail', 5, 40);
 	let c3 = gui.add(state, 'flowerSize', 10, 200);
 
-	controls.push(c0);
-	controls.push(c1);
-	controls.push(c2);
-
+	// control/s.push(c0);
+	// controls.push(c1);
+	// controls.push(c2);
+	c1.onChange(head =>{
+		for(let floral of CurveManagement.selectedCurve){
+			floral.trunkHead = head;	
+		}
+		
+		CurveManagement.draw();
+		changeColor( state.color );
+	});
+	c2.onChange(tail =>{
+		for(let floral of CurveManagement.selectedCurve){
+			floral.trunkTail = tail;	
+		}
+		
+		CurveManagement.draw();
+		changeColor( state.color );
+	});
 	c3.onChange(r =>{
 		for(let floral of CurveManagement.selectedCurve){
 			floral.flowerPosition.r = r;	
@@ -84,9 +97,19 @@ export function setGUI(){
 	gui.add(state, 'aspect', ['正面', '側面']);
 
 	gui.add(features, 'download');
-	gui.add(features, 'toggleLayer');
 	bound.onChange(value => setBounding(value) );
 	setBounding(state.bound);
+
+
+	let folder = gui.addFolder('Layer');
+	Object.keys(CurveManagement.layer).forEach(key => {
+		let layer = CurveManagement.layer[key];
+		state.show[key] = layer.visible();
+		let control = folder.add(state.show, key);
+		control.onChange(()=>{
+			features.toggleLayer(layer);
+		});
+	});
 }
 
 function levelFolder(index){

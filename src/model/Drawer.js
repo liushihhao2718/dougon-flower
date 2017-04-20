@@ -75,12 +75,14 @@ export function	drawStem(floral){
 		CurveManagement.selectedCurve.push(floral);
 	});
 
-	let tailWidth = UI.state.trunkTail;
-	if(floral.aspect == '側面')tailWidth*=0.5;
-	drawOutLine( stem, UI.state.trunkHead,tailWidth,'#7B5A62', floral.curve);
-	drawOutLine( stem, UI.state.trunkHead/1.111,tailWidth/1.111, '#CED5D0',floral.curve);
-	drawOutLine( stem, UI.state.trunkHead/2,tailWidth/2, '#9FB9A8',floral.curve);
-	drawOutLine( stem, UI.state.trunkHead/8,tailWidth/8, '#7C8168',floral.curve);
+	let trunkHead = floral.trunkHead;
+	let trunkTail = floral.trunkTail;
+	if(floral.aspect == '側面') trunkTail*=0.5;
+
+	drawOutLine( stem, trunkHead, trunkTail,'#7B5A62', floral.curve);
+	drawOutLine( stem, trunkHead/1.111, trunkTail/1.111, '#CED5D0',floral.curve);
+	drawOutLine( stem, trunkHead/2, trunkTail/2, '#9FB9A8',floral.curve);
+	drawOutLine( stem, trunkHead/8, trunkTail/8, '#7C8168',floral.curve);
 }
 function drawOutLine( layer, beginWidth, endWidth, color, basePath){
 	let totalLength = basePath.length;
