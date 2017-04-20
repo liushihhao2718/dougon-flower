@@ -1,5 +1,4 @@
 import CurveManagement from './CurveManagement';
-import * as UI from './UIManagement';
 import flowerString from '../images/海石榴心.svg';
 import {LeafImage, cap} from '../images/LeafImage';
 function handleClick(floral) {
