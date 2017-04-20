@@ -14,7 +14,7 @@ function handleClick(floral) {
 	CurveManagement.drawHint();
 }
 export function drawCap(floral) {
-	let width = UI.state.trunkTail / 2;
+	let width = floral.trunkTail / 2;
 
 	let lastBezier = floral.curve.beziers[floral.curve.beziers.length-1];
 	let normal = lastBezier.normal(1);//{x, y}
@@ -168,7 +168,7 @@ export function	drawFlower(floral){
 		x: blackCircle.cx,
 		y: blackCircle.cy,
 	}).transform({
-		rotation: 30,
+		rotation: floral.flowerRotation,
 		cx: cr,
 		cy: cr,
 	});

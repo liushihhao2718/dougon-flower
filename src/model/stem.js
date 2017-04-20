@@ -4,7 +4,7 @@ import shortid from 'shortid';
 import nextType from './MarkovLeaf';
 
 export class Floral{
-	constructor(basePath, r,trunkHead,trunkTail,flowerType='海石榴華', aspect = '正面',flowerRotation=45){
+	constructor(basePath, r,trunkHead,trunkTail,flowerType='海石榴華', aspect = '正面',flowerRotation=30){
 		this.id = shortid.generate();
 		this.curve = basePath;
 		this.flowerType = flowerType;
@@ -21,6 +21,7 @@ export class Floral{
 		this.aspect = aspect;
 	}
 	burgeons(amount){
+		if (this.curve.length === 0) return;
 		let samples = this.curve.sample(amount);
 		return samples.map(s => {
 			const {point, direction} = s;

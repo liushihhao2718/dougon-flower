@@ -11,7 +11,7 @@ export default {
 		let leafDrawingQueue=[];
 		let leafCollisionScene=[];
 		const amount = UI.state.levelCurve[0].branches;
-		let groupedBurgeons = this.floralScene.map( f=>f.burgeons(amount) );
+		let groupedBurgeons = this.floralScene.map( f=>f.burgeons(amount) ).filter(f => f!==undefined);
 		let burgeons = flatten( groupedBurgeons );
 		let sign = 1;
 		for(let levelParam of UI.state.levelCurve){
@@ -53,6 +53,9 @@ export default {
 		this.clearDrawing();
 		this.floralScene.forEach(floral=>{
 			Drawer.drawFlower(floral);
+			if(!floral.curve.length){
+				return;
+			}
 			Drawer.drawStem(floral);
 			Drawer.drawBasePath(floral.curve.svgString());
 			
@@ -96,3 +99,4 @@ export default {
 function flatten(arr){
 	return arr.reduce((acc, val) => acc.concat( Array.isArray(val) ? flatten(val) : val),[]);
 }
+

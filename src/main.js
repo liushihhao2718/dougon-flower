@@ -1,5 +1,6 @@
 import PaintControl from './Controls/PaintControl';
-import BoundControl from './Controls/BoundControl';
+// import BoundControl from './Controls/BoundControl';
+import FloralControl from './Controls/FloralControl';
 import SVG from 'svg.js';
 import * as UI from './model/UIManagement';
 import CurveManagement from './model/CurveManagement';
@@ -21,14 +22,14 @@ function setSVGLayer(panel) {
 	let hintLayer = panel.group();
 
 	CurveManagement.layer = {dougonLayer, leafLayer, stemLayer, flowerLayer, debugCurveLayer, hintLayer};
-	
 }
 
 function setControl(_container) {
 	let isMouseDown = false;
 	let tools = {
 		paint : new PaintControl(_container),
-		bound : new BoundControl(_container),
+		// bound : new BoundControl(_container),
+		flower : new FloralControl(_container),
 		select : undefined
 	};
 	

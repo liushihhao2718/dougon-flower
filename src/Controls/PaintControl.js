@@ -35,7 +35,6 @@ function PaintControl(pannel) {
 		paintingPolyLine.plot( rawPointData );
 	}
 	
-
 	function clearRawData(){
 		rawPointData = [];
 		paintingPolyLine.remove();
