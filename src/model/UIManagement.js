@@ -140,7 +140,10 @@ function setBounding(value){
 	CurveManagement.clearAllLayer();
 	CurveManagement.clearScene();
 
-	CurveManagement.layer.dougonLayer.path(svgString).addClass('background');
+	if(value === '撩擔方'){
+		CurveManagement.layer.dougonLayer.svg(svgString);
+	}else
+		CurveManagement.layer.dougonLayer.path(svgString).addClass('background');
 
 	let backgroundColorKey = styleMap['五彩遍裝'][state.color].background;
 	state.flowerSize = dougonBoundingParam[value].flowerSize;

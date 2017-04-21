@@ -87,7 +87,7 @@ function makeCollider(controlPoint){
 function longer(p0,p1){
 	let v0 = glm.vec2(p0[0], p0[1]);
 	let v1 = glm.vec2(p1[0], p1[1]);
-	let a = glm.mul(glm.sub(v0,v1),0.8);
+	let a = glm.mul(glm.sub(v0,v1),0.6);
 	let b = glm.mul(glm.add(v0,v1),0.5);
 	return [p0,p1]=[glm.add(b,a).elements,glm.sub(b,a).elements];
 }

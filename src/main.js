@@ -6,7 +6,7 @@ import * as UI from './model/UIManagement';
 import CurveManagement from './model/CurveManagement';
 
 (function(){
-	let draw = SVG('drawing').size(1000, 1000);
+	let draw = SVG('drawing').size(1500, 1000);
 	setSVGLayer(draw);
 	setControl(draw);
 	UI.setGUI();

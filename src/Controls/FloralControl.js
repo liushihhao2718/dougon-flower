@@ -28,7 +28,7 @@ class FloralControl{
 		this.hideHint();
 		let aspect = UI.state.aspect;
 		let rotation = angle(this.startPoint[0], this.startPoint[1], this.endPoint[0], this.endPoint[1]);
-		CurveManagement.floralScene.push(new Floral(new BezierSpline([this.startPoint],0.2), UI.state.flowerSize,0, UI.state.trunkTail,'海石榴華', aspect ,rotation));
+		CurveManagement.floralScene.push(new Floral(new BezierSpline([this.startPoint],0.2), this.radius,0, UI.state.trunkTail,'海石榴華', aspect ,rotation));
 		CurveManagement.draw();
 	}
 	showHint(){
