@@ -2,7 +2,6 @@ import {BezierSpline} from '../model/Spline';
 import {Floral} from '../model/stem';
 import CurveManagement from '../model/CurveManagement';
 import * as UI from '../model/UIManagement';
-//CA
 
 class FloralControl{
 	constructor(pannel){
@@ -22,9 +21,7 @@ class FloralControl{
 		this.endPoint = point;
 		this.updateHint();
 	}
-
 	end(){
-		//this.update(point);
 		this.hideHint();
 		let aspect = UI.state.aspect;
 		let rotation = angle(this.startPoint[0], this.startPoint[1], this.endPoint[0], this.endPoint[1]);

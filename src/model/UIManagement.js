@@ -139,20 +139,17 @@ function setBounding(value){
 	let svgString = dougonBounding[value];
 	CurveManagement.clearAllLayer();
 	CurveManagement.clearScene();
-
-	if(value === '撩擔方'){
-		CurveManagement.layer.dougonLayer.svg(svgString);
-	}else
-		CurveManagement.layer.dougonLayer.path(svgString).addClass('background');
-
-	let backgroundColorKey = styleMap['五彩遍裝'][state.color].background;
+	
+	CurveManagement.layer.dougonLayer.svg(svgString);
+	
 	state.flowerSize = dougonBoundingParam[value].flowerSize;
 	state.trunkHead = dougonBoundingParam[value].trunkHead;
 	state.trunkTail = dougonBoundingParam[value].trunkTail;
 	gui.__controllers[2].updateDisplay();
 	gui.__controllers[3].updateDisplay();
 	gui.__controllers[4].updateDisplay();
-	changeBGColor('background',colorMap[backgroundColorKey]);
+
+	changeColor( state.color );
 }
 
 function changeColor(value) {
