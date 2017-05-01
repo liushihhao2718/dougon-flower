@@ -18,7 +18,7 @@ function SkeletonControl(pannel) {
 	};
 
 	this.end = function() {
-		let smoothBizer = new BezierSpline( rawPointData, error );
+		let smoothBizer = BezierSpline.makeByPoints( rawPointData, error );
 		if(smoothBizer.length == 0) {
 			clearRawData();
 			return;

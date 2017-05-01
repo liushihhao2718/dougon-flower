@@ -1,6 +1,6 @@
 import CurveManagement from './CurveManagement';
 import flowerString from '../images/海石榴心.svg';
-import {LeafImage, cap} from '../images/LeafImage';
+import {LeafImage, cap, leafType, LeafBranch} from '../images/LeafImage';
 function handleClick(floral) {
 	if(CurveManagement.selectedCurve.includes(floral)){
 		const index = CurveManagement.selectedCurve.indexOf(floral);
@@ -84,33 +84,7 @@ export function	drawStem(floral){
 	drawOutLine( stem, trunkHead/8, trunkTail/8, '#7C8168',floral.curve);
 }
 function drawOutLine( layer, beginWidth, endWidth, color, basePath){
-	let totalLength = basePath.length;
-
-	let l = 0;
-	let w = (endWidth-beginWidth)/totalLength;
-	let outline = basePath.beziers.map(b => {
-		let d1 = beginWidth + l * w;
-		l += b.length();
-		let d2 = beginWidth + l * w;
-		if(d1 === 0) d1 = 1;
-		return b.outline(d1, d1, d2, d2);
-	});
-
-	let f = [];
-	let r = [];
-	let head=outline[0].curves[0];
-	let tail;
-	const lastPath = outline[outline.length-1];
-	tail = lastPath.curves[lastPath.curves.length/2];
-
-	outline.forEach(b => {
-		const length = Math.floor(b.curves.length/2)- 1;
-		f = f.concat(b.curves.slice(1, length+1));
-		r = r.concat(b.curves.slice(length+2).reverse());
-	});
-
-	let fullPath = [].concat([head],f,[tail], r.reverse());
-	
+	let fullPath = basePath.outline(beginWidth, endWidth);
 
 	let pathString = svgPathString(fullPath);
 	drawOnPannel( layer, pathString, color );
@@ -182,9 +156,17 @@ export function	drawLeaf(leaf){
 
 	// leaf.mag.drawOn(CurveManagement.layer.debugCurveLayer, leaf.level);
 
-	let leafString = LeafImage[type];
+	let leafString = '';
+	switch(leaf.type.name){
+	case leafType.leaf:
+		leafString = LeafImage[type.order];
+		break;
+	case leafType.leafBranch:
+		leafString = LeafBranch[type.order];
+		break;	
+	}
 	let g = CurveManagement.layer.leafLayer.group();
-	// g.hide();
+
 	let leafSVG = g.svg(leafString);
 	const direct = leafSVG.node.children[0].getElementById('direct');
 	const direct_x1 = direct.getAttribute('x1');
@@ -231,6 +213,7 @@ export 	function drawBasePath(pathString){
 export function drawPolygon(polygon){
 	CurveManagement.layer.debugCurveLayer.polygon().plot(polygon).fill('none').stroke({ width: 1,color:'red' });
 }
+
 function distance(x1, y1, x2, y2) {
 	const a = x1 - x2;
 	const b = y1 - y2;

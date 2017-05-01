@@ -5,16 +5,27 @@ const markov = [
 	[5,5,6,10,11],
 	[0,0,3,4,5]
 ];
+
+/*
+leafType:
+@property name symbol
+@property order number
+*/
 export default function nextType(currentType) {
-	const row = markov[currentType];
+	const row = markov[currentType.order];
 	const max = row[row.length-1];
 	const random = range(0, max);
 
 	for (let i = 0; i < row.length; i++) {
-		if( random < row[i] ) return i;
+		if( random < row[i] ) return {
+			name: currentType.name,
+			order:i
+		};
 	}
-
-	return row.length - 1;
+	return {
+		name: currentType.name,
+		order:row.length - 1
+	};
 }
 
 function range(min, max){

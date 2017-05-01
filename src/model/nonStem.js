@@ -2,6 +2,8 @@ import shortid from 'shortid';
 import * as Drawer from './Drawer';
 import {Leaf} from './stem';
 import _ from 'lodash';
+import {leafType} from '../images/LeafImage';
+
 export class Flower{
 	constructor(x,y, r,flowerType='海石榴華',flowerRotation=30){
 		this.id = shortid.generate();
@@ -18,10 +20,13 @@ export class Flower{
 }
 
 export class LeafBranch{
-	constructor(spline){
+	constructor(spline, colliderWidth = 90){
 		this.spline = spline;
+		let beziers =  spline.outline(colliderWidth, 10);
+		this.colliders = _.flatMap(beziers,b => b.getLUT(10))
+			.map(p=>[p.x, p.y]);
 	}
-	segmentedIndex(){
+	static segmentedIndex(){
 		let segment = [2,2,2,3,4,6,10];
 		segment.reverse();
 		let total = _.sum(segment);
@@ -32,19 +37,28 @@ export class LeafBranch{
 	}
 
 	computeSegmentLeaf(){
-		let leafs = [];
-		let segment = this.segmentedIndex();
+		if(!this._leaf) this.leafs = [];
+
+		let segment = LeafBranch.segmentedIndex();
 		for (var i = 0; i < segment.length-1; i++) {
 			let start = segment[i], end= segment[i+1];
 			let beziers = this.spline.segmentRange(start, end);
 			let points = _.flatMap(beziers, b=> b.getLUT(100)).map(p=>[p.x, p.y]);
-			leafs.push(Leaf.makeLeafByPoint(points, 1, 1));
+			let type = {
+				name :leafType.leafBranch,
+				order: i
+			};
+			this.leafs.push(Leaf.makeLeafByPoint(points, 0, type));
 		}
-		return leafs;
+		this.leafs.reverse();
+		return this.leafs;
 	}
 
 	draw(){
-		this.computeSegmentLeaf().forEach( leaf=>Drawer.drawLeaf(leaf) );
+		this.computeSegmentLeaf().forEach(leaf=>{
+			Drawer.drawLeaf(leaf);
+		});
+		Drawer.drawPolygon(this.colliders );
 	}
 	burgeons(){
 		return undefined;
@@ -57,7 +71,4 @@ function partialSum(numArray) {
 		partialSum += numArray[i];
 		numArray[i] = partialSum;
 	}
-
-	//partialSum = 0;
-	//return numArray.map(x=>partialSum+=x);
 }

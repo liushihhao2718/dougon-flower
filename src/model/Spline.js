@@ -3,9 +3,12 @@ import Bezier from 'bezier-js';
 let glm = require('glm-js');
 import _ from 'lodash';
 export class BezierSpline {
-	constructor(points, error=50){
-		// this.points = points;
-		this.controlPoints = fitCurve(points, error);//[ [c0,c1,c2,c3], ... ]
+	static makeByPoints(points, error=50){
+		let controlPoints = fitCurve(points, error);//[ [c0,c1,c2,c3], ... ]
+		return new BezierSpline(controlPoints);
+	}
+	constructor(controlPoints){
+		this.controlPoints = controlPoints;//[ [c0,c1,c2,c3], ... ]
 		this.beziers = this.controlPoints.map(b =>	
 			new Bezier(
 				b[0][0], b[0][1],
@@ -16,7 +19,6 @@ export class BezierSpline {
 		);
 		this.lengths = this.beziers.map(b=>b.length());
 		this.length = this.lengths.reduce( (a,b)=>a+b , 0);
-		let that = this;
 		this.sample = function(density){
 			let burgeons = [];
 			let pos = 1 / (density + 1);
@@ -31,10 +33,42 @@ export class BezierSpline {
 			return acc.concat( collider );
 		},[]);
 	}
+	paramColliders(p=0.6){
+		return this.controlPoints.reduce((acc, val)=>{
+			let collider = makeCollider(val, p);
+			return acc.concat( collider );
+		},[]);
+	}
+	outline(beginWidth, endWidth){
+		let l = 0;
+		let w = (endWidth-beginWidth)/this.length;
+		let outline = this.beziers.map(b => {
+			let d1 = beginWidth + l * w;
+			l += b.length();
+			let d2 = beginWidth + l * w;
+			if(d1 === 0) d1 = 1;
+			return b.outline(d1, d1, d2, d2);
+		});
+
+		let f = [];
+		let r = [];
+		let head=outline[0].curves[0];
+		let tail;
+		const lastPath = outline[outline.length-1];
+		tail = lastPath.curves[lastPath.curves.length/2];
+
+		outline.forEach(b => {
+			const length = Math.floor(b.curves.length/2)- 1;
+			f = f.concat(b.curves.slice(1, length+1));
+			r = r.concat(b.curves.slice(length+2).reverse());
+		});
+
+		return [].concat([head],f,[tail], r.reverse());
+	}
 	test(x){
 		
-		let {bezierAtIndex, posOnSinglebezier} = this.sampleAt(x);
-		let {point, direction} = this.toRay(bezierAtIndex, posOnSinglebezier);
+		let {bezierIndex, posOnSinglebezier} = this.sampleAt(x);
+		let {point, direction} = this.toRay(this.beziers[bezierIndex], posOnSinglebezier);
 		return {point, direction};
 
 	}
@@ -52,10 +86,9 @@ export class BezierSpline {
 			pos -= Bs[bezierIndex].length();
 			bezierIndex++;
 		}
-		let bezierAtIndex = Bs[bezierIndex];
-		let posOnSinglebezier = pos / bezierAtIndex.length();
+		let posOnSinglebezier = pos / Bs[bezierIndex].length();
 
-		return {bezierAtIndex, posOnSinglebezier};
+		return {bezierIndex, posOnSinglebezier};
 	}
 	toRay(bezierAtIndex, posOnSinglebezier){
 		let point =  bezierAtIndex.get( posOnSinglebezier );
@@ -88,6 +121,10 @@ export class BezierSpline {
 		}
 		return segments;
 	}
+	range(i,j){
+		let segments = this.segmentRange(i,j);
+		return new BezierSpline(segments.map(b=>b.points.map(p=>[p.x,p.y])));
+	}
 	svgString() {
 		var str = '';
 		//bezier : [ [c0], [c1], [c2], [c3] ]
@@ -105,7 +142,7 @@ export class BezierSpline {
 		return str;
 	}
 }
-function makeCollider(controlPoint){
+function makeCollider(controlPoint, long){
 	let c0 = glm.vec2(controlPoint[0][0], controlPoint[0][1]);
 	let c1 = glm.vec2(controlPoint[1][0], controlPoint[1][1]);
 	let c2 = glm.vec2(controlPoint[2][0], controlPoint[2][1]);
@@ -115,14 +152,14 @@ function makeCollider(controlPoint){
 	let reflect_C2 = reflecttPoint(c0,c2,c3 );
 
 	let collider = controlPoint.concat([reflect_C2, reflect_C1]);
-	[collider[1],collider[5]]=longer(collider[1],collider[5]);
-	[collider[2],collider[4]]=longer(collider[2],collider[4]);
+	[collider[1],collider[5]]=longer(collider[1],collider[5], long);
+	[collider[2],collider[4]]=longer(collider[2],collider[4], long);
 	return collider;
 }
-function longer(p0,p1){
+function longer(p0,p1, long = 0.6){
 	let v0 = glm.vec2(p0[0], p0[1]);
 	let v1 = glm.vec2(p1[0], p1[1]);
-	let a = glm.mul(glm.sub(v0,v1),0.6);
+	let a = glm.mul(glm.sub(v0,v1),long);
 	let b = glm.mul(glm.add(v0,v1),0.5);
 	return [p0,p1]=[glm.add(b,a).elements,glm.sub(b,a).elements];
 }

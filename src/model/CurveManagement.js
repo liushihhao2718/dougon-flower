@@ -1,6 +1,7 @@
 import * as UI from './UIManagement';
 import * as Collision from './Collision';
 import * as Drawer from '../model/Drawer';
+import _ from 'lodash';
 
 export default {
 	selectedCurve :[],
@@ -9,7 +10,7 @@ export default {
 	layer:{},
 	growBranches(){
 		let leafDrawingQueue=[];
-		let leafCollisionScene=[];
+		let leafCollisionScene= this.floralScene.map(f=>f.colliders).filter(f => f!==undefined);
 		const amount = UI.state.levelCurve[0].branches;
 		let groupedBurgeons = this.floralScene.map( f=>f.burgeons(amount) ).filter(f => f!==undefined);
 		let burgeons = flatten( groupedBurgeons );
@@ -25,7 +26,7 @@ export default {
 				let leaf = burgeon.germinate(levelParam.length,levelParam.alpha, sign=-1*sign);
 
 				if( Collision.testCollision(leaf.colliders, leafCollisionScene, 
-						this.floralScene.map(f=>f.flowerPosition),
+						this.floralScene.map(f=>f.flowerPosition).filter(f => f!==undefined),
 						burgeon.parent.colliders)
 				){
 					nextLevelBurgeons.push(burgeon);

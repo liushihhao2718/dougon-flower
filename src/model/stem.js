@@ -4,11 +4,12 @@ import shortid from 'shortid';
 import nextType from './MarkovLeaf';
 import * as Drawer from './Drawer';
 import _ from 'lodash';
+import {leafType} from '../images/LeafImage';
 
 export class Floral{
 	constructor(basePath, r,trunkHead,trunkTail,flowerType='海石榴華', aspect = '正面',flowerRotation=30){
 		this.id = shortid.generate();
-		this.curve = basePath;
+		this.curve = basePath.range(0, 0.8);
 		this.flowerType = flowerType;
 		this.flowerRotation = flowerRotation;
 		this.colliders = undefined;
@@ -25,14 +26,20 @@ export class Floral{
 	burgeons(amount){
 		if (this.curve.length === 0) return;
 		let samples = this.curve.sample(amount);
+
+		let type = {
+			name: leafType.leaf,
+			order: 0
+		};
+
 		return samples.map(s => {
 			const {point, direction} = s;
-			return (new Burgeon(point.x, point.y, direction, 0, this) );
+			return (new Burgeon(point.x, point.y, direction, type, this) );
 		});
 	}
 	draw(){
-		Drawer.drawFlower(this);
 		Drawer.drawStem(this);
+		Drawer.drawFlower(this);
 		Drawer.drawBasePath(this.curve.svgString());
 	}
 }
@@ -72,7 +79,7 @@ export class Leaf {
 
 		return new Leaf(startX,startY,
 			endX,endY,
-			new BezierSpline(points),
+			BezierSpline.makeByPoints(points),
 			sign,
 			type
 		);
@@ -88,10 +95,6 @@ export class Leaf {
 		this.colliders = this.curve.colliders;
 		this.sign = sign;
 	}
-	/*
-		@param amount : number 
-		number of branch
-	*/
 	burgeons(amount){
 		let samples = this.curve.sample(amount);
 		return samples.map(s => {
