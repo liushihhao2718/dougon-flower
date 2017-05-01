@@ -52,7 +52,7 @@ export function setGUI(){
 	gui = new dat.GUI();
 	let bound =	gui.add(state, 'bound', Object.keys(dougonBounding));
 
-	let c0 = gui.add(state, 'tool', ['paint', 'flower', 'select']);
+	let c0 = gui.add(state, 'tool', ['paint', 'flower', 'select', 'skeleton']);
 	let c1 = gui.add(state, 'trunkHead', 1, 20);
 	let c2 = gui.add(state, 'trunkTail', 5, 40);
 	let c3 = gui.add(state, 'flowerSize', 10, 200);

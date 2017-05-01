@@ -1,7 +1,7 @@
 import {BezierSpline} from '../model/Spline';
-import {Floral} from '../model/stem';
+import {LeafBranch} from '../model/nonStem';
 import CurveManagement from '../model/CurveManagement';
-import * as UI from '../model/UIManagement';
+// import * as UI from '../model/UIManagement';
 const error = 100;
 
 function SkeletonControl(pannel) {
@@ -23,7 +23,8 @@ function SkeletonControl(pannel) {
 			clearRawData();
 			return;
 		}
-		
+		CurveManagement.floralScene.push(new LeafBranch(smoothBizer));
+		CurveManagement.draw();
 		clearRawData();
 	};
 

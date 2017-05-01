@@ -1,7 +1,5 @@
-import {BezierSpline} from '../model/Spline';
-import {Floral} from '../model/stem';
+import {Flower} from '../model/nonStem';
 import CurveManagement from '../model/CurveManagement';
-import * as UI from '../model/UIManagement';
 
 class FloralControl{
 	constructor(pannel){
@@ -23,9 +21,8 @@ class FloralControl{
 	}
 	end(){
 		this.hideHint();
-		let aspect = UI.state.aspect;
 		let rotation = angle(this.startPoint[0], this.startPoint[1], this.endPoint[0], this.endPoint[1]);
-		CurveManagement.floralScene.push(new Floral(new BezierSpline([this.startPoint],0.2), this.radius,0, UI.state.trunkTail,'海石榴華', aspect ,rotation));
+		CurveManagement.floralScene.push(new Flower(this.startPoint[0],this.startPoint[1], this.radius,'海石榴華',rotation));
 		CurveManagement.draw();
 	}
 	showHint(){

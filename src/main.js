@@ -1,4 +1,4 @@
-import Controls from './Controls/Control';
+import Control from './Controls/Control';
 import SVG from 'svg.js';
 import * as UI from './model/UIManagement';
 import CurveManagement from './model/CurveManagement';
@@ -25,10 +25,10 @@ function setSVGLayer(panel) {
 function setControl(_container) {
 	let isMouseDown = false;
 	let tools = {
-		paint : new Controls.PaintControl(_container),
-		flower : new Controls.FloralControl(_container),
-		select : new Controls.SelectControl(_container),
-		skeleton: new Controls.SkeletonControl(_container)
+		paint : new Control.PaintControl(_container),
+		flower : new Control.FloralControl(_container),
+		select : new Control.SelectControl(_container),
+		skeleton: new Control.SkeletonControl(_container)
 	};
 	
 	const top = _container.node.getBoundingClientRect().top;

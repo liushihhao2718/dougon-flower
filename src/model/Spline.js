@@ -1,10 +1,10 @@
 import fitCurve from 'fit-curve';
 import Bezier from 'bezier-js';
 let glm = require('glm-js');
-
+import _ from 'lodash';
 export class BezierSpline {
 	constructor(points, error=50){
-		this.points = points;
+		// this.points = points;
 		this.controlPoints = fitCurve(points, error);//[ [c0,c1,c2,c3], ... ]
 		this.beziers = this.controlPoints.map(b =>	
 			new Bezier(
@@ -16,42 +16,77 @@ export class BezierSpline {
 		);
 		this.lengths = this.beziers.map(b=>b.length());
 		this.length = this.lengths.reduce( (a,b)=>a+b , 0);
-
+		let that = this;
 		this.sample = function(density){
-			let Bs = this.beziers;
-
-			let totalLength = this.length;
 			let burgeons = [];
-
 			let pos = 1 / (density + 1);
 			for (let i = 1; i <= density; i++) {
 				burgeons.push(pos * i);
 			}
-			return burgeons.map(i => {
-				if( totalLength === 0) return;
-
-				let bezierIndex = 0;
-
-				let pos = totalLength * i;
-				while( pos >= Bs[bezierIndex].length() ) {
-					pos -= Bs[bezierIndex].length();
-					bezierIndex++;
-				}
-				let bezierAtIndex = Bs[bezierIndex];
-				let posOnSinglebezier = pos / bezierAtIndex.length();
-
-				let bezier = Bs[ bezierIndex ];
-				let point = bezier.get( posOnSinglebezier );
-				let direction = bezier.derivative( posOnSinglebezier );
-
-				return {point, direction};
-			});
+			return burgeons.map(x=>this.test(x));
 		};
-
+		
 		this.colliders = this.controlPoints.reduce((acc, val)=>{
 			let collider = makeCollider(val);
 			return acc.concat( collider );
 		},[]);
+	}
+	test(x){
+		
+		let {bezierAtIndex, posOnSinglebezier} = this.sampleAt(x);
+		let {point, direction} = this.toRay(bezierAtIndex, posOnSinglebezier);
+		return {point, direction};
+
+	}
+	sampleAt(index){
+
+		if (index === 1) return {bezierIndex:this.beziers.length-1, posOnSinglebezier:1};
+		let Bs = this.beziers;
+		let totalLength = this.length;
+
+		if( totalLength === 0) return;
+
+		let bezierIndex = 0;
+		let pos = totalLength * index;
+		while( pos >= Bs[bezierIndex].length() ) {
+			pos -= Bs[bezierIndex].length();
+			bezierIndex++;
+		}
+		let bezierAtIndex = Bs[bezierIndex];
+		let posOnSinglebezier = pos / bezierAtIndex.length();
+
+		return {bezierAtIndex, posOnSinglebezier};
+	}
+	toRay(bezierAtIndex, posOnSinglebezier){
+		let point =  bezierAtIndex.get( posOnSinglebezier );
+		let direction = bezierAtIndex.derivative( posOnSinglebezier );
+
+		return {point, direction};
+	}
+	segmentRange(i, j){
+		if(i === j) return;
+		let start = this.sampleAt(i);
+		let end = this.sampleAt(j);
+
+		let segments = [];
+		if (start.bezierIndex !== end.bezierIndex) {
+			segments.push(
+				this.beziers[start.bezierIndex].split(start.posOnSinglebezier,1)
+			);
+			if(end.bezierIndex - start.bezierIndex > 1)
+				segments.concat(
+					_.range(start.bezierIndex+1, end.bezierIndex-1).map(i=>this.beziers[i])
+				);
+			segments.push(
+				this.beziers[end.bezierIndex].split(0, end.posOnSinglebezier)
+			);
+		}
+		else{
+			segments.push(
+				this.beziers[start.bezierIndex].split(start.posOnSinglebezier, end.posOnSinglebezier)
+			);
+		}
+		return segments;
 	}
 	svgString() {
 		var str = '';

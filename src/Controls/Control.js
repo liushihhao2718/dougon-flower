@@ -3,4 +3,5 @@ import SelectControl from './SelectControl';
 import FloralControl from './FloralControl';
 import SkeletonControl from './SkeletonControl';
 
-export let Control = { PaintControl, SelectControl, FloralControl, SkeletonControl };
+let Control = { PaintControl, SelectControl, FloralControl, SkeletonControl };
+export default Control;

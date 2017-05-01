@@ -2,6 +2,8 @@ import MagneticCurve from './MagneticCurve';
 import { BezierSpline } from './Spline';
 import shortid from 'shortid';
 import nextType from './MarkovLeaf';
+import * as Drawer from './Drawer';
+import _ from 'lodash';
 
 export class Floral{
 	constructor(basePath, r,trunkHead,trunkTail,flowerType='海石榴華', aspect = '正面',flowerRotation=30){
@@ -10,10 +12,10 @@ export class Floral{
 		this.flowerType = flowerType;
 		this.flowerRotation = flowerRotation;
 		this.colliders = undefined;
-		let points = this.curve.points;
+		let point = _.last(this.curve.controlPoints)[3];
 		this.flowerPosition = {
-			x: points[points.length-1][0],
-			y: points[points.length-1][1],
+			x: point[0],
+			y: point[1],
 			r
 		};
 		this.trunkHead = trunkHead;
@@ -28,6 +30,11 @@ export class Floral{
 			return (new Burgeon(point.x, point.y, direction, 0, this) );
 		});
 	}
+	draw(){
+		Drawer.drawFlower(this);
+		Drawer.drawStem(this);
+		Drawer.drawBasePath(this.curve.svgString());
+	}
 }
 
 export class Burgeon{
@@ -40,40 +47,46 @@ export class Burgeon{
 	}
 
 	germinate( length,alpha,sign){
-		let leaf = new Leaf(this.x, this.y, 
-			this.direction.x, this.direction.y,
-			length,
-			alpha,
-			sign,
-			this.type
-		);
-
-		return leaf;
-	}
-}
-
-export class Leaf {
-	constructor(startX,startY,vx,vy,length, alpha, sign,type) {
 		let mag = new MagneticCurve({
-			startX,
-			startY,
-			vx,
-			vy,
+			startX:this.x, 
+			startY:this.y, 
+			vx:this.direction.x,
+			vy: this.direction.y,
 			T: length,
 			alpha,
 			sign
 		});
+		
+
+		return Leaf.makeLeafByPoint(mag.getCurve(), sign, this.type);
+	}
+}
+
+export class Leaf {
+	static makeLeafByPoint(points, sign, type){
+		const lastOne = points.length -1;
+		let startX = points[0][0];
+		let startY = points[0][1];
+		let endX = points[lastOne][0];
+		let endY = points[lastOne][1];
+
+		return new Leaf(startX,startY,
+			endX,endY,
+			new BezierSpline(points),
+			sign,
+			type
+		);
+	}
+
+	constructor(startX,startY,endX,endY,curve, sign,type) {
 		this.startX = startX;
 		this.startY = startY;
-		const lastOne = mag.getCurve().length -1;
-		this.endX = mag.getCurve()[lastOne][0];
-		this.endY = mag.getCurve()[lastOne][1];
+		this.endX = endX;
+		this.endY = endY;
 		this.type = type;
-		this.curve = new BezierSpline(mag.getCurve() );
+		this.curve = curve;
 		this.colliders = this.curve.colliders;
 		this.sign = sign;
-
-		this.mag = mag;
 	}
 	/*
 		@param amount : number 

@@ -24,7 +24,10 @@ export default {
 
 				let leaf = burgeon.germinate(levelParam.length,levelParam.alpha, sign=-1*sign);
 
-				if( Collision.testCollision(leaf.colliders, leafCollisionScene, this.floralScene.map(f=>f.flowerPosition),burgeon.parent.colliders )){
+				if( Collision.testCollision(leaf.colliders, leafCollisionScene, 
+						this.floralScene.map(f=>f.flowerPosition),
+						burgeon.parent.colliders)
+				){
 					nextLevelBurgeons.push(burgeon);
 				}
 				else{
@@ -51,32 +54,13 @@ export default {
 	},
 	draw(){
 		this.clearDrawing();
-		this.floralScene.forEach(floral=>{
-			Drawer.drawFlower(floral);
-			if(!floral.curve.length){
-				return;
-			}
-			Drawer.drawStem(floral);
-			Drawer.drawBasePath(floral.curve.svgString());
-			
-			let stems = this.growBranches().reverse();
-
-			stems.forEach(s => Drawer.drawLeaf(s) );
-			stems.forEach(s => Drawer.drawPolygon(s.colliders) );
-		});
-		this.drawHint();
-
-	},
-	redrawFlower(){
-		this.layer.flowerLayer.clear();
-		this.layer.stemLayer.clear();
-
-		this.floralScene.forEach(floral=>{
-
-			Drawer.drawFlower(floral);
-			Drawer.drawStem(floral);
-			Drawer.drawBasePath(floral.curve.svgString());
-		});
+		
+		this.floralScene.forEach(floral=>floral.draw());
+		
+		let stems = this.growBranches().reverse();
+		stems.forEach(s => Drawer.drawLeaf(s) );
+		stems.forEach(s => Drawer.drawPolygon(s.colliders) );
+		
 		this.drawHint();
 	},
 	drawHint(){
