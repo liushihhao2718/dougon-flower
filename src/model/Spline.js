@@ -101,10 +101,17 @@ export class BezierSpline {
 		let start = this.sampleAt(i);
 		let end = this.sampleAt(j);
 
-		return this
-			.beziers.slice(start.bezierIndex,end.bezierIndex+1)
-			.map((x,i,a)=>x.split(i === 0 ? start.posOnSinglebezier : 0,i === a.length ? end.posOnSinglebezier : 1));
+		let segments = this.beziers.slice(start.bezierIndex,end.bezierIndex+1);
+		if (segments.length == 1) {
+			segments[0] = segments[0].split(start.posOnSinglebezier, end.posOnSinglebezier);
+		}
+		else{
+			segments[0] = segments[0].split(start.posOnSinglebezier, 1);
+			segments[segments.length-1] = segments[segments.length-1].split(0, end.posOnSinglebezier);
+		}
+		return segments;
 	}
+
 	range(i,j){
 		let segments = this.segmentRange(i,j);
 		let controlPoints = segments.map(b=>b.points.map(p=>[p.x,p.y]));
