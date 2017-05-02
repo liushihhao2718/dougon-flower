@@ -27,7 +27,7 @@ export class LeafBranch{
 			.map(p=>[p.x, p.y]);
 	}
 	static segmentedIndex(){
-		let segment = [2,2,2,3,4,6,10];
+		let segment = [3,3,3,4,4,6,15];
 		segment.reverse();
 		let total = _.sum(segment);
 		let normalizedSegment = _.map(segment, x=>x/total);
@@ -41,7 +41,11 @@ export class LeafBranch{
 
 		let segment = LeafBranch.segmentedIndex();
 		for (var i = 0; i < segment.length-1; i++) {
-			let start = segment[i], end= segment[i+1];
+			let start = segment[i];
+			let end= segment[i+1];
+
+			if(i !== 0)	start -= 0.01;
+
 			let beziers = this.spline.segmentRange(start, end);
 			let points = _.flatMap(beziers, b=> b.getLUT(100)).map(p=>[p.x, p.y]);
 			let type = {

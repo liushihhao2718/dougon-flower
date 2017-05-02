@@ -9,7 +9,7 @@ import {leafType} from '../images/LeafImage';
 export class Floral{
 	constructor(basePath, r,trunkHead,trunkTail,flowerType='海石榴華', aspect = '正面',flowerRotation=30){
 		this.id = shortid.generate();
-		this.curve = basePath.range(0, 0.6);
+		this.curve = (aspect === '正面') ?basePath:basePath.range(0, 0.7);
 		this.flowerType = flowerType;
 		this.flowerRotation = flowerRotation;
 		this.colliders = undefined;

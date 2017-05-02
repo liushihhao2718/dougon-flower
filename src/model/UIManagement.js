@@ -31,7 +31,7 @@ export let state = {
 		}
 	],
 	bound: '撩擔方',
-	tool:'paint',
+	tool:'skeleton',
 	show:{
 	},
 	color:'鋪地捲成',

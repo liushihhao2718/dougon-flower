@@ -11,6 +11,8 @@ import CurveManagement from './model/CurveManagement';
 })();
 
 function setSVGLayer(panel) {
+	var image = panel.image('生成目標.png');
+	image.width(1371).height(436).x(60.5).y(63.5);
 	//order is very importent!
 	let dougonLayer = panel.group();
 	let leafLayer = panel.group();
