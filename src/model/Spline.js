@@ -96,59 +96,17 @@ export class BezierSpline {
 
 		return {point, direction};
 	}
-	segmentRange3(i, j){
-		if(i === j) return;
-		let start = this.sampleAt(i);
-		let end = this.sampleAt(j);
-		
-		return this
-			.beziers.slice(start.bezierIndex,end.bezierIndex+1)
-			.map((x,i,a)=>x.split(i === 0 ? start.posOnSinglebezier : 0,i === a.length ? end.posOnSinglebezier : 1));
-	}
-	segmentRange2(i, j){
-		if(i === j) return;
-		let start = this.sampleAt(i);
-		let end = this.sampleAt(j);
-
-		let segments = this.beziers.slice(start.bezierIndex,end.bezierIndex+1);
-		if (segments.length == 1) {
-			segments[0] = segments[0].split(start.posOnSinglebezier, end.posOnSinglebezier);
-		}
-		else{
-			segments[0] = segments[0].split(start.posOnSinglebezier, 1);
-			segments[segments.length-1] = segments[segments.length-1].split(0, end.posOnSinglebezier);
-		}
-		return segments;
-	}
 	segmentRange(i, j){
 		if(i === j) return;
 		let start = this.sampleAt(i);
 		let end = this.sampleAt(j);
 
-		let segments = [];
-		if (start.bezierIndex !== end.bezierIndex) {
-			segments.push(
-				this.beziers[start.bezierIndex].split(start.posOnSinglebezier,1)
-			);
-
-			if(end.bezierIndex - start.bezierIndex > 1)
-				segments = segments.concat(
-					_.range(start.bezierIndex+1, end.bezierIndex).map(i=>this.beziers[i])
-				);
-			
-			segments.push(
-				this.beziers[end.bezierIndex].split(0, end.posOnSinglebezier)
-			);
-		}
-		else{
-			segments.push(
-				this.beziers[start.bezierIndex].split(start.posOnSinglebezier, end.posOnSinglebezier)
-			);
-		}
-		return segments;
+		return this
+			.beziers.slice(start.bezierIndex,end.bezierIndex+1)
+			.map((x,i,a)=>x.split(i === 0 ? start.posOnSinglebezier : 0,i === a.length ? end.posOnSinglebezier : 1));
 	}
 	range(i,j){
-		let segments = this.segmentRange3(i,j);
+		let segments = this.segmentRange(i,j);
 		let controlPoints = segments.map(b=>b.points.map(p=>[p.x,p.y]));
 		return new BezierSpline(controlPoints);
 	}
