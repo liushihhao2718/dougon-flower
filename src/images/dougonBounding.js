@@ -15,9 +15,9 @@ export let dougonBoundingParam = {
 		trunkTail: 10
 	},
 	撩擔方:{
-		flowerSize: 90,
+		flowerSize: 150,
 		trunkHead: 5,
-		trunkTail: 30
+		trunkTail: 10
 	}
 };
 

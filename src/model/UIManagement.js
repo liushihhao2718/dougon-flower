@@ -10,14 +10,14 @@ let gui, folders = [];
 let controls = [];
 let leafControls = [];
 export let state = {
-	flowerSize: 100,
+	flowerSize: 150,
 	trunkHead: 5,
-	trunkTail: 30,
+	trunkTail: 10,
 	levelCurve :[
 		{
-			length: 100,
+			length: 80,
 			alpha: 0.9,
-			branches: 3
+			branches: 5
 		},
 		{
 			length: 62,
@@ -25,7 +25,7 @@ export let state = {
 			branches: 5
 		},
 		{
-			length: 38,
+			length: 40,
 			alpha: 0.9,
 			branches: 2
 		}

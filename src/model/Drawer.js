@@ -1,5 +1,5 @@
 import CurveManagement from './CurveManagement';
-import flowerString from '../images/海石榴心.svg';
+import flowerString from '../images/海石榴心_v2.svg';
 import {LeafImage, cap, leafType, LeafBranch} from '../images/LeafImage';
 function handleClick(floral) {
 	if(CurveManagement.selectedCurve.includes(floral)){

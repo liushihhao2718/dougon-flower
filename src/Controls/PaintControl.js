@@ -3,7 +3,7 @@ import {Floral} from '../model/stem';
 import CurveManagement from '../model/CurveManagement';
 import * as UI from '../model/UIManagement';
 
-const error = 100;
+const error = 50;
 
 function PaintControl(pannel) {
 	let rawPointData = [];
