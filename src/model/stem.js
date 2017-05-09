@@ -63,7 +63,7 @@ export class Burgeon{
 			alpha,
 			sign
 		});
-		
+		this.mag = mag;
 
 		return Leaf.makeLeafByPoint(mag.getCurve(), sign, this.type);
 	}
@@ -71,7 +71,7 @@ export class Burgeon{
 
 export class Leaf {
 	static makeLeafByPoint(points, sign, type){
-		const lastOne = points.length -1;
+		const lastOne = points.length - 1;
 		let startX = points[0][0];
 		let startY = points[0][1];
 		let endX = points[lastOne][0];

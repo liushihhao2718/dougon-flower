@@ -92,22 +92,7 @@ export default class MagneticCurve {
 			this._controlPoints = fitCurve( this._curve, error );		
 		return this._controlPoints;
 	}
-	drawOn(pannel, level=0){
-		this.getCurve();
-		let pathString = fittedCurveToPathString(this.controlPoints);
-		//debug color
-		let color = ['red', 'green', 'blue', 'black'];
-		// pannel.path(pathString).fill('none').stroke({ width: 5 }).stroke(color[level]);
 
-		// window.setTimeout(()=>{
-		pannel.path(pathString).fill('none').stroke({ width: 5 }).stroke(color[level]);
-		const bbox = this.bbox();
-		pannel.rect(bbox.width, bbox.height).x(bbox.x).y(bbox.y).fill('none').stroke({ width: 1,'color':color[level] });
-		// }, timeout);
-		// timeout+=100;
-		//bbox
-		
-	}
 	makeBBox(points){
 		let minX = Number.MAX_VALUE;
 		let minY = Number.MAX_VALUE;

@@ -146,6 +146,11 @@ export function	drawFlower(floral){
 		cy: cr,
 	});
 }
+
+export function drawMagneticCurve(leaf, level){
+	let level_color = ['orange', 'green', 'blue', 'black'];
+	CurveManagement.layer.debugCurveLayer.path(leaf.curve.svgString() ).fill('none').stroke({ width: 3 }).stroke(level_color[level]);
+}
 export function	drawLeaf(leaf){
 	let x1 = leaf.startX;
 	let y1 = leaf.startY;
@@ -153,8 +158,6 @@ export function	drawLeaf(leaf){
 	let y2 = leaf.endY;
 	let sign = leaf.sign;
 	let type = leaf.type;
-
-	// leaf.mag.drawOn(CurveManagement.layer.debugCurveLayer, leaf.level);
 
 	let leafString = '';
 	switch(leaf.type.name){

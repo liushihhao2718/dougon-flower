@@ -1,21 +1,22 @@
 import * as UI from './UIManagement';
 import * as Collision from './Collision';
 import * as Drawer from '../model/Drawer';
-import _ from 'lodash';
 
 export default {
 	selectedCurve :[],
 	scene :[],
 	floralScene:[],
 	layer:{},
+	debug_burgeons:[],
 	growBranches(){
 		let leafDrawingQueue=[];
-		let leafCollisionScene= this.floralScene.map(f=>f.colliders).filter(f => f!==undefined);
+		let collisionScene= this.floralScene.map(f=>f.colliders).filter(f => f!==undefined);
 		const amount = UI.state.levelCurve[0].branches;
 		let groupedBurgeons = this.floralScene.map( f=>f.burgeons(amount) ).filter(f => f!==undefined);
 		let burgeons = flatten( groupedBurgeons );
 		let sign = 1;
-		for(let levelParam of UI.state.levelCurve){
+		UI.state.levelCurve.forEach((levelParam, index)=>{
+
 			let nextLevelBurgeons = [];
 
 			while(burgeons.length > 0){
@@ -25,7 +26,7 @@ export default {
 
 				let leaf = burgeon.germinate(levelParam.length,levelParam.alpha, sign=-1*sign);
 
-				if( Collision.testCollision(leaf.colliders, leafCollisionScene, 
+				if( Collision.testCollision(leaf.colliders, collisionScene, 
 						this.floralScene.map(f=>f.flowerPosition).filter(f => f!==undefined),
 						burgeon.parent.colliders)
 				){
@@ -33,12 +34,13 @@ export default {
 				}
 				else{
 					leafDrawingQueue.push(leaf);
-					leafCollisionScene.push(leaf.colliders);
+					collisionScene.push(leaf.colliders);
+					this.debug_burgeons.push({leaf,level:index});
 					burgeons = burgeons.concat( leaf.burgeons( levelParam.branches ) );
 				}
 			}
 			burgeons = burgeons.concat( nextLevelBurgeons );
-		}
+		});
 		
 
 		return leafDrawingQueue;
@@ -62,6 +64,7 @@ export default {
 		stems.forEach(s => Drawer.drawLeaf(s) );
 		stems.forEach(s => Drawer.drawPolygon(s.colliders) );
 		
+		this.debug_burgeons.forEach(({leaf, level}) => Drawer.drawMagneticCurve(leaf, level));
 		this.drawHint();
 	},
 	drawHint(){

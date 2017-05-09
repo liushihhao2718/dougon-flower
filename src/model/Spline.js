@@ -1,7 +1,6 @@
 import fitCurve from 'fit-curve';
 import Bezier from 'bezier-js';
 let glm = require('glm-js');
-import _ from 'lodash';
 export class BezierSpline {
 	static makeByPoints(points, error=50){
 		let controlPoints = fitCurve(points, error);//[ [c0,c1,c2,c3], ... ]
