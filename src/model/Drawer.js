@@ -1,5 +1,5 @@
 import CurveManagement from './CurveManagement';
-import flowerString from '../images/海石榴心_v2.svg';
+import flowerString from '../images/海石榴心_v3.svg';
 import {LeafImage, cap, leafType, LeafBranch} from '../images/LeafImage';
 function handleClick(floral) {
 	if(CurveManagement.selectedCurve.includes(floral)){
@@ -134,17 +134,25 @@ export function	drawFlower(floral){
 	const rate = blackCircle.r/cr;
 			
 	flower.transform({
-		scale: rate,
-		cx: cr,
-		cy: cr,
-	}).transform({
+		scale: rate
+	});
+	flower.transform({
 		x: blackCircle.cx,
 		y: blackCircle.cy,
-	}).transform({
+	});
+	flower.transform({
 		rotation: floral.flowerRotation,
 		cx: cr,
 		cy: cr,
 	});
+
+
+	let matrix = flower.node.getAttribute('transform').split(/[^\-\d.]+/).filter(x=>x !== '');
+	let px = Number(boundingCircle.attributes.cx.value);
+	let py = Number(boundingCircle.attributes.cy.value);
+	let point = multiplyMatrixAndPoint(matrix, [px, py, 1]);
+
+	CurveManagement.layer.flowerLayer.circle(10).cx(point[0]).cy(point[1]).fill('red');
 }
 
 export function drawMagneticCurve(leaf, level){

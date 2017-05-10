@@ -10,6 +10,7 @@ export default {
 	debug_burgeons:[],
 	growBranches(){
 		let leafDrawingQueue=[];
+		let flowerPosition = this.floralScene.map(f=>f.flowerPosition).filter(f => f!==undefined);
 		let collisionScene= this.floralScene.map(f=>f.colliders).filter(f => f!==undefined);
 		const amount = UI.state.levelCurve[0].branches;
 		let groupedBurgeons = this.floralScene.map( f=>f.burgeons(amount) ).filter(f => f!==undefined);
@@ -26,10 +27,7 @@ export default {
 
 				let leaf = burgeon.germinate(levelParam.length,levelParam.alpha, sign=-1*sign);
 
-				if( Collision.testCollision(leaf.colliders, collisionScene, 
-						this.floralScene.map(f=>f.flowerPosition).filter(f => f!==undefined),
-						burgeon.parent.colliders)
-				){
+				if(Collision.testCollision(leaf.colliders, collisionScene, flowerPosition, burgeon.parent.colliders)){
 					nextLevelBurgeons.push(burgeon);
 				}
 				else{

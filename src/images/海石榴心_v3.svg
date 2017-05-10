@@ -1,14 +1,10 @@
-<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="297.58" height="297.294"  style="enable-background:new 0.284 -45.444 297.296 342.74;" xml:space="preserve">
-	<g id="IMAGE">
-		
-			<!-- <image style="display:none;" width="1426" height="1044" xlink:href="../CA753F7.jpeg"  transform="matrix(0.2086 0 0 0.2084 0 17)">
-		</image> -->
-	</g>
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1" height="1" style="overflow:visible">
+	<g id="IMAGE"></g>
 	<g id="海石榴華">
 		<g id="invisible" style="display:none;">
 			<circle class="boundingCircle" style="display:inline;fill:#6E86B1;" cx="148.932" cy="148.648" r="148.648"></circle>
 		</g>
-		
+		<polygon id="SvgjsPolygon1376" points="45.646,69.902 -0.8990000000000009,128.493 1.6750000000000007,179.353 11.463,190.40400000000002 12.841,191.71800000000002 25.998999999999995,199.62900000000002 99.22399999999999,225.807 108.39499999999998,228.34099999999998 114.24499999999999,228.78499999999997 182.76899999999998,228.78499999999997 188.61899999999997,228.34099999999998 197.79,225.807 271.0150000000001,199.62900000000002 284.1730000000001,191.71800000000002 285.5510000000001,190.40400000000002 295.33900000000017,179.353 297.914,128.493 203.25799999999998,-33.65599999999999 199.004,-38.487 187.696,-47.352 155.85999999999999,-44.53600000000001 45.646,69.902" fill="none" stroke="red" stroke-width="3"></polygon>
 		<g id="花柱">
 			<g>
 		<path class="C6 C5" d="M193.624-37.427c0,0,0.964-3.665-1.283-5.751
