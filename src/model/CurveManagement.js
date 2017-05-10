@@ -27,7 +27,7 @@ export default {
 
 				let leaf = burgeon.germinate(levelParam.length,levelParam.alpha, sign=-1*sign);
 
-				if(Collision.testCollision(leaf.colliders, collisionScene, flowerPosition, burgeon.parent.colliders)){
+				if(Collision.testCollision(leaf.colliders, collisionScene, [], burgeon.parent.colliders)){
 					nextLevelBurgeons.push(burgeon);
 				}
 				else{

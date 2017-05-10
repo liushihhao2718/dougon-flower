@@ -1,6 +1,5 @@
 import CurveManagement from './CurveManagement';
-import flowerString from '../images/海石榴心_v3.svg';
-import {LeafImage, cap, leafType, LeafBranch} from '../images/LeafImage';
+import {flowerString, LeafImage, cap, leafType, LeafBranch} from '../images/LeafImage';
 function handleClick(floral) {
 	if(CurveManagement.selectedCurve.includes(floral)){
 		const index = CurveManagement.selectedCurve.indexOf(floral);
@@ -64,6 +63,9 @@ export function drawCap(floral) {
 	floral.flowerPosition.x = pos[0];
 	floral.flowerPosition.y = pos[1];
 	floral.flowerPosition.r = rate * r;
+
+
+	setFloralCollider(floral, capSVG);
 }
 
 export function	drawStem(floral){
@@ -146,15 +148,19 @@ export function	drawFlower(floral){
 		cy: cr,
 	});
 
-
-	let matrix = flower.node.getAttribute('transform').split(/[^\-\d.]+/).filter(x=>x !== '');
-	let px = Number(boundingCircle.attributes.cx.value);
-	let py = Number(boundingCircle.attributes.cy.value);
-	let point = multiplyMatrixAndPoint(matrix, [px, py, 1]);
-
-	CurveManagement.layer.flowerLayer.circle(10).cx(point[0]).cy(point[1]).fill('red');
+	setFloralCollider(floral, flower);
+	
 }
+function setFloralCollider(floral, svg) {
+	let matrix = svg.node.getAttribute('transform').split(/[^\-\d.]+/).filter(x=>x !== '');
 
+	const collider = svg.select('#collider').members[0].node;
+
+	let colliderPointsInSVG = collider.attributes.points.value.split(' ').map(s=>s.split(',').map(n=>Number(n)) );
+	let colliderPointsInWorld = colliderPointsInSVG.map( ([px, py]) => multiplyMatrixAndPoint(matrix, [px, py, 1]));
+	
+	floral.colliders = colliderPointsInWorld;
+}
 export function drawMagneticCurve(leaf, level){
 	let level_color = ['orange', 'green', 'blue', 'black'];
 	CurveManagement.layer.debugCurveLayer.path(leaf.curve.svgString() ).fill('none').stroke({ width: 3 }).stroke(level_color[level]);
