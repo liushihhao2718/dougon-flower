@@ -6,7 +6,8 @@
   "scripts": {
     "test": "ava",
     "dev": "watchify src/main.js -v --debug -t [ stringify --extensions [.svg] ] -t babelify -o docs/js/main.js",
-    "start": "http-server docs"
+    "start": "http-server docs",
+    "concave":"watchify src/model/ConcaveHullFactory.js -v --debug -t [ stringify --extensions [.svg] ] -t babelify -o test/concave.js"
   },
   "author": "",
   "license": "ISC",
@@ -18,6 +19,7 @@
   },
   "dependencies": {
     "bezier-js": "^2.2.2",
+    "concaveman": "^1.1.1",
     "fit-curve": "^0.1.4",
     "glm-js": "0.0.6-c",
     "lodash": "^4.17.4",
