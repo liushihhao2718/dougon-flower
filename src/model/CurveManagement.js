@@ -52,6 +52,7 @@ export default {
 		this.layer.leafLayer.clear();
 		this.layer.debugCurveLayer.clear();
 		this.layer.hintLayer.clear();
+		this.debug_burgeons = [];
 	},
 	draw(){
 		this.clearDrawing();

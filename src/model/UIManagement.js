@@ -57,9 +57,6 @@ export function setGUI(){
 	let c2 = gui.add(state, 'trunkTail', 5, 40);
 	let c3 = gui.add(state, 'flowerSize', 10, 200);
 
-	// control/s.push(c0);
-	// controls.push(c1);
-	// controls.push(c2);
 	c1.onChange(head =>{
 		for(let floral of CurveManagement.selectedCurve){
 			floral.trunkHead = head;	
