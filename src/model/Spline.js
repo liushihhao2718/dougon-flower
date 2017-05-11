@@ -24,6 +24,7 @@ export class BezierSpline {
 			for (let i = 1; i <= density; i++) {
 				burgeons.push(pos * i);
 			}
+			burgeons.reverse();
 			return burgeons.map(x=>this.test(x));
 		};
 		
