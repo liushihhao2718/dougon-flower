@@ -157,7 +157,7 @@ function setFloralCollider(floral, svg) {
 	const collider = svg.select('#collider').members[0].node;
 
 	let colliderPointsInSVG = collider.attributes.points.value.split(' ').map(s=>s.split(',').map(n=>Number(n)) );
-	let colliderPointsInWorld = colliderPointsInSVG.map( ([px, py]) => multiplyMatrixAndPoint(matrix, [px, py, 1]));
+	let colliderPointsInWorld = colliderPointsInSVG.map( ([px, py]) => multiplyMatrixAndPoint(matrix, [px, py, 1]).slice(0,2));
 	
 	floral.colliders = colliderPointsInWorld;
 }
@@ -222,6 +222,8 @@ export function	drawLeaf(leaf){
 			cx: direct_x1,
 			cy: direct_y1,
 		});
+
+	setFloralCollider(leaf, leafSVG);
 }
 
 export 	function drawBasePath(pathString){

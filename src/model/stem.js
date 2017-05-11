@@ -93,6 +93,7 @@ export class Leaf {
 		this.type = type;
 		this.curve = curve;
 		this.colliders = this.curve.colliders;
+		// this.colliders = undefined;//get after draw svg
 		this.sign = sign;
 	}
 	burgeons(amount){
