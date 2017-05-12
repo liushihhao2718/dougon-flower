@@ -199,9 +199,8 @@ export function	drawLeaf(leaf){
 
 	const redLineAngle = Math.atan2( direct_y2 - direct_y1, direct_x2-direct_x1 )* toDeg;
 	const leafCurveAngle = Math.atan2( y2 - y1, x2 - x1)* toDeg;
-	const roateAngle = (leafCurveAngle - redLineAngle );
+	const roateAngle = (leafCurveAngle - redLineAngle);
 	const rate = skeletonLength / directLength;
-	// sign = -1;
 	if(sign > 0) 
 		leafSVG.flip('y').transform({
 			scale: rate,
@@ -216,17 +215,21 @@ export function	drawLeaf(leaf){
 			y: y1,
 		});
 	else
-		leafSVG.transform({
+		leafSVG
+	
+		.transform({
+			rotation: roateAngle,
+			cx: direct_x1,
+			cy: direct_y1
+		})
+		.transform({
 			scale: rate,
-			cx: direct_x1,
-			cy: direct_y1
-		}).transform({
-			rotation: roateAngle ,
-			cx: direct_x1,
-			cy: direct_y1
-		}).transform({
-			x: x1,
-			y: y1,
+			cx:direct_x1,
+			cy:direct_y1
+		});
+		g.transform({
+			x: x1-direct_x1,
+			y: y1-direct_y1
 		});
 
 		

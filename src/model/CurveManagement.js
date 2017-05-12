@@ -15,7 +15,7 @@ export default {
 		const amount = UI.state.levelCurve[0].branches;
 		let groupedBurgeons = this.floralScene.map( f=>f.burgeons(amount) ).filter(f => f!==undefined);
 		let burgeons = flatten( groupedBurgeons );
-		let sign = 1;
+		let sign = -1;
 		UI.state.levelCurve.forEach((levelParam, index)=>{
 
 			let nextLevelBurgeons = [];
@@ -25,7 +25,7 @@ export default {
 				let burgeon = burgeons[0];
 				burgeons.shift();
 
-				let leaf = burgeon.germinate(levelParam.length,levelParam.alpha, sign=-1*sign);
+				let leaf = burgeon.germinate(levelParam.length,levelParam.alpha, sign);
 
 				if(Collision.testCollision(leaf.colliders, collisionScene, [], burgeon.parent.colliders)){
 					nextLevelBurgeons.push(burgeon);
@@ -37,7 +37,7 @@ export default {
 					burgeons = burgeons.concat( leaf.burgeons( levelParam.branches ) );
 				}
 			}
-			burgeons = burgeons.concat( nextLevelBurgeons );
+			// burgeons = burgeons.concat( nextLevelBurgeons );
 		});
 		
 
