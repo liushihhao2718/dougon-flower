@@ -187,10 +187,10 @@ export function	drawLeaf(leaf){
 
 	let leafSVG = g.svg(leafString);
 	const direct = leafSVG.node.children[0].getElementById('direct');
-	const direct_x1 = direct.getAttribute('x1');
-	const direct_y1 = direct.getAttribute('y1');
-	const direct_x2 = direct.getAttribute('x2');
-	const direct_y2 = direct.getAttribute('y2');
+	const direct_x1 = Number(direct.getAttribute('x1'));
+	const direct_y1 = Number(direct.getAttribute('y1'));
+	const direct_x2 = Number(direct.getAttribute('x2'));
+	const direct_y2 = Number(direct.getAttribute('y2'));
 
 	const skeletonLength = distance(x1, y1, x2, y2);
 	const directLength = distance(direct_x1, direct_y1, direct_x2, direct_y2);
@@ -203,23 +203,42 @@ export function	drawLeaf(leaf){
 	const rate = skeletonLength / directLength;
 	sign = -1;
 	if(sign > 0) 
-		leafSVG.flip('y').scale(rate,rate).translate(x1, y1)
-			.rotate(roateAngle +180-(leafCurveAngle*2),
-			direct_x1,direct_y1
-		);
+		leafSVG.flip('y').transform({
+			scale: rate
+		}).transform({
+			x: x1,
+			y: y1,
+		}).transform({
+			rotation: roateAngle +180-(leafCurveAngle*2),
+			cx: direct_x1,
+			cy: direct_y1,
+		});
+
 	else
-		leafSVG.scale(rate,rate).translate(x1, y1).rotate(roateAngle, direct_x1, direct_y1);
+		leafSVG.transform({
+			scale: rate
+		}).transform({
+			x: x1,
+			y: y1,
+		}).transform({
+			rotation: roateAngle ,
+			cx: direct_x1,
+			cy: direct_y1,
+		});
+
 		
 	// setFloralCollider(leaf, leafSVG);
 
-	let matrix = leafSVG.node.getAttribute('transform').split(/[^\-\d.]+/).filter(x=>x !== '');
+	// let matrix = leafSVG.node.getAttribute('transform').split(/[^\-\d.]+/).filter(x=>x !== '');
 
 	// let [px, py] = collider.attributes.points.value.split(' ')[0].split(',').map(n=>Number(n));
-	let [px,py] = multiplyMatrixAndPoint(matrix, [direct_x2, direct_y2, 1]).slice(0,2);
-	let p2 = new Vector2(direct_x2, direct_y2);
-	// p2.multiply(rate).
+	// let [px,py] = multiplyMatrixAndPoint(matrix, [direct_x2, direct_y2, 1]).slice(0,2);
+	// let p2 = new Vector2(direct_x2, direct_y2);
+	// let origin = new Vector2(direct_x1, direct_y1);
+	// let fixPoint = new Vector2(x1, y1);
+	// p2.sub(origin).multiplyScalar(rate).add(origin).add(fixPoint).rotateAround(fixPoint, roateAngle);
 	
-	console.log(close(px,x2) && close(py, y2));
+	// console.log(close(p2.x,x2) && close(p2.y, y2));
 }
 function close(a, b) {
 	return Math.abs(a - b) < 0.001;
