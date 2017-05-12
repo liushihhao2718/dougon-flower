@@ -1,5 +1,6 @@
 import CurveManagement from './CurveManagement';
 import {flowerString, LeafImage, cap, leafType, LeafBranch} from '../images/LeafImage';
+import {Vector2} from 'three';
 function handleClick(floral) {
 	if(CurveManagement.selectedCurve.includes(floral)){
 		const index = CurveManagement.selectedCurve.indexOf(floral);
@@ -199,33 +200,30 @@ export function	drawLeaf(leaf){
 	const redLineAngle = Math.atan2( direct_y2 - direct_y1, direct_x2-direct_x1 )* toDeg;
 	const leafCurveAngle = Math.atan2( y2 - y1, x2 - x1)* toDeg;
 	const roateAngle = (leafCurveAngle - redLineAngle );
+	const rate = skeletonLength / directLength;
+	sign = -1;
 	if(sign > 0) 
-		leafSVG.flip('y').transform({
-			scale: skeletonLength / directLength
-		}).transform({
-			x: x1,
-			y: y1,
-		}).transform({
-			rotation: roateAngle +180-(leafCurveAngle*2),
-			cx: direct_x1,
-			cy: direct_y1,
-		});
-
+		leafSVG.flip('y').scale(rate,rate).translate(x1, y1)
+			.rotate(roateAngle +180-(leafCurveAngle*2),
+			direct_x1,direct_y1
+		);
 	else
-		leafSVG.transform({
-			scale: skeletonLength / directLength
-		}).transform({
-			x: x1,
-			y: y1,
-		}).transform({
-			rotation: roateAngle ,
-			cx: direct_x1,
-			cy: direct_y1,
-		});
+		leafSVG.scale(rate,rate).translate(x1, y1).rotate(roateAngle, direct_x1, direct_y1);
+		
+	// setFloralCollider(leaf, leafSVG);
 
-	setFloralCollider(leaf, leafSVG);
+	let matrix = leafSVG.node.getAttribute('transform').split(/[^\-\d.]+/).filter(x=>x !== '');
+
+	// let [px, py] = collider.attributes.points.value.split(' ')[0].split(',').map(n=>Number(n));
+	let [px,py] = multiplyMatrixAndPoint(matrix, [direct_x2, direct_y2, 1]).slice(0,2);
+	let p2 = new Vector2(direct_x2, direct_y2);
+	// p2.multiply(rate).
+	
+	console.log(close(px,x2) && close(py, y2));
 }
-
+function close(a, b) {
+	return Math.abs(a - b) < 0.001;
+}
 export 	function drawBasePath(pathString){
 	CurveManagement.layer.debugCurveLayer.path( pathString ).fill('none').stroke({ width: 3 }).stroke('#f06');
 }

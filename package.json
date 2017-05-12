@@ -7,7 +7,7 @@
     "test": "ava",
     "dev": "watchify src/main.js -v --debug -t [ stringify --extensions [.svg] ] -t babelify -o docs/js/main.js",
     "start": "http-server docs",
-    "concave":"watchify test/ConcaveHullFactory.js -v --debug -t [ stringify --extensions [.svg] ] -t babelify -o test/concave.js"
+    "concave": "watchify test/ConcaveHullFactory.js -v --debug -t [ stringify --extensions [.svg] ] -t babelify -o test/concave.js"
   },
   "author": "",
   "license": "ISC",
@@ -27,7 +27,8 @@
     "point-in-polygon": "^1.0.1",
     "shortid": "^2.2.8",
     "stringify": "^5.1.0",
-    "svg.js": "*"
+    "svg.js": "*",
+    "three": "^0.85.2"
   },
   "ava": {
     "files": [
