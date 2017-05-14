@@ -15,7 +15,7 @@ export default {
 		const amount = UI.state.levelCurve[0].branches;
 		let groupedBurgeons = this.floralScene.map( f=>f.burgeons(amount) ).filter(f => f!==undefined);
 		let burgeons = flatten( groupedBurgeons );
-		let sign = -1;
+		let sign = 1;
 		UI.state.levelCurve.forEach((levelParam, index)=>{
 
 			let nextLevelBurgeons = [];
