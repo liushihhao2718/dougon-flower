@@ -21,6 +21,8 @@ function concaveSVG(flowerString, concave, length){
 	let points = getPathPoints(flower, draw).filter(x=>typeof x[0] === 'number' && typeof x[1] === 'number');
 	let polygon = concaveman(points, concave, length);
 	draw.polygon().plot(polygon).fill('none').stroke({ width: 3 }).stroke('red');
+
+	return polygon;
 }
 
 function 正面(){
@@ -43,8 +45,11 @@ function 側面(){
 側面();
 
 function leaf(){
+	let json = [];
 	_.range(6).forEach(i =>{
-		concaveSVG(LeafImage[i], 2, 45);
+		const polygon = concaveSVG(LeafImage[i], 2, 45);
+		json.push(polygon);
 	});
+	console.log(JSON.stringify(json));
 }
 leaf();

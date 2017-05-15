@@ -10,7 +10,7 @@ export default {
 	debug_burgeons:[],
 	growBranches(){
 		let leafDrawingQueue=[];
-		let flowerPosition = this.floralScene.map(f=>f.flowerPosition).filter(f => f!==undefined);
+		// let flowerPosition = this.floralScene.map(f=>f.flowerPosition).filter(f => f!==undefined);
 		let collisionScene= this.floralScene.map(f=>f.colliders).filter(f => f!==undefined);
 		const amount = UI.state.levelCurve[0].branches;
 		let groupedBurgeons = this.floralScene.map( f=>f.burgeons(amount) ).filter(f => f!==undefined);
@@ -39,8 +39,6 @@ export default {
 			}
 			burgeons = burgeons.concat( nextLevelBurgeons );
 		});
-		
-
 		return leafDrawingQueue;
 	},
 	clearAllLayer(){
@@ -76,7 +74,6 @@ export default {
 				.cx(position.x).cy(position.y)
 				.fill('none').stroke({color:'orange', width:10});
 		}
-		
 	},
 	clearScene(){
 		this.floralScene.length = [];

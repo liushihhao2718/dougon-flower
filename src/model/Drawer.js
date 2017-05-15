@@ -1,6 +1,5 @@
 import CurveManagement from './CurveManagement';
 import {flowerString, LeafImage, cap, leafType, LeafBranch} from '../images/LeafImage';
-import {Vector2} from 'three';
 function handleClick(floral) {
 	if(CurveManagement.selectedCurve.includes(floral)){
 		const index = CurveManagement.selectedCurve.indexOf(floral);
@@ -37,8 +36,6 @@ export function drawCap(floral) {
 	const cx = Number(boundingCircle.getAttribute('cx'));
 	const cy = Number(boundingCircle.getAttribute('cy'));
 	const r = Number(boundingCircle.getAttribute('r'));
-
-
 
 	const toDeg = 180/Math.PI;
 
@@ -199,8 +196,6 @@ export function	drawLeaf(leaf){
 
 	const redLineAngle = Math.atan2( direct_y2 - direct_y1, direct_x2-direct_x1 )* toDeg;
 	const leafCurveAngle = Math.atan2( y2 - y1, x2 - x1)* toDeg;
-	const roateAngle = (leafCurveAngle - redLineAngle );
-	const rate = skeletonLength / directLength;
 
 	//scale(1 ${-sign}) == matrix(1 0 0 ${-sign} 0 0) 
 	g.attr({'transform': `
@@ -210,23 +205,9 @@ export function	drawLeaf(leaf){
 		scale(1 ${-sign})
 		rotate(${-redLineAngle}) 
 		scale(${1/directLength}) 
-		translate(${-direct_x1},${-direct_y1})`
-	.replace('\n',' ')});
-		
-	// setFloralCollider(leaf, leafSVG);
-
-	let matrix = leafSVG.node.getAttribute('transform').split(/[^\-\d.]+/).filter(x=>x !== '');
-
-	// let [px, py] = collider.attributes.points.value.split(' ')[0].split(',').map(n=>Number(n));
-	let [px,py] = multiplyMatrixAndPoint(matrix, [direct_x2, direct_y2, 1]).slice(0,2);
-	let p2 = new Vector2(direct_x2, direct_y2);
-	// p2.multiply(rate).
-	
-	console.log(close(px,x2) && close(py, y2));
+		translate(${-direct_x1},${-direct_y1})`.replace('\n',' ')});
 }
-function close(a, b) {
-	return Math.abs(a - b) < 0.001;
-}
+
 export 	function drawBasePath(pathString){
 	CurveManagement.layer.debugCurveLayer.path( pathString ).fill('none').stroke({ width: 3 }).stroke('#f06');
 }
