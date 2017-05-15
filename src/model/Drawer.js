@@ -187,10 +187,10 @@ export function	drawLeaf(leaf){
 
 	let leafSVG = g.svg(leafString);
 	const direct = leafSVG.node.children[0].getElementById('direct');
-	const direct_x1 = direct.getAttribute('x1');
-	const direct_y1 = direct.getAttribute('y1');
-	const direct_x2 = direct.getAttribute('x2');
-	const direct_y2 = direct.getAttribute('y2');
+	const direct_x1 = Number(direct.getAttribute('x1'));
+	const direct_y1 = Number(direct.getAttribute('y1'));
+	const direct_x2 = Number(direct.getAttribute('x2'));
+	const direct_y2 = Number(direct.getAttribute('y2'));
 
 	const skeletonLength = distance(x1, y1, x2, y2);
 	const directLength = distance(direct_x1, direct_y1, direct_x2, direct_y2);
@@ -201,14 +201,17 @@ export function	drawLeaf(leaf){
 	const leafCurveAngle = Math.atan2( y2 - y1, x2 - x1)* toDeg;
 	const roateAngle = (leafCurveAngle - redLineAngle );
 	const rate = skeletonLength / directLength;
-	sign = -1;
-	if(sign > 0) 
-		leafSVG.flip('y').scale(rate,rate).translate(x1, y1)
-			.rotate(roateAngle +180-(leafCurveAngle*2),
-			direct_x1,direct_y1
-		);
-	else
-		leafSVG.scale(rate,rate).translate(x1, y1).rotate(roateAngle, direct_x1, direct_y1);
+
+	//scale(1 ${-sign}) == matrix(1 0 0 ${-sign} 0 0) 
+	g.attr({'transform': `
+		translate(${x1} ${y1}) 
+		scale(${skeletonLength}) 
+		rotate(${leafCurveAngle})
+		scale(1 ${-sign})
+		rotate(${-redLineAngle}) 
+		scale(${1/directLength}) 
+		translate(${-direct_x1},${-direct_y1})`
+	.replace('\n',' ')});
 		
 	// setFloralCollider(leaf, leafSVG);
 
