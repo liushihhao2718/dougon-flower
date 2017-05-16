@@ -205,7 +205,8 @@ export function	drawLeaf(leaf){
 		scale(1 ${-sign})
 		rotate(${-redLineAngle}) 
 		scale(${1/directLength}) 
-		translate(${-direct_x1},${-direct_y1})`.replace('\n',' ')});
+		translate(${-direct_x1},${-direct_y1})`.replace(`
+`,' ')});
 }
 
 export 	function drawBasePath(pathString){

@@ -52,7 +52,8 @@ export class LeafBranch{
 				name :leafType.leafBranch,
 				order: i
 			};
-			this.leafs.push(Leaf.makeLeafByPoint(points, 0, type));
+			const sign = -1;
+			this.leafs.push(Leaf.makeLeafByPoint(points, sign, type));
 		}
 		this.leafs.reverse();
 		return this.leafs;
