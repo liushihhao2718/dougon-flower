@@ -129,7 +129,8 @@ export class Leaf {
 			.rotate(leafCurveAngle)
 			.scale(1, -this.sign)
 			.rotate(-redLineAngle) 
-			.scale(1/directLength) 
+			.scale(1/directLength)
+			.scale(0.85) 
 			.translate(-direct_x1,-direct_y1);
 
 		this._colliders = leafColliders[this.type.order].map(([x,y])=> multiplyMatrixAndPoint(matrix, [x,y,1]).slice(0,2));
