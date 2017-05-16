@@ -93,8 +93,6 @@ export class Leaf {
 		this.endY = endY;
 		this.type = type;
 		this.curve = curve;
-		this.colliders = this.curve.colliders;
-		// this.colliders = undefined;//get after draw svg
 		this.sign = sign;
 	}
 	burgeons(amount){
@@ -104,36 +102,39 @@ export class Leaf {
 			return (new Burgeon(point.x, point.y, direction, nextType(this.type), this) );
 		});
 	}
-	// get colliders(){
-	// 	const parser = new DOMParser();
-	// 	let leafSVG = parser.parseFromString(LeafImage[this.type.order], 'image/svg+xml');
+	get colliders(){
 
-	// 	const direct = leafSVG.getElementById('direct');
-	// 	const direct_x1 = Number(direct.getAttribute('x1'));
-	// 	const direct_y1 = Number(direct.getAttribute('y1'));
-	// 	const direct_x2 = Number(direct.getAttribute('x2'));
-	// 	const direct_y2 = Number(direct.getAttribute('y2'));
+		if(this._colliders) return this._colliders;
+		const parser = new DOMParser();
+		let leafSVG = parser.parseFromString(LeafImage[this.type.order], 'image/svg+xml');
 
-	// 	const skeletonLength = distance(this.startX, this.startY, this.endX, this.endY);
-	// 	const directLength = distance(direct_x1, direct_y1, direct_x2, direct_y2);
+		const direct = leafSVG.getElementById('direct');
+		const direct_x1 = Number(direct.getAttribute('x1'));
+		const direct_y1 = Number(direct.getAttribute('y1'));
+		const direct_x2 = Number(direct.getAttribute('x2'));
+		const direct_y2 = Number(direct.getAttribute('y2'));
 
-	// 	const toDeg = 180/Math.PI;
+		const skeletonLength = distance(this.startX, this.startY, this.endX, this.endY);
+		const directLength = distance(direct_x1, direct_y1, direct_x2, direct_y2);
 
-	// 	const redLineAngle = Math.atan2( direct_y2 - direct_y1, direct_x2-direct_x1 )* toDeg;
-	// 	const leafCurveAngle = Math.atan2( this.endY - this.startY, this.endX - this.startX)* toDeg;
+		const toDeg = 180/Math.PI;
 
-	// 	//scale(1 ${-sign}) == matrix(1 0 0 ${-sign} 0 0) 
-	// 	let matrix = new SVG.Matrix()
-	// 		.translate(this.startX, this.startY) 
-	// 		.scale(skeletonLength) 
-	// 		.rotate(leafCurveAngle)
-	// 		.scale(1, -this.sign)
-	// 		.rotate(-redLineAngle) 
-	// 		.scale(1/directLength) 
-	// 		.translate(-direct_x1,-direct_y1);
+		const redLineAngle = Math.atan2( direct_y2 - direct_y1, direct_x2-direct_x1 )* toDeg;
+		const leafCurveAngle = Math.atan2( this.endY - this.startY, this.endX - this.startX)* toDeg;
 
-	// 	return leafColliders[this.type.order].map(([x,y])=> multiplyMatrixAndPoint(matrix, [x,y,1]).slice(0,2));
-	// }
+		//scale(1 ${-sign}) == matrix(1 0 0 ${-sign} 0 0) 
+		let matrix = new SVG.Matrix()
+			.translate(this.startX, this.startY) 
+			.scale(skeletonLength) 
+			.rotate(leafCurveAngle)
+			.scale(1, -this.sign)
+			.rotate(-redLineAngle) 
+			.scale(1/directLength) 
+			.translate(-direct_x1,-direct_y1);
+
+		this._colliders = leafColliders[this.type.order].map(([x,y])=> multiplyMatrixAndPoint(matrix, [x,y,1]).slice(0,2));
+		return this._colliders;
+	}
 }
 function distance(x1, y1, x2, y2) {
 	const a = x1 - x2;
