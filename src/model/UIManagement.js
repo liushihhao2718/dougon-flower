@@ -13,6 +13,7 @@ export let state = {
 	flowerSize: 150,
 	trunkHead: 5,
 	trunkTail: 10,
+	density: 1,
 	levelCurve :[
 		{
 			length: 80,
@@ -56,7 +57,7 @@ export function setGUI(){
 	let c1 = gui.add(state, 'trunkHead', 1, 20);
 	let c2 = gui.add(state, 'trunkTail', 5, 40);
 	let c3 = gui.add(state, 'flowerSize', 10, 200);
-
+	let c4 = gui.add(state, 'density', 0.5, 2);
 	c1.onChange(head =>{
 		for(let floral of CurveManagement.selectedCurve){
 			floral.trunkHead = head;	
@@ -81,7 +82,10 @@ export function setGUI(){
 		CurveManagement.draw();
 		changeColor( state.color );
 	});
-
+	c4.onChange(()=>{
+		CurveManagement.draw();
+		changeColor(state.color);
+	});
 	levelFolder(0);
 	levelFolder(1);
 	levelFolder(2);

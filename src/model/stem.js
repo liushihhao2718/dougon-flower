@@ -5,6 +5,8 @@ import nextType from './MarkovLeaf';
 import * as Drawer from './Drawer';
 import _ from 'lodash';
 import SVG from 'svg.js';
+import * as UI from './UIManagement';
+
 import {leafType,LeafImage,leafColliders} from '../images/LeafImage';
 
 export class Floral{
@@ -102,9 +104,7 @@ export class Leaf {
 			return (new Burgeon(point.x, point.y, direction, nextType(this.type), this) );
 		});
 	}
-	get colliders(){
-
-		if(this._colliders) return this._colliders;
+	computeColliders(density=1){
 		const parser = new DOMParser();
 		let leafSVG = parser.parseFromString(LeafImage[this.type.order], 'image/svg+xml');
 
@@ -130,10 +130,15 @@ export class Leaf {
 			.scale(1, -this.sign)
 			.rotate(-redLineAngle) 
 			.scale(1/directLength)
-			.scale(0.85) 
+			.scale(1/density) 
 			.translate(-direct_x1,-direct_y1);
 
 		this._colliders = leafColliders[this.type.order].map(([x,y])=> multiplyMatrixAndPoint(matrix, [x,y,1]).slice(0,2));
+		return this._colliders;
+	}
+	get colliders(){
+		if(this._colliders) return this._colliders;
+		this._colliders = this.computeColliders(UI.state.density);
 		return this._colliders;
 	}
 }
