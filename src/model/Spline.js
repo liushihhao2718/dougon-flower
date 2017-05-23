@@ -27,11 +27,14 @@ export class BezierSpline {
 			burgeons.reverse();
 			return burgeons.map(x=>this.test(x));
 		};
-		
-		this.colliders = this.controlPoints.reduce((acc, val)=>{
-			let collider = makeCollider(val);
-			return acc.concat( collider );
-		},[]);
+	}
+	get colliders(){
+		if(!this._colliders)
+			this._colliders = this.controlPoints.reduce((acc, val)=>{
+				let collider = makeCollider(val);
+				return acc.concat( collider );
+			},[]);
+		return this._colliders;
 	}
 	paramColliders(p=0.6){
 		return this.controlPoints.reduce((acc, val)=>{

@@ -1,16 +1,6 @@
 import * as UI from '../model/UIManagement';
 import {dougonBoundingNodes} from '../images/dougonBounding';
 let inside = require('point-in-polygon');
-import _ from 'lodash';
-
-function testCollision(test_polygon, polygons, ...ignore){
-	const dougon = dougonBoundingNodes[ UI.state.bound ];
-	const all_inside = true;
-	if(!polygonInsidePolygon(test_polygon, dougon, all_inside)) return true;
-	return !!polygons.find(poly=> !ignore.includes(poly)
-		&& polygonCollision(test_polygon, poly)
-	);
-}
 
 function aabbCollision(rect1, rect2){
 
@@ -25,33 +15,11 @@ function aabbCollision(rect1, rect2){
 function polygonCollision(polygon1, polygon2){
 	return polygonInsidePolygon(polygon1, polygon2);
 }
-function bezierIntersects(polyBezier, others){
-	let flag = false;
-	for (var i = 0; i < others.length; i++) {
-		for (var j = 0; j < polyBezier.length; j++) {
-			if( others[i].intersects(polyBezier[j]).length > 0 ){
-				flag = true;
-				break;
-			}
-		}
-	}
-	return flag;
-}
+
 function polygonInsidePolygon(poly,fixedPoly, all_inside){
 	return all_inside?
 		poly.every(p => inside(p, fixedPoly))
 		:!!poly.find(p => inside(p, fixedPoly));
-}
-
-function circlePolygonCollision(circle, polygon) {
-	return !!polygon.find(p => distance(circle.x, circle.y, p[0], p[1]) < circle.r);
-}
-
-function distance(x1, y1, x2, y2) {
-	const a = x1 - x2;
-	const b = y1 - y2;
-
-	return Math.sqrt( a*a + b*b );
 }
 
 export default class ColliderCollection{

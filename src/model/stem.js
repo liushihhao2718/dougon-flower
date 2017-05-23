@@ -8,7 +8,8 @@ import SVG from 'svg.js';
 import * as UI from './UIManagement';
 
 import {leafType,LeafImage,leafColliders} from '../images/LeafImage';
-
+const parser = new DOMParser();
+const parsedLeafs = LeafImage.map(s=>parser.parseFromString(s, 'image/svg+xml'));
 export class Floral{
 	constructor(basePath, r,trunkHead,trunkTail,flowerType='海石榴華', aspect = '正面',flowerRotation=30){
 		this.id = shortid.generate();
@@ -105,9 +106,9 @@ export class Leaf {
 		});
 	}
 	computeColliders(density=1){
-		const parser = new DOMParser();
-		let leafSVG = parser.parseFromString(LeafImage[this.type.order], 'image/svg+xml');
-
+		// const parser = new DOMParser();
+		// let leafSVG = parser.parseFromString(LeafImage[this.type.order], 'image/svg+xml');
+		let leafSVG = parsedLeafs[this.type.order];
 		const direct = leafSVG.getElementById('direct');
 		const direct_x1 = Number(direct.getAttribute('x1'));
 		const direct_y1 = Number(direct.getAttribute('y1'));
