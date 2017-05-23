@@ -149,7 +149,14 @@ export class Leaf {
 			.rotate(leafCurveAngle)
 			.scale(1, -this.sign);
 
-		this._colliders = normalizedColliders[this.type.order].map(([x,y])=> multiplyMatrixAndPoint(matrix, [x,y,1]).slice(0,2));
+		// this._colliders = normalizedColliders[this.type.order].map(p=> {
+		// 	p = scale(p , 1, -this.sign);
+		// 	p = rotate(p, leafCurveAngle);
+		// 	p = scale(p, skeletonLength, skeletonLength);
+		// 	p = scale(p, 1/density, 1/density);
+		// 	p = translate(p, this.startX, this.startY);
+		// 	return p;
+		// });
 		return this._colliders;
 	}
 	get colliders(){
@@ -157,6 +164,21 @@ export class Leaf {
 		this._colliders = this.computeColliders(UI.state.density);
 		return this._colliders;
 	}
+}
+
+function scale(point, sx, sy){
+	let [x,y]=point;
+	return [x*sx,y*sy];
+}
+function rotate(point, r) {
+	const [x, y] = point;
+	const c = Math.cos(r);
+	const s = Math.sin(r);
+	return [c*x - s*y, s*x + c*y];
+}
+function translate(point, dx, dy){
+	const [x, y] = point;
+	return [x+dx, y+dy];
 }
 function distance(x1, y1, x2, y2) {
 	const a = x1 - x2;
