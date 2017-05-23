@@ -136,27 +136,16 @@ export class Leaf {
 	}
 	computeColliders(density=1){
 		const skeletonLength = distance(this.startX, this.startY, this.endX, this.endY);
+		const leafCurveAngle = Math.atan2( this.endY - this.startY, this.endX - this.startX);
 
-		const toDeg = 180/Math.PI;
-
-		const leafCurveAngle = Math.atan2( this.endY - this.startY, this.endX - this.startX)* toDeg;
-
-		//scale(1 ${-sign}) == matrix(1 0 0 ${-sign} 0 0) 
-		let matrix = new SVG.Matrix()
-			.translate(this.startX, this.startY)
-			.scale(1/density) 
-			.scale(skeletonLength) 
-			.rotate(leafCurveAngle)
-			.scale(1, -this.sign);
-
-		// this._colliders = normalizedColliders[this.type.order].map(p=> {
-		// 	p = scale(p , 1, -this.sign);
-		// 	p = rotate(p, leafCurveAngle);
-		// 	p = scale(p, skeletonLength, skeletonLength);
-		// 	p = scale(p, 1/density, 1/density);
-		// 	p = translate(p, this.startX, this.startY);
-		// 	return p;
-		// });
+		this._colliders = normalizedColliders[this.type.order].map(p=> {
+			p = scale(p , 1, -this.sign);
+			p = rotate(p, leafCurveAngle);
+			p = scale(p, skeletonLength, skeletonLength);
+			p = scale(p, 1/density, 1/density);
+			p = translate(p, this.startX, this.startY);
+			return p;
+		});
 		return this._colliders;
 	}
 	get colliders(){
