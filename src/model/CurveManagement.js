@@ -1,5 +1,5 @@
 import * as UI from './UIManagement';
-import * as Collision from './Collision';
+import ColliderCollection from './Collision';
 import * as Drawer from '../model/Drawer';
 
 export default {
@@ -10,8 +10,7 @@ export default {
 	debug_burgeons:[],
 	growBranches(){
 		let leafDrawingQueue=[];
-		// let flowerPosition = this.floralScene.map(f=>f.flowerPosition).filter(f => f!==undefined);
-		let collisionScene= this.floralScene.map(f=>f.colliders).filter(f => f!==undefined);
+		let collisionScene= new ColliderCollection(this.floralScene.map(f=>f.colliders));
 		const amount = UI.state.levelCurve[0].branches;
 		let groupedBurgeons = this.floralScene.map( f=>f.burgeons(amount) ).filter(f => f!==undefined);
 		let burgeons = flatten( groupedBurgeons );
@@ -27,12 +26,12 @@ export default {
 
 				let leaf = burgeon.germinate(levelParam.length,levelParam.alpha, sign=-1*sign);
 
-				if(Collision.testCollision(leaf.colliders, collisionScene, [], burgeon.parent.colliders)){
+				if(collisionScene.test(leaf.colliders, burgeon.parent.colliders)){
 					nextLevelBurgeons.push(burgeon);
 				}
 				else{
 					leafDrawingQueue.push(leaf);
-					collisionScene.push(leaf.colliders);
+					collisionScene.add(leaf.colliders);
 					this.debug_burgeons.push({leaf,level:index});
 					burgeons = burgeons.concat( leaf.burgeons( levelParam.branches ) );
 				}
@@ -83,4 +82,6 @@ export default {
 function flatten(arr){
 	return arr.reduce((acc, val) => acc.concat( Array.isArray(val) ? flatten(val) : val),[]);
 }
+
+
 
