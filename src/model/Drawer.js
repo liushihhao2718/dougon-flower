@@ -65,10 +65,12 @@ export function drawCap(floral) {
 
 	setFloralCollider(floral, capSVG);
 }
-const worker = new Worker('js/OutlineWorker.js');
+let worker = new Worker('js/OutlineWorker.js');
 
 export function	drawStem(floral){
-	// worker.terminate();
+	worker.terminate();
+	worker = new Worker('js/OutlineWorker.js');
+	
 	let stem = CurveManagement.layer.stemLayer.group();
 	stem.addClass('clickable');
 	stem.data({ id:floral.id });
