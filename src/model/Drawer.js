@@ -65,8 +65,10 @@ export function drawCap(floral) {
 
 	setFloralCollider(floral, capSVG);
 }
+const worker = new Worker('js/OutlineWorker.js');
 
 export function	drawStem(floral){
+	// worker.terminate();
 	let stem = CurveManagement.layer.stemLayer.group();
 	stem.addClass('clickable');
 	stem.data({ id:floral.id });
@@ -78,38 +80,55 @@ export function	drawStem(floral){
 	let trunkTail = floral.trunkTail;
 	if(floral.aspect == '側面') trunkTail*=0.5;
 
-	drawOutLine( stem, trunkHead, trunkTail,'#7B5A62', floral.curve);
-	drawOutLine( stem, trunkHead/1.111, trunkTail/1.111, '#CED5D0',floral.curve);
-	drawOutLine( stem, trunkHead/2, trunkTail/2, '#9FB9A8',floral.curve);
-	drawOutLine( stem, trunkHead/8, trunkTail/8, '#7C8168',floral.curve);
-}
-function drawOutLine( layer, beginWidth, endWidth, color, basePath){
-	let fullPath = basePath.outline(beginWidth, endWidth);
+	let message ={
+		basePath : floral.curve.controlPoints,
+		trunk: [
+			[trunkHead, trunkTail],
+			[trunkHead/1.111, trunkTail/1.111],
+			[trunkHead/2, trunkTail/2],
+			[trunkHead/8, trunkTail/8]
+		]
+	};
 
-	let pathString = svgPathString(fullPath);
-	drawOnPannel( layer, pathString, color );
+	const color = ['#7B5A62', '#CED5D0','#9FB9A8','#7C8168'];
+	worker.postMessage(message);
+	worker.onmessage = function(e){
+		e.data.forEach((s,i)=>{
+			drawOnPannel( stem, s, color[i] );
+		});
+	};
+	// drawOutLine( stem, trunkHead, trunkTail,'#7B5A62', floral.curve);
+	// drawOutLine( stem, trunkHead/1.111, trunkTail/1.111, '#CED5D0',floral.curve);
+	// drawOutLine( stem, trunkHead/2, trunkTail/2, '#9FB9A8',floral.curve);
+	// drawOutLine( stem, trunkHead/8, trunkTail/8, '#7C8168',floral.curve);
 }
+// function drawOutLine( layer, beginWidth, endWidth, color, basePath){
+// 	let fullPath = basePath.outline(beginWidth, endWidth);
+
+// 	let pathString = svgPathString(fullPath);
+// 	drawOnPannel( layer, pathString, color );
+// }
 function drawOnPannel(pannel, pathString, color){
 	pannel.path( pathString )
 	.fill(color)
 	.stroke({width: 0});
 }
-function svgPathString(fittedLineData) {
-	var str = '';
-	//bezier : [ [c0], [c1], [c2], [c3] ]
-	fittedLineData.forEach(function (bezier, i) {
-		if (i == 0) {
-			str += 'M ' + bezier.points[0].x + ' ' + bezier.points[0].y;
-		}
+// function svgPathString(fittedLineData) {
+// 	var str = '';
+// 	//bezier : [ [c0], [c1], [c2], [c3] ]
+// 	fittedLineData.forEach(function (bezier, i) {
+// 		if (i == 0) {
+// 			str += 'M ' + bezier.points[0].x + ' ' + bezier.points[0].y;
+// 		}
 
-		str += 'C ' + bezier.points[1].x + ' ' + bezier.points[1].y + ', ' +
-		bezier.points[2].x + ' ' + bezier.points[2].y + ', ' +
-		bezier.points[3].x + ' ' + bezier.points[3].y + ' ';	
+// 		str += 'C ' + bezier.points[1].x + ' ' + bezier.points[1].y + ', ' +
+// 		bezier.points[2].x + ' ' + bezier.points[2].y + ', ' +
+// 		bezier.points[3].x + ' ' + bezier.points[3].y + ' ';	
 					
-	});
+// 	});
 
-	return str;
-}
+// 	return str;
+// }
 export function	drawFlower(floral){
 
 	if (floral.aspect === '側面') {
