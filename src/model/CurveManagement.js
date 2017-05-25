@@ -36,7 +36,7 @@ export default {
 					burgeons = burgeons.concat( leaf.burgeons( levelParam.branches ) );
 				}
 			}
-			burgeons = burgeons.concat( nextLevelBurgeons );
+			burgeons = nextLevelBurgeons;
 		});
 		return leafDrawingQueue;
 	},
