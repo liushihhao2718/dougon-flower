@@ -62,7 +62,7 @@ export default class MagneticCurve {
 
 		let T = this.param.T;
 		let t = 0;
-		let dt = T/4;
+		let dt = T/7;
 
 		while( t < T ) {
 			points.push( [x, y] );
