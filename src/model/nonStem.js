@@ -20,11 +20,8 @@ export class Flower{
 }
 
 export class LeafBranch{
-	constructor(spline, colliderWidth = 90){
+	constructor(spline){
 		this.spline = spline;
-		let beziers =  spline.outline(colliderWidth, 10);
-		this.colliders = _.flatMap(beziers,b => b.getLUT(10))
-			.map(p=>[p.x, p.y]);
 	}
 	static segmentedIndex(){
 		let segment = [3,3,3,4,4,6,15];
@@ -35,27 +32,31 @@ export class LeafBranch{
 		normalizedSegment.unshift(0);
 		return normalizedSegment;
 	}
-
-	computeSegmentLeaf(){
-		if(!this._leaf) this.leafs = [];
-
-		let segment = LeafBranch.segmentedIndex();
-		for (var i = 0; i < segment.length-1; i++) {
-			let start = segment[i];
-			let end= segment[i+1];
-
-			if(i !== 0)	start -= 0.01;
-
-			let beziers = this.spline.segmentRange(start, end);
-			let points = _.flatMap(beziers, b=> b.getLUT(100)).map(p=>[p.x, p.y]);
-			let type = {
-				name :leafType.leafBranch,
-				order: i
-			};
-			const sign = -1;
-			this.leafs.push(Leaf.makeLeafByPoint(points, sign, type));
+	get colliders(){
+		if(!this._colliders){
+			this._colliders = this.computeSegmentLeaf().map(x=>x.colliders);
 		}
-		this.leafs.reverse();
+		return this._colliders;
+	}
+	computeSegmentLeaf(){
+		if(!this.leafs){
+			this.leafs = [];
+
+			let segment = LeafBranch.segmentedIndex();
+			for (var i = 0; i < segment.length-1; i++) {
+				let start = segment[i];
+				let end= segment[i+1];
+
+				if(i !== 0)	start -= 0.01;
+
+				let beziers = this.spline.segmentRange(start, end);
+				let points = _.flatMap(beziers, b=> b.getLUT(100)).map(p=>[p.x, p.y]);
+				let type = 5 + i;
+				const sign = -1;
+				this.leafs.push(Leaf.makeLeafByPoint(points, sign, type));
+			}
+			this.leafs.reverse();
+		}
 		return this.leafs;
 	}
 

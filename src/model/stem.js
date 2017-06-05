@@ -7,7 +7,7 @@ import _ from 'lodash';
 import SVG from 'svg.js';
 import * as UI from './UIManagement';
 
-import {leafType,LeafImage,leafColliders} from '../images/LeafImage';
+import {LeafImage,leafColliders} from '../images/LeafImage';
 
 const normalizedColliders = prepareCollider();
 function prepareCollider() {
@@ -60,10 +60,7 @@ export class Floral{
 		if (this.curve.length === 0) return;
 		let samples = this.curve.sample(amount);
 
-		let type = {
-			name: leafType.leaf,
-			order: 0
-		};
+		let type = 0;
 
 		return samples.map(s => {
 			const {point, direction} = s;
@@ -138,7 +135,7 @@ export class Leaf {
 		const skeletonLength = distance(this.startX, this.startY, this.endX, this.endY);
 		const leafCurveAngle = Math.atan2( this.endY - this.startY, this.endX - this.startX);
 
-		this._colliders = normalizedColliders[this.type.order].map(p=> {
+		this._colliders = normalizedColliders[this.type].map(p=> {
 			p = scale(p , 1, -this.sign);
 			p = rotate(p, leafCurveAngle);
 			p = scale(p, skeletonLength, skeletonLength);

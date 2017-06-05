@@ -1,7 +1,7 @@
 import SVG from 'svg.js';
 import concaveman from 'concaveman';
 import _ from 'lodash';
-import {LeafImage} from '../src/images/LeafImage';
+import {LeafImage, LeafBranch} from '../src/images/LeafImage';
 
 
 function getPathPoints(svg, draw) {
@@ -53,3 +53,13 @@ function leaf(){
 	console.log(JSON.stringify(json));
 }
 leaf();
+
+function leafBranch(){
+	let json = [];
+	_.range(7).forEach(i =>{
+		const polygon = concaveSVG(LeafBranch[i], 2, 45);
+		json.push(polygon);
+	});
+	console.log(JSON.stringify(json));
+}
+leafBranch();

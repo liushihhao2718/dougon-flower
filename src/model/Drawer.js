@@ -1,5 +1,5 @@
 import CurveManagement from './CurveManagement';
-import {flowerString, LeafImage, cap, leafType, LeafBranch} from '../images/LeafImage';
+import {flowerString, LeafImage, cap} from '../images/LeafImage';
 function handleClick(floral) {
 	if(CurveManagement.selectedCurve.includes(floral)){
 		const index = CurveManagement.selectedCurve.indexOf(floral);
@@ -154,7 +154,7 @@ function setFloralCollider(floral, svg) {
 	let colliderPointsInSVG = collider.attributes.points.value.split(' ').map(s=>s.split(',').map(n=>Number(n)) );
 	let colliderPointsInWorld = colliderPointsInSVG.map( ([px, py]) => multiplyMatrixAndPoint(matrix, [px, py, 1]).slice(0,2));
 	
-	floral.colliders = colliderPointsInWorld;
+	floral.colliders = [colliderPointsInWorld];
 }
 export function drawMagneticCurve(leaf, level){
 	let level_color = ['orange', 'green', 'blue', 'black'];
@@ -169,14 +169,9 @@ export function	drawLeaf(leaf){
 	let type = leaf.type;
 
 	let leafString = '';
-	switch(leaf.type.name){
-	case leafType.leaf:
-		leafString = LeafImage[type.order];
-		break;
-	case leafType.leafBranch:
-		leafString = LeafBranch[type.order];
-		break;	
-	}
+
+	leafString = LeafImage[type];
+	
 	let g = CurveManagement.layer.leafLayer.group();
 
 	let leafSVG = g.svg(leafString);
