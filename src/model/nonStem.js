@@ -51,7 +51,7 @@ export class LeafBranch{
 
 				let beziers = this.spline.segmentRange(start, end);
 				let points = _.flatMap(beziers, b=> b.getLUT(100)).map(p=>[p.x, p.y]);
-				let type = 5 + i;
+				let type = 6 + i;
 				const sign = -1;
 				this.leafs.push(Leaf.makeLeafByPoint(points, sign, type));
 			}
