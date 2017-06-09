@@ -8,6 +8,7 @@ import SVG from 'svg.js';
 import * as UI from './UIManagement';
 
 import {LeafImage,leafColliders} from '../images/LeafImage';
+const transformParameters = [];
 
 const normalizedColliders = prepareCollider();
 function prepareCollider() {
@@ -28,6 +29,7 @@ function normalizeSVG(leafSVG, index) {
 
 	const redLineAngle = Math.atan2( direct_y2 - direct_y1, direct_x2-direct_x1 )* toDeg;
 
+	transformParameters.push({direct_x1, direct_y1, directLength, redLineAngle});
 	//scale(1 ${-sign}) == matrix(1 0 0 ${-sign} 0 0) 
 	let matrix = new SVG.Matrix()
 		.rotate(-redLineAngle) 
@@ -134,7 +136,7 @@ export class Leaf {
 	computeColliders(density=1){
 		const skeletonLength = distance(this.startX, this.startY, this.endX, this.endY);
 		const leafCurveAngle = Math.atan2( this.endY - this.startY, this.endX - this.startX);
-
+		
 		this._colliders = normalizedColliders[this.type].map(p=> {
 			p = scale(p , 1, -this.sign);
 			p = rotate(p, leafCurveAngle);
@@ -144,6 +146,23 @@ export class Leaf {
 			return p;
 		});
 		return this._colliders;
+	}
+	transformString(){
+		const skeletonLength = distance(this.startX, this.startY, this.endX, this.endY);
+		const leafCurveAngle = Math.atan2( this.endY - this.startY, this.endX - this.startX);
+		const toDeg = 180/Math.PI;
+
+		let {direct_x1, direct_y1, directLength, redLineAngle} = transformParameters[this.type];
+
+		return `
+		translate(${this.startX} ${this.startY}) 
+		scale(${skeletonLength}) 
+		rotate(${leafCurveAngle*toDeg})
+		scale(1 ${-this.sign})
+		rotate(${-redLineAngle}) 
+		scale(${1/directLength}) 
+		translate(${-direct_x1},${-direct_y1})`.replace(`
+`,' ');
 	}
 	get colliders(){
 		if(this._colliders) return this._colliders;

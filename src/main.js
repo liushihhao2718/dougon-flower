@@ -21,6 +21,8 @@ function setSVGLayer(panel) {
 	let debugCurveLayer = panel.group().hide();
 	let hintLayer = panel.group();
 
+	CurveManagement.panel = panel;
+	CurveManagement.initSvgSymbol();
 	CurveManagement.layer = {dougonLayer, leafLayer, stemLayer, flowerLayer, debugCurveLayer, hintLayer};
 }
 

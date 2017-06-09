@@ -3,6 +3,7 @@ import ColliderCollection from './Collision';
 import * as Drawer from '../model/Drawer';
 
 export default {
+	panel : undefined,
 	selectedCurve :[],
 	scene :[],
 	floralScene:[],
@@ -76,7 +77,8 @@ export default {
 	},
 	clearScene(){
 		this.floralScene.length = [];
-	}
+	},
+	initSvgSymbol: Drawer.initSvgSymbol
 };
 
 function flatten(arr){

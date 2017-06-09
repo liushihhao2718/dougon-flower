@@ -1,5 +1,22 @@
 import CurveManagement from './CurveManagement';
 import {flowerString, LeafImage, cap} from '../images/LeafImage';
+const colorMap = require('../color/colorHex.json');
+
+let symbols;
+
+export function initSvgSymbol(){
+	const panel = CurveManagement.panel;
+	let flowerSymbol = panel.symbol().svg(flowerString);
+
+	let leafSymbol = LeafImage.map(x => {
+		let s = panel.symbol();
+		return s.group().svg(x);
+	});
+	let capSymbol = panel.symbol().svg(cap);
+
+	symbols = {flowerSymbol, leafSymbol, capSymbol};
+}
+
 function handleClick(floral) {
 	if(CurveManagement.selectedCurve.includes(floral)){
 		const index = CurveManagement.selectedCurve.indexOf(floral);
@@ -68,9 +85,6 @@ export function drawCap(floral) {
 let worker = new Worker('js/OutlineWorker.js');
 
 export function	drawStem(floral){
-	// worker.terminate();
-	// worker = new Worker('js/OutlineWorker.js');
-	
 	let stem = CurveManagement.layer.stemLayer.group();
 	stem.addClass('clickable');
 	stem.data({ id:floral.id });
@@ -92,11 +106,11 @@ export function	drawStem(floral){
 		]
 	};
 
-	const color = ['#7B5A62', '#CED5D0','#9FB9A8','#7C8168'];
+	const color = ['赭筆描道', '綠華','二綠','大綠'];
 	worker.postMessage(message);
 	worker.onmessage = function(e){
 		e.data.forEach((s,i)=>{
-			drawOnPannel( stem, s, color[i] );
+			drawOnPannel( stem, s, colorMap[color[i]]);
 		});
 	};
 }
@@ -161,44 +175,9 @@ export function drawMagneticCurve(leaf, level){
 	CurveManagement.layer.debugCurveLayer.path(leaf.curve.svgString() ).fill('none').stroke({ width: 3 }).stroke(level_color[level]);
 }
 export function	drawLeaf(leaf){
-	let x1 = leaf.startX;
-	let y1 = leaf.startY;
-	let x2 = leaf.endX;
-	let y2 = leaf.endY;
-	let sign = leaf.sign;
-	let type = leaf.type;
-
-	let leafString = '';
-
-	leafString = LeafImage[type];
-	
 	let g = CurveManagement.layer.leafLayer.group();
-
-	let leafSVG = g.svg(leafString);
-	const direct = leafSVG.node.children[0].getElementById('direct');
-	const direct_x1 = Number(direct.getAttribute('x1'));
-	const direct_y1 = Number(direct.getAttribute('y1'));
-	const direct_x2 = Number(direct.getAttribute('x2'));
-	const direct_y2 = Number(direct.getAttribute('y2'));
-
-	const skeletonLength = distance(x1, y1, x2, y2);
-	const directLength = distance(direct_x1, direct_y1, direct_x2, direct_y2);
-
-	const toDeg = 180/Math.PI;
-
-	const redLineAngle = Math.atan2( direct_y2 - direct_y1, direct_x2-direct_x1 )* toDeg;
-	const leafCurveAngle = Math.atan2( y2 - y1, x2 - x1)* toDeg;
-
-	//scale(1 ${-sign}) == matrix(1 0 0 ${-sign} 0 0) 
-	g.attr({'transform': `
-		translate(${x1} ${y1}) 
-		scale(${skeletonLength}) 
-		rotate(${leafCurveAngle})
-		scale(1 ${-sign})
-		rotate(${-redLineAngle}) 
-		scale(${1/directLength}) 
-		translate(${-direct_x1},${-direct_y1})`.replace(`
-`,' ')});
+	g.use(symbols.leafSymbol[leaf.type]);
+	g.attr({'transform': leaf.transformString()});
 }
 
 export 	function drawBasePath(pathString){
