@@ -11,7 +11,7 @@ import CurveManagement from './model/CurveManagement';
 })();
 
 function setSVGLayer(panel) {
-	var image = panel.image('target.png');
+	var image = panel.image('target.jpg');
 	image.width(1371).height(436).x(60.5).y(63.5);
 	//order is very importent!
 	let dougonLayer = panel.group();

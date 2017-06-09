@@ -2,7 +2,6 @@ import shortid from 'shortid';
 import * as Drawer from './Drawer';
 import {Leaf} from './stem';
 import _ from 'lodash';
-import {leafType} from '../images/LeafImage';
 
 export class Flower{
 	constructor(x,y, r,flowerType='海石榴華',flowerRotation=30){
