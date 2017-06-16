@@ -35,19 +35,13 @@ function setControl(_container) {
 		skeleton: new Control.SkeletonControl(_container)
 	};
 	
-	const top = _container.node.getBoundingClientRect().top;
-	const left = _container.node.getBoundingClientRect().left;
-
+	
+		
 	_container.on('mousedown', function (e) {
 		let currnetControl = tools[UI.state.tool];
-
-		const point = [
-			e.clientX - top,
-			e.clientY - left
-		];
+		const point = [ e.offsetX, e.offsetY ];
 		isMouseDown = true;
 		currnetControl.start(point);
-
 	});
 	_container.on('mouseup', function () {
 		let currnetControl = tools[UI.state.tool];

@@ -78,7 +78,9 @@ export default {
 	clearScene(){
 		this.floralScene.length = [];
 	},
-	initSvgSymbol: Drawer.initSvgSymbol
+	initSvgSymbol(){
+		Drawer.initSvgSymbol();
+	}
 };
 
 function flatten(arr){
