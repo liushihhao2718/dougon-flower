@@ -25,7 +25,6 @@ function setSVGLayer(panel) {
 	CurveManagement.initSvgSymbol();
 	CurveManagement.layer = {dougonLayer, leafLayer, stemLayer, flowerLayer, debugCurveLayer, hintLayer};
 }
-
 function setControl(_container) {
 	let isMouseDown = false;
 	let tools = {
@@ -35,7 +34,7 @@ function setControl(_container) {
 		skeleton: new Control.SkeletonControl(_container)
 	};
 	
-	
+	UI.state.tools = tools;
 		
 	_container.on('mousedown', function (e) {
 		let currnetControl = tools[UI.state.tool];
@@ -59,4 +58,3 @@ function setControl(_container) {
 		}
 	});
 }
-

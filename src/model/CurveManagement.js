@@ -1,7 +1,6 @@
 import * as UI from './UIManagement';
 import ColliderCollection from './Collision';
 import * as Drawer from '../model/Drawer';
-
 export default {
 	panel : undefined,
 	selectedCurve :[],

@@ -24,7 +24,6 @@ function handleClick(floral) {
 	}
 	else{
 		CurveManagement.selectedCurve.push(floral);
-		console.log(`${floral.id} clicked`);
 	}
 	CurveManagement.drawHint();
 }

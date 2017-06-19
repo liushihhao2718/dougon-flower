@@ -12,9 +12,16 @@ leafType:
 @property order number
 */
 export default function nextType(currentType) {
+
+return range(0, 4);
+
+
+
 	const row = markov[currentType];
 	const max = row[row.length-1];
 	const random = range(0, max);
+
+
 
 	for (let i = 0; i < row.length; i++) {
 		if( random < row[i] ) return i;
