@@ -34,7 +34,7 @@ export default {
 					leafDrawingQueue.push(leaf);
 					collisionScene.add(leaf.colliders);
 					this.debug_burgeons.push({leaf,level:index});
-					burgeons = burgeons.concat( leaf.burgeons( levelParam.branches ) );
+					burgeons = burgeons.concat( leaf.burgeons( levelParam.branches ) );					
 				}
 			}
 			burgeons = nextLevelBurgeons;

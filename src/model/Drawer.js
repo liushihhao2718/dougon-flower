@@ -165,9 +165,9 @@ function setFloralCollider(floral, svg) {
 
 	const collider = svg.select('#collider').members[0].node;
 
-	let colliderPointsInSVG = collider.attributes.points.value.split(' ').map(s=>s.split(',').map(n=>Number(n)) );
-	let colliderPointsInWorld = colliderPointsInSVG.map( ([px, py]) => multiplyMatrixAndPoint(matrix, [px, py, 1]).slice(0,2));
-	
+	let colliderPointsInSVG = Array.from(collider.points);
+	let colliderPointsInWorld = colliderPointsInSVG.map( p => multiplyMatrixAndPoint(matrix, [p.x, p.y, 1]).slice(0,2));
+	drawPolygon(colliderPointsInWorld);
 	floral.colliders = [colliderPointsInWorld];
 }
 export function drawMagneticCurve(leaf, level){

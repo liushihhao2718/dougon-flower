@@ -13,13 +13,12 @@ function aabbCollision(rect1, rect2){
 }
 
 function polygonCollision(polygon1, polygon2){
-	return polygonInsidePolygon(polygon1, polygon2);
+	return  !!polygon1.find(p => inside(p, polygon2)) ||
+			!!polygon2.find(p => inside(p, polygon1));
 }
 
-function polygonInsidePolygon(poly,fixedPoly, all_inside){
-	return all_inside?
-		poly.every(p => inside(p, fixedPoly))
-		:!!poly.find(p => inside(p, fixedPoly));
+function polygonInsidePolygon(poly,fixedPoly){
+	return poly.every(p => inside(p, fixedPoly));
 }
 
 export default class ColliderCollection{
@@ -32,7 +31,7 @@ export default class ColliderCollection{
 		let bbox = makeBbox(polygon);
 		const dougon = dougonBoundingNodes[ UI.state.bound ];
 
-		if(!polygonInsidePolygon(polygon, dougon, true)) return true;
+		if(!polygonInsidePolygon(polygon, dougon)) return true;
 
 		return !!this.colliders
 		.find(
