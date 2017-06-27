@@ -184,7 +184,7 @@ export 	function drawBasePath(pathString){
 	CurveManagement.layer.debugCurveLayer.path( pathString ).fill('none').stroke({ width: 3 }).stroke('#f06');
 }
 export function drawPolygon(polygon){
-	CurveManagement.layer.debugCurveLayer.polygon().plot(polygon).fill('none').stroke({ width: 1,color:'red' });
+	CurveManagement.layer.debugCurveLayer.polygon().plot(polygon).fill('none').stroke({ width: 3,color:'red' });
 }
 
 function distance(x1, y1, x2, y2) {
