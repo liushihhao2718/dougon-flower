@@ -17,6 +17,7 @@ export let state = {
 	trunkHead: 5,
 	trunkTail: 10,
 	density: 1,
+	rotation: 45,
 	levelCurve :[
 		{
 			length: 80,
@@ -71,6 +72,8 @@ export function setGUI(){
 	let c2 = gui.add(state, 'trunkTail', 5, 40);
 	let c3 = gui.add(state, 'flowerSize', 10, 200);
 	let c4 = gui.add(state, 'density', 0.5, 2);
+	let c5 = gui.add(state, 'rotation', -90, 90);	
+
 	c1.onChange(head =>{
 		for(let floral of CurveManagement.selectedCurve){
 			floral.trunkHead = head;	
@@ -98,6 +101,14 @@ export function setGUI(){
 	c4.onChange(()=>{
 		CurveManagement.draw();
 		changeColor(state.color);
+	});
+	c5.onChange( rotation =>{
+		for(let floral of CurveManagement.selectedCurve){
+			floral.flowerRotation = rotation;	
+		}
+		
+		CurveManagement.draw();
+		changeColor( state.color );
 	});
 	levelFolder(0);
 	levelFolder(1);
@@ -160,9 +171,13 @@ function setBounding(value){
 	state.flowerSize = dougonBoundingParam[value].flowerSize;
 	state.trunkHead = dougonBoundingParam[value].trunkHead;
 	state.trunkTail = dougonBoundingParam[value].trunkTail;
+	state.levelCurve[0].length = dougonBoundingParam[value].level1Size || 80;
+
 	gui.__controllers[2].updateDisplay();
 	gui.__controllers[3].updateDisplay();
 	gui.__controllers[4].updateDisplay();
+
+	// gui.__controllers[2].updateDisplay();
 
 	changeColor( state.color );
 }

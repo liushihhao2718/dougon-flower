@@ -14,17 +14,20 @@ export let dougonBoundingParam = {
 	令栱:{
 		flowerSize: 30,
 		trunkHead: 5,
-		trunkTail: 10
+		trunkTail: 10,
+		level1Size: 30
 	},
 	撩擔方:{
 		flowerSize: 150,
 		trunkHead: 5,
-		trunkTail: 10
+		trunkTail: 10,
+		level1Size: 80
 	},
 	栱眼壁:{
 		flowerSize: 60,
 		trunkHead: 3,
-		trunkTail: 5
+		trunkTail: 5,
+		level1Size: 30
 	}
 };
 
