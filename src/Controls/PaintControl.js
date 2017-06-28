@@ -12,18 +12,18 @@ function PaintControl(pannel) {
 	this.start = function( point ) {
 		rawPointData.push( point );
 
-		const marker = pannel.marker(10, 10, function(add) {
-			let c = add.circle(2);
-			c.cx(5).cy(5).fill('red');
+		// const marker = pannel.marker(10, 10, function(add) {
+		// 	let c = add.circle(2);
+		// 	c.cx(5).cy(5).fill('red');
 
-		});
-		paintingPolyLine = pannel.polyline().fill('none').stroke({ width: 3, dashArray:'3,5' });
-		paintingPolyLine.marker('mid', marker);
+		// });
+		// paintingPolyLine = pannel.polyline().fill('none').stroke({ width: 3, dashArray:'3,5' });
+		// paintingPolyLine.marker('mid', marker);
 
 	};
 	this.update = function( point ) {
 		rawPointData.push( point );
-		updateLines( paintingPolyLine, rawPointData);
+		// updateLines( paintingPolyLine, rawPointData);
 	};
 
 	this.end = function() {

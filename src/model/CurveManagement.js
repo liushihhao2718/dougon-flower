@@ -10,7 +10,7 @@ export default {
 	debug_burgeons:[],
 	growBranches(){
 		let leafDrawingQueue=[];
-		let collisionScene= new ColliderCollection([].concat(...this.floralScene.map(f=>f.colliders)));
+		let collisionScene= new ColliderCollection([]);
 		const amount = UI.state.levelCurve[0].branches;
 		let groupedBurgeons = this.floralScene.map( f=>f.burgeons(amount) ).filter(f => f!==undefined);
 		let burgeons = flatten( groupedBurgeons );
@@ -58,9 +58,23 @@ export default {
 		
 		let stems = this.growBranches().reverse();
 		stems.forEach(s => Drawer.drawLeaf(s) );
-		stems.forEach(s => Drawer.drawPolygon(s.colliders) );
-		
-		this.debug_burgeons.forEach(({leaf, level}) => Drawer.drawMagneticCurve(leaf, level));
+		// stems.forEach(s => Drawer.drawPolygon(s.colliders) );
+		stems.forEach(s =>	{
+			let bbox = makeBbox( s.colliders);
+			Drawer.drawPolygon(
+			[
+				[bbox.x, bbox.y],
+				[bbox.x+bbox.width, bbox.y],
+				[bbox.x+bbox.width, bbox.y+bbox.height],
+				[bbox.x, bbox.y+bbox.height],
+			]);
+		});
+		// this.debug_burgeons.forEach(({leaf, level}) => {
+		// 	Drawer.drawMagneticCurve(leaf, level);
+
+			
+		// });
+
 		this.drawHint();
 	},
 	drawHint(){
@@ -86,5 +100,26 @@ function flatten(arr){
 	return arr.reduce((acc, val) => acc.concat( Array.isArray(val) ? flatten(val) : val),[]);
 }
 
+function makeBbox(points){
+	let minX = Number.MAX_VALUE;
+	let minY = Number.MAX_VALUE;
+	let maxX = Number.MIN_VALUE;
+	let maxY = Number.MIN_VALUE;
+	points.forEach(p => {
+		let x = p[0];
+		let y = p[1];
 
+		if(x < minX) minX = x;
+		if(y < minY) minY = y;
+		if(x > maxX) maxX = x;
+		if(y > maxY) maxY = y;
+	});
+
+	return {
+		x: minX,
+		y: minY,
+		width: maxX-minX,
+		height: maxY-minY
+	};
+}
 

@@ -14,8 +14,8 @@ let controls = [];
 let leafControls = [];
 export let state = {
 	flowerSize: 150,
-	trunkHead: 5,
-	trunkTail: 10,
+	trunkHead: 1,
+	trunkTail: 1,
 	density: 1,
 	levelCurve :[
 		{
@@ -72,7 +72,7 @@ export function setGUI(){
 
 	let c0 = gui.add(state, 'tool', ['paint', 'flower', 'select', 'skeleton']);
 	let c1 = gui.add(state, 'trunkHead', 1, 20);
-	let c2 = gui.add(state, 'trunkTail', 5, 40);
+	let c2 = gui.add(state, 'trunkTail', 1, 40);
 	let c3 = gui.add(state, 'flowerSize', 10, 200);
 	let c4 = gui.add(state, 'density', 0.5, 2);
 	c1.onChange(head =>{

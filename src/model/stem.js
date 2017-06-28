@@ -72,7 +72,7 @@ export class Floral{
 	draw(){
 		Drawer.drawStem(this);
 		Drawer.drawFlower(this);
-		Drawer.drawBasePath(this.curve.svgString());
+		// Drawer.drawBasePath(this.curve.svgString());
 	}
 }
 
