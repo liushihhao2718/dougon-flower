@@ -4,7 +4,6 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "ava",
     "dev": "watchify src/main.js -v --debug -t [ stringify --extensions [.svg] ] -t babelify -o docs/js/main.js",
     "start": "http-server docs",
     "concave": "watchify test/ConcaveHullFactory.js -v --debug -t [ stringify --extensions [.svg] ] -t babelify -o test/concave.js"
@@ -12,31 +11,20 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "ava": "^0.16.0",
     "babel-eslint": "^7.1.1",
+    "babel-preset-es2015": "^6.24.1",
     "babelify": "^7.3.0",
+    "stringify": "^5.1.0",
     "watchify": "3.7.0"
   },
   "dependencies": {
     "bezier-js": "^2.2.2",
     "concaveman": "^1.1.1",
     "fit-curve": "^0.1.4",
-    "glm-js": "0.0.6-c",
     "lodash": "^4.17.4",
     "mathjs": "^3.4.1",
     "point-in-polygon": "^1.0.1",
     "shortid": "^2.2.8",
-    "stringify": "^5.1.0",
-    "svg.js": "*",
-    "three": "^0.85.2"
-  },
-  "ava": {
-    "files": [
-      "test/*.js"
-    ],
-    "require": [
-      "babel-register"
-    ],
-    "babel": "inherit"
+    "svg.js": "*"
   }
 }

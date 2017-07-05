@@ -141,6 +141,8 @@ export function	drawFlower(floral){
 
 	g.click(()=> handleClick(floral));
 	const cr = boundingCircle.getAttribute('r');
+	const cx = boundingCircle.getAttribute('cx');
+	const cy = boundingCircle.getAttribute('cy');
 
 	const rate = blackCircle.r/cr;
 			
@@ -148,8 +150,8 @@ export function	drawFlower(floral){
 		scale: rate
 	});
 	flower.transform({
-		x: blackCircle.cx,
-		y: blackCircle.cy,
+		x: blackCircle.cx - cx ,
+		y: blackCircle.cy - cy,
 	});
 	flower.transform({
 		rotation: floral.flowerRotation,
