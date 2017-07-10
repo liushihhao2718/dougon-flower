@@ -12,6 +12,7 @@ export default {
 	growBranches(){
 		let leafDrawingQueue=[];
 		let collisionScene= new ColliderCollection([].concat(...this.floralScene.map(f=>f.colliders)));
+		
 		const amount = UI.state.levelCurve[0].branches;
 		let groupedBurgeons = this.floralScene.map( f=>f.burgeons(amount) ).filter(f => f!==undefined);
 		let burgeons = flatten( groupedBurgeons );

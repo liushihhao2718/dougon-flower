@@ -141,17 +141,14 @@ export function	drawFlower(floral){
 
 	g.click(()=> handleClick(floral));
 	const cr = boundingCircle.getAttribute('r');
-	const cx = boundingCircle.getAttribute('cx');
-	const cy = boundingCircle.getAttribute('cy');
-
-	const rate = blackCircle.r/cr;
+	const rate = blackCircle.r / cr;
 			
 	flower.transform({
 		scale: rate
 	});
 	flower.transform({
-		x: blackCircle.cx - cx ,
-		y: blackCircle.cy - cy,
+		x: blackCircle.cx,
+		y: blackCircle.cy,
 	});
 	flower.transform({
 		rotation: floral.flowerRotation,
@@ -168,13 +165,18 @@ function setFloralCollider(floral, svg) {
 	const collider = svg.select('#collider').members[0].node;
 
 	let colliderPointsInSVG = Array.from(collider.points);
-	let colliderPointsInWorld = colliderPointsInSVG.map( p => multiplyMatrixAndPoint(matrix, [p.x, p.y, 1]).slice(0,2));
+	let colliderPointsInWorld = colliderPointsInSVG.map( p => 
+		multiplyMatrixAndPoint(matrix, [p.x, p.y, 1]).slice(0,2)
+	);
 	drawPolygon(colliderPointsInWorld);
 	floral.colliders = [colliderPointsInWorld];
 }
 export function drawMagneticCurve(leaf, level){
 	let level_color = ['orange', 'green', 'blue', 'black'];
-	CurveManagement.layer.debugCurveLayer.path(leaf.curve.svgString() ).fill('none').stroke({ width: 3 }).stroke(level_color[level]);
+	CurveManagement.layer.debugCurveLayer
+		.path(leaf.curve.svgString() )
+		.fill('none').stroke({ width: 3 })
+		.stroke(level_color[level]);
 }
 export function	drawLeaf(leaf){
 	let g = CurveManagement.layer.leafLayer.group();
@@ -183,10 +185,18 @@ export function	drawLeaf(leaf){
 }
 
 export 	function drawBasePath(pathString){
-	CurveManagement.layer.debugCurveLayer.path( pathString ).fill('none').stroke({ width: 3 }).stroke('#f06');
+	CurveManagement.layer.debugCurveLayer
+		.path( pathString )
+		.fill('none')
+		.stroke({ width: 3 })
+		.stroke('#f06');
 }
 export function drawPolygon(polygon){
-	CurveManagement.layer.debugCurveLayer.polygon().plot(polygon).fill('none').stroke({ width: 3,color:'red' });
+	CurveManagement.layer.debugCurveLayer
+		.polygon()
+		.plot(polygon)
+		.fill('none')
+		.stroke({ width: 3,color:'red' });
 }
 
 function distance(x1, y1, x2, y2) {
