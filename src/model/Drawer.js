@@ -117,8 +117,8 @@ export function	drawStem(floral){
 
 function drawOnPannel(pannel, pathString, color){
 	pannel.path( pathString )
-	.fill(color)
-	.stroke({width: 0});
+		.fill(color)
+		.stroke({width: 0});
 }
 
 export function	drawFlower(floral){

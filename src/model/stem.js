@@ -155,14 +155,14 @@ export class Leaf {
 		let {direct_x1, direct_y1, directLength, redLineAngle} = transformParameters[this.type];
 
 		return `
-		translate(${this.startX} ${this.startY}) 
-		scale(${skeletonLength}) 
-		rotate(${leafCurveAngle*toDeg})
-		scale(1 ${-this.sign})
-		rotate(${-redLineAngle}) 
-		scale(${1/directLength}) 
-		translate(${-direct_x1},${-direct_y1})`.replace(`
-`,' ');
+			translate(${this.startX} ${this.startY}) 
+			scale(${skeletonLength}) 
+			rotate(${leafCurveAngle*toDeg})
+			${this.sign ? '': 'scale(1 -1)'}
+			rotate(${-redLineAngle}) 
+			scale(${1/directLength}) 
+			translate(${-direct_x1},${-direct_y1})`
+			.replace(/\n/gm,' ');
 	}
 	get colliders(){
 		if(this._colliders) return this._colliders;

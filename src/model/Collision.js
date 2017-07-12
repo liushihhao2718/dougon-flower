@@ -34,11 +34,11 @@ export default class ColliderCollection{
 		if(!polygonInsidePolygon(polygon, dougon)) return true;
 
 		return !!this.colliders
-		.find(
-			x=>!ignore.includes(x.collider)
-			&& aabbCollision(x.bbox,bbox)
-			&& polygonCollision(x.collider,polygon)
-		);
+			.find(
+				x=>!ignore.includes(x.collider)
+				&& aabbCollision(x.bbox,bbox)
+				&& polygonCollision(x.collider,polygon)
+			);
 	}
 	add(polygon){
 		this.colliders.push({collider:polygon, bbox:makeBbox(polygon)});
