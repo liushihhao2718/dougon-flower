@@ -35,7 +35,7 @@ export let state = {
 			branches: 2
 		}
 	],
-	bound: '撩擔方',
+	bound: '圖樣',
 	tool:'paint',
 	show:{
 	},
@@ -60,6 +60,10 @@ let features = {
 		CurveManagement.floralScene.push( new Floral(smoothBizer,state.flowerSize, state.trunkHead, state.trunkTail,'海石榴華', aspect) );
 		
 		CurveManagement.draw();
+	},
+	toggleImage: function(){
+		let image = document.getElementsByTagName('image')[0];
+		image.style.visibility = state.show.image? 'visible':'hidden';
 	}
 };
 
@@ -69,10 +73,10 @@ export function setGUI(){
 
 	let c0 = gui.add(state, 'tool', ['paint', 'flower', 'select', 'skeleton']);
 	let c1 = gui.add(state, 'trunkHead', 1, 20);
-	let c2 = gui.add(state, 'trunkTail', 5, 40);
+	let c2 = gui.add(state, 'trunkTail', 1, 40);
 	let c3 = gui.add(state, 'flowerSize', 10, 200);
 	let c4 = gui.add(state, 'density', 0.5, 2);
-	let c5 = gui.add(state, 'rotation', -90, 90);	
+	let c5 = gui.add(state, 'rotation', -180, 180);	
 
 	c1.onChange(head =>{
 		for(let floral of CurveManagement.selectedCurve){
@@ -116,7 +120,7 @@ export function setGUI(){
 
 	setOnChange(controls, leafControls);
 
-	let colorControl = gui.add(state, 'color', ['青緣紅地', '綠緣青地', '鋪地捲成']);
+	let colorControl = gui.add(state, 'color', ['青緣紅地','青緣紅地-地色紅粉','綠緣青地','綠緣青地-地色為白', '鋪地捲成']);
 	colorControl.onChange(value => changeColor(value));
 
 	gui.add(state, 'aspect', ['正面', '側面']);
@@ -128,6 +132,11 @@ export function setGUI(){
 	gui.add(features, 'test');
 
 	let folder = gui.addFolder('Layer');
+	state.show['image'] = true;
+	let control = folder.add(state.show, 'image');
+	control.onChange(()=>{
+		features.toggleImage();
+	});
 	Object.keys(CurveManagement.layer).forEach(key => {
 		let layer = CurveManagement.layer[key];
 		state.show[key] = layer.visible();
@@ -140,7 +149,7 @@ export function setGUI(){
 
 function levelFolder(index){
 	let folder = gui.addFolder(`Level ${index}`);
-	leafControls.push( folder.add(state.levelCurve[index], 'length',10,500) );
+	leafControls.push( folder.add(state.levelCurve[index], 'length',1,50) );
 	leafControls.push( folder.add(state.levelCurve[index], 'alpha') );
 	leafControls.push( folder.add(state.levelCurve[index], 'branches').step(1) );
 	folders.push(folder);
