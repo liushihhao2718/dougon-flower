@@ -1,5 +1,6 @@
 import CurveManagement from './CurveManagement';
 import {flowerString, LeafImage, cap} from '../images/LeafImage';
+import SVG from 'svg.js';
 const colorMap = require('../color/colorHex.json');
 
 let symbols;
@@ -117,8 +118,8 @@ export function	drawStem(floral){
 
 function drawOnPannel(pannel, pathString, color){
 	pannel.path( pathString )
-	.fill(color)
-	.stroke({width: 0});
+		.fill(color)
+		.stroke({width: 0});
 }
 
 export function	drawFlower(floral){
@@ -141,6 +142,9 @@ export function	drawFlower(floral){
 
 	g.click(()=> handleClick(floral));
 	const cr = boundingCircle.getAttribute('r');
+	const cx = boundingCircle.getAttribute('r');
+	const cy = boundingCircle.getAttribute('r');
+
 	const rate = blackCircle.r / cr;
 			
 	flower.transform({
@@ -155,6 +159,13 @@ export function	drawFlower(floral){
 		cx: cr,
 		cy: cr,
 	});
+
+	let matrix = new SVG.Matrix()
+		.translate(blackCircle.cx, blackCircle.cy)
+		.rotate(floral.flowerRotation)
+		.scale(rate)
+		.translate(-cx, -cy);
+	flower.attr( 'transform',matrix.toString() );
 
 	setFloralCollider(floral, flower);
 	

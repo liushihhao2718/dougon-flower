@@ -202,15 +202,15 @@ function changeColor(value) {
 }
 function changeBGColor(class_name,new_color) {
 	const reg = /[A-Z]6/;
-	const cols = document.getElementsByClassName(class_name);
+	const cols = Array.from(document.getElementsByClassName(class_name));
 
 	if( reg.test(class_name) ){
-		for(const graph of cols) {
+		for(let graph of cols) {
 			graph.style.stroke = new_color;
 		}
 	}
 	else{
-		for(const graph of cols) {
+		for(let graph of cols) {
 			graph.style.fill = new_color;
 		}
 	}	
