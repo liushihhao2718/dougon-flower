@@ -29,5 +29,9 @@ export const LeafBranchType = {
 	big :{
 		segment:[3,3,3,4,4,6,15],
 		imageIndex:[6,7,8,9,10,11,12]
+	},
+	test:{
+		segment:[1,1,1],
+		imageIndex:[0,1,2]
 	}
 };

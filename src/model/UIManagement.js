@@ -40,7 +40,8 @@ export let state = {
 	show:{
 	},
 	color:'鋪地捲成',
-	aspect: '正面'
+	aspect: '正面',
+	leafBranchType: 'test'
 };
 
 let features = {
@@ -123,6 +124,8 @@ export function setGUI(){
 	let colorControl = gui.add(state, 'color', ['青緣紅地','青緣紅地-地色紅粉','綠緣青地','綠緣青地-地色為白', '鋪地捲成']);
 	colorControl.onChange(value => changeColor(value));
 
+
+	gui.add(state, 'leafBranchType', ['big', 'test']);
 	gui.add(state, 'aspect', ['正面', '側面']);
 
 	gui.add(features, 'download');
@@ -149,7 +152,7 @@ export function setGUI(){
 
 function levelFolder(index){
 	let folder = gui.addFolder(`Level ${index}`);
-	leafControls.push( folder.add(state.levelCurve[index], 'length',1,50) );
+	leafControls.push( folder.add(state.levelCurve[index], 'length',1,90) );
 	leafControls.push( folder.add(state.levelCurve[index], 'alpha') );
 	leafControls.push( folder.add(state.levelCurve[index], 'branches').step(1) );
 	folders.push(folder);

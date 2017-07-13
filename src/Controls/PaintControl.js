@@ -15,7 +15,7 @@ function PaintControl(pannel) {
 	};
 	this.update = function( point ) {
 		rawPointData.push( point );
-		updateLines( paintingPolyLine, rawPointData);
+		updatePolyLineSVG( paintingPolyLine, rawPointData);
 	};
 
 	this.end = function() {
@@ -31,7 +31,7 @@ function PaintControl(pannel) {
 		clearRawData();
 	};
 
-	function updateLines(paintingPolyLine, rawPointData) {
+	function updatePolyLineSVG(paintingPolyLine, rawPointData) {
 		paintingPolyLine.plot( rawPointData );
 	}
 	
