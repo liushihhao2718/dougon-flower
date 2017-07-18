@@ -13,6 +13,7 @@ import CurveManagement from './model/CurveManagement';
 function setSVGLayer(panel) {
 	// var image = panel.image('target.jpg');
 	// image.width(1371).height(436).x(60.5).y(63.5);
+
 	//order is very importent!
 	let dougonLayer = panel.group();
 	let leafLayer = panel.group();
@@ -23,7 +24,7 @@ function setSVGLayer(panel) {
 
 	CurveManagement.panel = panel;
 	CurveManagement.initSvgSymbol();
-	CurveManagement.layer = {dougonLayer, leafLayer, stemLayer, flowerLayer, debugCurveLayer, hintLayer};
+	CurveManagement.layer = { dougonLayer, leafLayer, stemLayer, flowerLayer, debugCurveLayer, hintLayer};
 }
 
 function setControl(_container) {
@@ -34,8 +35,6 @@ function setControl(_container) {
 		select : new Control.SelectControl(_container),
 		skeleton: new Control.SkeletonControl(_container)
 	};
-	
-	
 		
 	_container.on('mousedown', function (e) {
 		let currnetControl = tools[UI.state.tool];
@@ -59,4 +58,3 @@ function setControl(_container) {
 		}
 	});
 }
-

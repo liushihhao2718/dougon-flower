@@ -38,6 +38,8 @@ export let state = {
 	bound: '圖樣',
 	tool:'paint',
 	show:{
+		image:true,
+		dougon:true
 	},
 	color:'鋪地捲成',
 	aspect: '正面',
@@ -65,6 +67,14 @@ let features = {
 	toggleImage: function(){
 		let image = document.getElementsByTagName('image')[0];
 		image.style.visibility = state.show.image? 'visible':'hidden';
+	},
+	toggleDougon: function(){
+		Array.from(CurveManagement.layer.dougonLayer.node.children[0].children)
+		.filter(x => x.nodeName != 'image')
+		.forEach(x => {
+			x.style.display = '';
+			x.style.visibility = state.show.dougon? 'visible':'hidden';
+		});
 	}
 };
 
@@ -135,11 +145,16 @@ export function setGUI(){
 	gui.add(features, 'test');
 
 	let folder = gui.addFolder('Layer');
-	state.show['image'] = true;
-	let control = folder.add(state.show, 'image');
-	control.onChange(()=>{
+
+	folder.add(state.show, 'image')
+	.onChange(()=>{
 		features.toggleImage();
 	});
+
+	folder.add(state.show, 'dougon')
+	.onChange(()=>{
+		features.toggleDougon();
+	});	
 	Object.keys(CurveManagement.layer).forEach(key => {
 		let layer = CurveManagement.layer[key];
 		state.show[key] = layer.visible();
