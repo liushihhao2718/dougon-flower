@@ -25,7 +25,10 @@ function PaintControl(pannel) {
 			return;
 		}
 		let aspect = UI.state.aspect;
-		CurveManagement.floralScene.push( new Floral(smoothBizer,UI.state.flowerSize, UI.state.trunkHead, UI.state.trunkTail,'海石榴華', aspect, UI.state.rotation) );
+		if(aspect === '側面'){
+			CurveManagement.floralScene.push( new Floral(smoothBizer,UI.state.flowerSize, UI.state.trunkHead, 25,'海石榴華', aspect, UI.state.rotation) );	
+		}else
+			CurveManagement.floralScene.push( new Floral(smoothBizer,UI.state.flowerSize, UI.state.trunkHead, UI.state.trunkTail,'海石榴華', aspect, UI.state.rotation) );
 		
 		CurveManagement.draw();
 		clearRawData();

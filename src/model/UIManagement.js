@@ -70,11 +70,11 @@ let features = {
 	},
 	toggleDougon: function(){
 		Array.from(CurveManagement.layer.dougonLayer.node.children[0].children)
-		.filter(x => x.nodeName != 'image')
-		.forEach(x => {
-			x.style.display = '';
-			x.style.visibility = state.show.dougon? 'visible':'hidden';
-		});
+			.filter(x => x.nodeName != 'image')
+			.forEach(x => {
+				x.style.display = '';
+				x.style.visibility = state.show.dougon? 'visible':'hidden';
+			});
 	}
 };
 
@@ -147,14 +147,14 @@ export function setGUI(){
 	let folder = gui.addFolder('Layer');
 
 	folder.add(state.show, 'image')
-	.onChange(()=>{
-		features.toggleImage();
-	});
+		.onChange(()=>{
+			features.toggleImage();
+		});
 
 	folder.add(state.show, 'dougon')
-	.onChange(()=>{
-		features.toggleDougon();
-	});	
+		.onChange(()=>{
+			features.toggleDougon();
+		});	
 	Object.keys(CurveManagement.layer).forEach(key => {
 		let layer = CurveManagement.layer[key];
 		state.show[key] = layer.visible();
@@ -203,9 +203,7 @@ function setBounding(value){
 	gui.__controllers[2].updateDisplay();
 	gui.__controllers[3].updateDisplay();
 	gui.__controllers[4].updateDisplay();
-
-	// gui.__controllers[2].updateDisplay();
-
+	
 	changeColor( state.color );
 }
 
