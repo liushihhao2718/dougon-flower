@@ -2,26 +2,45 @@
 <html>
 <head>
 	<link rel="shortcut icon" href="favicon.ico" type="image/vnd.microsoft.icon">
+	<script
+  src="https://code.jquery.com/jquery-3.2.1.js"
+  integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
+  crossorigin="anonymous"></script>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
-	<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"/> -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<meta charset="utf-8">
 	<title>flower</title>
 	<link rel="stylesheet" type="text/css" href="style.css">
 </head>
+<template id="style-btn">
+	<button type="button" class="btn btn-default"  style="width:15%">
+		<img class="img-responsive" />
+	</button>
+</template>
 <body>
-	<div class="row" style="padding:10px;">
-		<div class="col-xs-6 col-md-3" >
-			<button type="button" class="btn btn-default">test</button>
-			<button type="button" class="btn btn-default">test</button>
-			<button type="button" class="btn btn-default">test</button>
-			<button type="button" class="btn btn-default">test</button>
-			<button type="button" class="btn btn-default">test</button>
-			<button type="button" class="btn btn-default">test</button>
-		</div>	
-	</div>
-	
+	<div id="style-btn-row"></div>
+	<script type="text/javascript">
+		let btn = document.getElementById('style-btn').content.children[0];
+		let fragment = document.createDocumentFragment();
+		for (let i = 1; i <= 5; i++) {
+			let clone = document.importNode(btn, true);
+			let img = clone.children[0];
+			img.setAttribute('src', `btn-img/color${i}.png`);
+			img.setAttribute('onclick', `setStyle(${i})`);
+			fragment.appendChild(clone);
+		}
+		document.getElementById('style-btn-row').appendChild(fragment);
+	</script>
+
 	<div id="drawing"></div>
 </body>
 
 <script src="js/main.js"></script>
+<script>
+	function setStyle(styleIndex) {
+		window['changeColorByIndex'](styleIndex);
+	}
+
+
+</script>
 </html>

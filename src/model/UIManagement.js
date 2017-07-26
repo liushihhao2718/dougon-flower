@@ -80,6 +80,7 @@ let features = {
 
 export function setGUI(){
 	gui = new dat.GUI();
+	gui.close();
 	let bound =	gui.add(state, 'bound', Object.keys(dougonBounding));
 
 	let c0 = gui.add(state, 'tool', ['paint', 'flower', 'select', 'skeleton']);
@@ -205,6 +206,12 @@ function setBounding(value){
 	gui.__controllers[4].updateDisplay();
 	
 	changeColor( state.color );
+}
+
+
+export function changeColorByIndex(index){
+	let value = Object.keys(styleMap['五彩遍裝'])[index-1];//1-5 => 0-4
+	changeColor(value);
 }
 
 function changeColor(value) {

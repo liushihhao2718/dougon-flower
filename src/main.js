@@ -55,3 +55,5 @@ function setControl(_container) {
 		}
 	});
 }
+
+window['changeColorByIndex']=UI.changeColorByIndex;

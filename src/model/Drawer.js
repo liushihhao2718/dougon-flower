@@ -60,24 +60,12 @@ export function drawCap(floral) {
 	const redLineAngle = Math.atan2( direct_y2 - direct_y1, direct_x2-direct_x1 )* toDeg;
 	const leafCurveAngle = Math.atan2( y2 - y1, x2 - x1)* toDeg;
 	const roateAngle = (leafCurveAngle - redLineAngle );
-	
-	// capSVG.transform({
-	// 	scale: rate
-	// }).transform({
-	// 	x: x1,
-	// 	y: y1,
-	// }).transform({
-	// 	rotation: roateAngle ,
-	// 	cx: direct_x1,
-	// 	cy: direct_y1,
-	// });
 
 	let matrix = new SVG.Matrix()
 		.translate(x1, y1)
 		.rotate(roateAngle)
 		.scale(rate)
 		.translate(-direct_x1, -direct_y1);
-	// let matrix = capSVG.node.getAttribute('transform').split(/[^\-\d.]+/).filter(x=>x !== '');
 	capSVG.attr( 'transform',matrix.toString() );
 
 	let pos = multiplyMatrixAndPoint(matrix.toString().split(/[^\-\d.]+/).filter(x=>x !== ''), [cx,cy,1]);
