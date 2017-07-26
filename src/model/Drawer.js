@@ -25,7 +25,7 @@ function handleClick(floral) {
 	}
 	else{
 		CurveManagement.selectedCurve.push(floral);
-		console.log(`${floral.id} clicked`);
+		// console.log(`${floral.id} clicked`);
 	}
 	CurveManagement.drawHint();
 }
@@ -60,22 +60,16 @@ export function drawCap(floral) {
 	const redLineAngle = Math.atan2( direct_y2 - direct_y1, direct_x2-direct_x1 )* toDeg;
 	const leafCurveAngle = Math.atan2( y2 - y1, x2 - x1)* toDeg;
 	const roateAngle = (leafCurveAngle - redLineAngle );
-	
-	capSVG.transform({
-		scale: rate
-	}).transform({
-		x: x1,
-		y: y1,
-	}).transform({
-		rotation: roateAngle ,
-		cx: direct_x1,
-		cy: direct_y1,
-	});
 
+	let matrix = new SVG.Matrix()
+		.translate(x1, y1)
+		.rotate(roateAngle)
+		.scale(rate)
+		.translate(-direct_x1, -direct_y1);
 
-	let matrix = capSVG.node.getAttribute('transform').split(/[^\-\d.]+/).filter(x=>x !== '');
-
-	let pos = multiplyMatrixAndPoint(matrix, [cx,cy,1]);
+	capSVG.attr( 'transform',matrix.toString() );
+	const matrixArray = matrix.toString().split(/[^\-\d.]+/).filter(x=>x !== '');
+	let pos = multiplyMatrixAndPoint(matrixArray, [cx,cy,1]);
 	floral.flowerPosition.x = pos[0];
 	floral.flowerPosition.y = pos[1];
 	floral.flowerPosition.r = rate * r;
@@ -146,19 +140,6 @@ export function	drawFlower(floral){
 	const cy = boundingCircle.getAttribute('r');
 
 	const rate = blackCircle.r / cr;
-			
-	flower.transform({
-		scale: rate
-	});
-	flower.transform({
-		x: blackCircle.cx,
-		y: blackCircle.cy,
-	});
-	flower.transform({
-		rotation: floral.flowerRotation,
-		cx: cr,
-		cy: cr,
-	});
 
 	let matrix = new SVG.Matrix()
 		.translate(blackCircle.cx, blackCircle.cy)
