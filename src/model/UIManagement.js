@@ -43,7 +43,7 @@ export let state = {
 	},
 	color:'鋪地捲成',
 	aspect: '正面',
-	leafBranchType: 'test'
+	leafBranchType: 'big'
 };
 
 let features = {
@@ -80,6 +80,7 @@ let features = {
 
 export function setGUI(){
 	gui = new dat.GUI();
+	gui.remember(state);
 	gui.close();
 	let bound =	gui.add(state, 'bound', Object.keys(dougonBounding));
 
@@ -189,7 +190,8 @@ function setOnChange(controls, leafControls){
 	});
 }
 
-function setBounding(value){
+export function setBounding(value){
+	state.bound = value;
 	let svgString = dougonBounding[value];
 	CurveManagement.clearAllLayer();
 	CurveManagement.clearScene();
@@ -201,16 +203,17 @@ function setBounding(value){
 	state.trunkTail = dougonBoundingParam[value].trunkTail;
 	state.levelCurve[0].length = dougonBoundingParam[value].level1Size || 80;
 
-	gui.__controllers[2].updateDisplay();
-	gui.__controllers[3].updateDisplay();
-	gui.__controllers[4].updateDisplay();
+	// gui.__controllers[2].updateDisplay();
+	// gui.__controllers[3].updateDisplay();
+	// gui.__controllers[4].updateDisplay();
 	
 	changeColor( state.color );
 }
 
 
 export function changeColorByIndex(index){
-	let value = Object.keys(styleMap['五彩遍裝'])[index-1];//1-5 => 0-4
+	let value = Object.keys(styleMap['五彩遍裝'])[index];
+	state.color = value;
 	changeColor(value);
 }
 
@@ -234,4 +237,21 @@ function changeBGColor(class_name,new_color) {
 			graph.style.fill = new_color;
 		}
 	}	
+}
+
+
+export function setSideFlowerState() {
+	state.tool = 'paint';
+	state.trunkTail = 25;
+	state.aspect = '側面';
+}
+
+export function setFrontFlowerState() {
+	state.tool = 'paint';
+	state.trunkTail = 10;
+	state.aspect = '正面';
+}
+
+export function setLeafState() {
+	state.tool = 'skeleton';
 }

@@ -12,35 +12,125 @@
 	<title>flower</title>
 	<link rel="stylesheet" type="text/css" href="style.css">
 </head>
-<template id="style-btn">
-	<button type="button" class="btn btn-default"  style="width:15%">
-		<img class="img-responsive" />
-	</button>
-</template>
-<body>
-	<div id="style-btn-row"></div>
-	<script type="text/javascript">
-		let btn = document.getElementById('style-btn').content.children[0];
-		let fragment = document.createDocumentFragment();
-		for (let i = 1; i <= 5; i++) {
-			let clone = document.importNode(btn, true);
-			let img = clone.children[0];
-			img.setAttribute('src', `btn-img/color${i}.png`);
-			img.setAttribute('onclick', `setStyle(${i})`);
-			fragment.appendChild(clone);
-		}
-		document.getElementById('style-btn-row').appendChild(fragment);
-	</script>
 
+<body>	
+	<div id="style-btn-row">
+		<button type="button" class="btn btn-default"  style="width:10%" onclick="setStyle(0)">
+			<img data-index="0" class="img-responsive" src="btn-img/color1.png"/>
+		</button>
+		<button type="button" class="btn btn-default"  style="width:10%" onclick="setStyle(1)">
+			<img data-index="1" class="img-responsive" src="btn-img/color2.png"/>
+		</button>
+		<button type="button" class="btn btn-default"  style="width:10%" onclick="setStyle(2)">
+			<img data-index="2" class="img-responsive" src="btn-img/color3.png"/>
+		</button>
+		<button type="button" class="btn btn-default"  style="width:10%" onclick="setStyle(3)">
+			<img data-index="3" class="img-responsive" src="btn-img/color4.png"/>
+		</button>
+		<button type="button" class="btn btn-default"  style="width:10%" onclick="setStyle(4)">
+			<img data-index="4" class="img-responsive" src="btn-img/color5.png"/>
+		</button>
+	</div>
+	<div id="tools">
+		<button type="button" class="btn btn-default"  style="width:10%" onclick="setFront()">
+			<img class="img-responsive" src="btn-img/draw-front.jpg"/>
+		</button>
+		<button type="button" class="btn btn-default"  style="width:10%" onclick="setSide()">
+			<img class="img-responsive" src="btn-img/draw-side.jpg"/>
+		</button>
+		<button type="button" class="btn btn-default"  style="width:10%" onclick="setLeaf()">
+			<img class="img-responsive" src="btn-img/draw-leaf.jpg"/>
+		</button>
+	</div>
+	<button type="button" class="btn btn-default"  onclick="SendLinkByMail()">mail</button>
+<!-- 	<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal</button>
+ -->
 	<div id="drawing"></div>
+
+	<div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Modal Header</h4>
+      </div>
+      <div class="modal-body">
+		<form name="email" method=POST action="" enctype="text/html">
+			匿稱：<input type="text" name="e_name"><br>
+			信箱：<input type="text" name="e_mail"><br>
+			<textarea name="e_body" rows="10" cols="30">
+		
+			</textarea><br>
+			<input type="button" onclick="sendMail(this.form);" value="寄出">
+			<input type="reset" value="重寫">
+		</form>      
+		</div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
 </body>
 
 <script src="js/main.js"></script>
 <script>
-	function setStyle(styleIndex) {
-		window['changeColorByIndex'](styleIndex);
-	}
+function setStyle(styleIndex) {
+	window['changeColorByIndex'](styleIndex);
+}
 
+function setSide() {
+	window['setSideFlowerState']();
+}
 
+function setLeaf() {
+	window['setLeafState']();
+}
+
+function setFront() {
+	window['setFrontFlowerState']();
+}
+
+function SendLinkByMail(href) {
+	var subject= '海石榴華';
+
+	let svg = document.getElementsByTagName('svg')[0];
+
+	var uri = 'mailto:?subject=';
+	uri += encodeURIComponent(subject);
+	uri += '&Content-Type=text/html; charset=utf-8';
+	uri += '&body=';
+	uri +=encodeURIComponent(
+`<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+${svg.outerHTML}
+</body>
+</html>	`);
+	window.location.href = uri;
+}
+function sendMail(obj){
+	let svg = document.getElementsByTagName('svg')[0];
+	let url = "mailto:購物網站<abgne@xuite.net>?subject="+ obj.e_name.value+"<"+obj.e_mail.value+">的訂單&body=";
+	url +=encodeURIComponent(
+	`
+	<!DOCTYPE html>
+	<html>
+	<head>
+		<title></title>
+	</head>
+	<body>
+	${svg.outerHTML}
+	</body>
+	</html>
+	`);
+	window.location.href = url;
+}
 </script>
 </html>

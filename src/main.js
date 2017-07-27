@@ -7,7 +7,11 @@ import CurveManagement from './model/CurveManagement';
 	let draw = SVG('drawing').size(1900, 2500);
 	setSVGLayer(draw);
 	setControl(draw);
-	UI.setGUI();
+	// UI.setGUI();
+	let bound = (new URL(window.location)).searchParams.get('bound');
+
+	UI.setBounding(bound);
+	exportFunctionToHtml();
 })();
 
 function setSVGLayer(panel) {
@@ -47,13 +51,16 @@ function setControl(_container) {
 	});
 	_container.on('mousemove', function (e) {
 		let currnetControl = tools[UI.state.tool];
+		let p = [e.offsetX, e.offsetY];
 
-		var x = e.offsetX;
-		var y = e.offsetY;
-		if (isMouseDown) {
-			currnetControl.update([x, y]);
-		}
+		if (isMouseDown) currnetControl.update( p );
 	});
 }
 
-window['changeColorByIndex']=UI.changeColorByIndex;
+
+function exportFunctionToHtml() {
+	window['changeColorByIndex']= UI.changeColorByIndex;
+	window['setSideFlowerState'] = UI.setSideFlowerState;
+	window['setFrontFlowerState'] = UI.setFrontFlowerState;
+	window['setLeafState'] = UI.setLeafState;
+}
