@@ -1,5 +1,6 @@
 import {Flower} from '../model/nonStem';
 import CurveManagement from '../model/CurveManagement';
+import {angle} from '../model/UtilMath';
 
 class FloralControl{
 	constructor(pannel){
@@ -46,8 +47,3 @@ class FloralControl{
 }
 
 export default FloralControl;
-
-function angle(x1,y1, x2, y2) {
-	const toDeg = 180/Math.PI;
-	return 	 Math.atan2( y2 - y1, x2 - x1)* toDeg +90;
-}

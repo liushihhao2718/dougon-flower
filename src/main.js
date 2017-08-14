@@ -12,6 +12,7 @@ import CurveManagement from './model/CurveManagement';
 
 	UI.setBounding(bound);
 	exportFunctionToHtml();
+	UI.setFrontFlowerState();
 })();
 
 function setSVGLayer(panel) {

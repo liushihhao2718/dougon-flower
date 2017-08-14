@@ -250,6 +250,11 @@ export function setFrontFlowerState() {
 	state.tool = 'paint';
 	state.trunkTail = 10;
 	state.aspect = '正面';
+
+	if (state.bound !== '圖樣'){
+		state.trunkTail = 5;
+		state.trunkHead = 2;	
+	} 
 }
 
 export function setLeafState() {

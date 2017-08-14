@@ -41,3 +41,13 @@ export function multiplyMatrixAndPoint(matrix, point) {
 
 	return [resultX, resultY, resultZ];
 }
+
+export function angle(x1,y1, x2, y2) {
+	const toDeg = 180/Math.PI;
+	return 	 Math.atan2( y2 - y1, x2 - x1)* toDeg +90;
+}
+
+export function normalize(x, y) {
+	const d = distance(0,0, x, y);
+	return [x/d, y/d];
+}

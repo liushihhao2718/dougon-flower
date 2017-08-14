@@ -6,7 +6,7 @@ import * as Drawer from './Drawer';
 import _ from 'lodash';
 import SVG from 'svg.js';
 import * as UI from './UIManagement';
-import * as Matrix from './Matrix';
+import * as Matrix from './UtilMath';
 
 import {LeafImage,leafColliders} from '../images/LeafImage';
 const transformParameters = [];
