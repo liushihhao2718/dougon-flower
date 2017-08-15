@@ -4,7 +4,8 @@ export let dougonBounding = {
 	栱眼壁:require('./new_00224.svg'),
 	昂:require('./昂.svg'),
 	盧枓:require('./LD.svg'),
-	七舖座:require('./seven.svg')
+	七舖座:require('./seven.svg'),
+	L: require('./L.svg')
 };
 
 export let dougonBoundingNodes = {
@@ -52,7 +53,13 @@ export let dougonBoundingParam = {
 		trunkHead: 3,
 		trunkTail: 5,
 		level1Size: 30
-	}
+	},
+	L :{
+		flowerSize: 30,
+		trunkHead: 5,
+		trunkTail: 10,
+		level1Size: 30
+	},
 };
 
 /*

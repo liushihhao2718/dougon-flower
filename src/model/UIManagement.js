@@ -212,6 +212,9 @@ function computeBounding(value) {
 	case 'rect':
 		dougonBoundingNodes[value] = rectElementToPoints(boundingElement.node, bounding.node.firstElementChild);
 		break;
+	case 'polygon':
+		dougonBoundingNodes[value] = boundingElement.array().value;
+		break;
 	default:
 		console.error(`not support ${boundingElement.type} for bounding.`);		
 	}
