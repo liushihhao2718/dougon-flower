@@ -29,7 +29,7 @@ export default class ColliderCollection{
 	}
 	test(polygon, ...ignore){
 		let bbox = makeBbox(polygon);
-		const dougon = dougonBoundingNodes[ UI.state.bound ];
+		let dougon = dougonBoundingNodes[ UI.state.bound ];
 
 		if(!polygonInsidePolygon(polygon, dougon)) return true;
 

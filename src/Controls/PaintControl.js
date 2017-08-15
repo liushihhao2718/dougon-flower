@@ -2,7 +2,6 @@ import {BezierSpline} from '../model/Spline';
 import {Floral} from '../model/stem';
 import CurveManagement from '../model/CurveManagement';
 import * as UI from '../model/UIManagement';
-import {angle, normalize} from '../model/UtilMath';
 
 const error = 50;
 

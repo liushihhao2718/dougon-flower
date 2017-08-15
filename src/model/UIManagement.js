@@ -1,7 +1,7 @@
 import * as dat from '../lib/dat.gui';
 import download from '../lib/download';
 import CurveManagement from './CurveManagement';
-import {dougonBounding, dougonBoundingParam} from '../images/dougonBounding';
+import {dougonBounding, dougonBoundingParam, dougonBoundingNodes} from '../images/dougonBounding';
 
 const styleMap = require('../color/StyleMap.json');
 const colorMap = require('../color/colorHex.json');
@@ -192,24 +192,54 @@ function setOnChange(controls, leafControls){
 
 export function setBounding(value){
 	state.bound = value;
-	let svgString = dougonBounding[value];
+	clearOldBounding();
+	computeBounding(value);
+	// updateDatGUI();
+	setStateForBounding(value);
+	changeColor( state.color );
+}
+function clearOldBounding() {
 	CurveManagement.clearAllLayer();
 	CurveManagement.clearScene();
-	
-	CurveManagement.layer.dougonLayer.svg(svgString);
-	
+}
+function computeBounding(value) {
+	const svgString = dougonBounding[value];
+	const bounding = CurveManagement.layer.dougonLayer.svg(svgString);
+	const boundingElement = bounding.select('#bounding').members[0];
+	if (!boundingElement) console.error('bounding svg have no bounding id element');
+
+	switch(boundingElement.type){
+	case 'rect':
+		dougonBoundingNodes[value] = rectElementToPoints(boundingElement.node, bounding.node.firstElementChild);
+		break;
+	default:
+		console.error(`not support ${boundingElement.type} for bounding.`);		
+	}
+}
+function rectElementToPoints(rect, svg) {
+	const x = Number(rect.getAttribute('x'));
+	const y = Number(rect.getAttribute('y'));
+	const w = Number(rect.getAttribute('width'));
+	const h = Number(rect.getAttribute('height'));
+	return [[x,y], [x+w, y], [x+w, y+h], [x, y+h]].map(p =>{
+		let svgPoint = svg.createSVGPoint();
+		svgPoint.x = p[0];
+		svgPoint.y = p[1];
+		svgPoint = svgPoint.matrixTransform(svg.getCTM());
+		return [svgPoint.x, svgPoint.y];
+	});
+}
+function setStateForBounding(value) {
 	state.flowerSize = dougonBoundingParam[value].flowerSize;
 	state.trunkHead = dougonBoundingParam[value].trunkHead;
 	state.trunkTail = dougonBoundingParam[value].trunkTail;
 	state.levelCurve[0].length = dougonBoundingParam[value].level1Size || 80;
-
-	// gui.__controllers[2].updateDisplay();
-	// gui.__controllers[3].updateDisplay();
-	// gui.__controllers[4].updateDisplay();
-	
-	changeColor( state.color );
 }
-
+function updateDatGUI() {
+	gui.__controllers[2].updateDisplay();
+	gui.__controllers[3].updateDisplay();
+	gui.__controllers[4].updateDisplay();
+}
 
 export function changeColorByIndex(index){
 	let value = Object.keys(styleMap['五彩遍裝'])[index];
