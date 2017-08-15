@@ -192,7 +192,7 @@ function setBounding(value){
 	let svgString = dougonBounding[value];
 	CurveManagement.clearAllLayer();
 	CurveManagement.clearScene();
-	
+	// CurveManagement.selectedCurve
 	CurveManagement.layer.dougonLayer.svg(svgString);
 	
 	state.flowerSize = dougonBoundingParam[value].flowerSize;

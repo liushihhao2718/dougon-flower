@@ -77,7 +77,8 @@ export default {
 		}
 	},
 	clearScene(){
-		this.floralScene.length = [];
+		this.floralScene = [];
+		this.selectedCurve = [];
 	},
 	initSvgSymbol(){
 		Drawer.initSvgSymbol();
