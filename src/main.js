@@ -38,7 +38,8 @@ function setControl(_container) {
 		
 	_container.on('mousedown', function (e) {
 		let currnetControl = tools[UI.state.tool];
-		const point = [ e.offsetX, e.offsetY ];
+		const point = getSvgCtmPoint(e, _container);
+
 		isMouseDown = true;
 		currnetControl.start(point);
 	});
@@ -48,13 +49,22 @@ function setControl(_container) {
 		isMouseDown = false;
 		currnetControl.end();
 	});
-	_container.on('mousemove', function (e) {
+	_container.on('mousemove', e => {
 		let currnetControl = tools[UI.state.tool];
-
-		var x = e.offsetX;
-		var y = e.offsetY;
+		
+		const [x,y] = getSvgCtmPoint(e, _container);
 		if (isMouseDown) {
 			currnetControl.update([x, y]);
 		}
 	});
+}
+
+function getSvgCtmPoint(e, svg){
+	const p = svg.node.createSVGPoint();
+	p.x = e.clientX;
+	p.y = e.clientY;
+	const ctm = svg.node.getScreenCTM();
+	const inverse = ctm.inverse();
+	const transforomP = p.matrixTransform(inverse);
+	return [transforomP.x, transforomP.y];
 }
