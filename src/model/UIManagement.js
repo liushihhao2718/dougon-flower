@@ -4,7 +4,7 @@ import CurveManagement from './CurveManagement';
 import {dougonBounding, dougonBoundingParam, dougonBoundingNodes} from '../images/dougonBounding';
 
 const styleMap = require('../color/StyleMap.json');
-const colorMap = require('../color/colorHex.json');
+import colorMap from '../color/colorHex';
 
 import {Floral} from './stem';
 import {BezierSpline} from './Spline';

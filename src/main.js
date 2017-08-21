@@ -2,6 +2,7 @@ import Control from './Controls/Control';
 import SVG from 'svg.js';
 import * as UI from './model/UIManagement';
 import CurveManagement from './model/CurveManagement';
+import {changeColorMap} from './color/colorHex';
 
 (function(){
 	let draw = SVG('drawing').size(1900, 2500);
@@ -77,3 +78,25 @@ function exportFunctionToHtml() {
 	window['setFrontFlowerState'] = UI.setFrontFlowerState;
 	window['setLeafState'] = UI.setLeafState;
 }
+
+function readSingleFile(e) {
+	var file = e.target.files[0];
+	if (!file) return;
+
+	var reader = new FileReader();
+	reader.onload = function(e) {
+		let contents = e.target.result;
+		displayContents(contents);
+		const colorMap = JSON.parse(contents);
+		changeColorMap(colorMap);
+	};
+	reader.readAsText(file);
+}
+
+function displayContents(contents) {
+	var element = document.getElementById('file-content');
+	element.textContent = contents;
+}
+
+document.getElementById('file-input')
+  .addEventListener('change', readSingleFile, false);

@@ -1,8 +1,7 @@
 import CurveManagement from './CurveManagement';
 import {flowerString, LeafImage, cap} from '../images/LeafImage';
 import SVG from 'svg.js';
-const colorMap = require('../color/colorHex.json');
-
+import colorMap from '../color/colorHex';
 let symbols;
 
 export function initSvgSymbol(){
