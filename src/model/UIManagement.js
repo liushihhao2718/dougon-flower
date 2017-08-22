@@ -4,7 +4,6 @@ import CurveManagement from './CurveManagement';
 import {dougonBounding, dougonBoundingParam, dougonBoundingNodes} from '../images/dougonBounding';
 
 const styleMap = require('../color/StyleMap.json');
-import colorMap from '../color/colorHex';
 
 import {Floral} from './stem';
 import {BezierSpline} from './Spline';
@@ -250,10 +249,10 @@ export function changeColorByIndex(index){
 	changeColor(value);
 }
 
-function changeColor(value) {
+export function changeColor(value) {
 	let colorTags = styleMap['五彩遍裝'][value];
 	Object.keys( colorTags ).forEach(key =>{
-		changeBGColor( key, colorMap[colorTags[key]] );
+		changeBGColor( key,  window['colorMap'][colorTags[key]] );
 	});
 }
 function changeBGColor(class_name,new_color) {

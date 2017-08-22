@@ -86,9 +86,11 @@ function readSingleFile(e) {
 	var reader = new FileReader();
 	reader.onload = function(e) {
 		let contents = e.target.result;
-		displayContents(contents);
+		// displayContents(contents);
 		const colorMap = JSON.parse(contents);
 		changeColorMap(colorMap);
+		CurveManagement.draw();
+		UI.changeColor(UI.state.color);
 	};
 	reader.readAsText(file);
 }

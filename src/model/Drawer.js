@@ -1,7 +1,6 @@
 import CurveManagement from './CurveManagement';
 import {flowerString, LeafImage, cap} from '../images/LeafImage';
 import SVG from 'svg.js';
-import colorMap from '../color/colorHex';
 let symbols;
 
 export function initSvgSymbol(){
@@ -103,7 +102,7 @@ export function	drawStem(floral){
 	worker.postMessage(message);
 	worker.onmessage = function(e){
 		e.data.forEach((s,i)=>{
-			drawOnPannel( stem, s, colorMap[color[i]]);
+			drawOnPannel( stem, s, window['colorMap'][color[i]]);
 		});
 	};
 }

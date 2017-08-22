@@ -48,8 +48,8 @@
 	<div id="drawing"></div>
 
 <input type="file" id="file-input" />
-<h3>Contents of the file:</h3>
-<pre id="file-content"></pre>
+<!-- <h3>Contents of the file:</h3>
+<pre id="file-content"></pre> -->
 
 	<div id="myModal" class="modal fade" role="dialog">
   <div class="modal-dialog">
@@ -118,23 +118,6 @@ ${svg.outerHTML}
 </body>
 </html>	`);
 	window.location.href = uri;
-}
-function sendMail(obj){
-	let svg = document.getElementsByTagName('svg')[0];
-	let url = "mailto:購物網站<abgne@xuite.net>?subject="+ obj.e_name.value+"<"+obj.e_mail.value+">的訂單&body=";
-	url +=encodeURIComponent(
-	`
-	<!DOCTYPE html>
-	<html>
-	<head>
-		<title></title>
-	</head>
-	<body>
-	${svg.outerHTML}
-	</body>
-	</html>
-	`);
-	window.location.href = url;
 }
 </script>
 </html>

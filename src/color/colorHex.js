@@ -1,6 +1,6 @@
 let colorMap = require('./colorHex.json');
-export default colorMap;
+window['colorMap'] = colorMap;
 
 export function changeColorMap(newColorMap){
-	colorMap = newColorMap;
+	window['colorMap'] = newColorMap;
 }
