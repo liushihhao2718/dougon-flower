@@ -226,12 +226,21 @@ function rectElementToPoints(rect, svg) {
 	const w = Number(rect.getAttribute('width'));
 	const h = Number(rect.getAttribute('height'));
 	return [[x,y], [x+w, y], [x+w, y+h], [x, y+h]].map(p =>{
-		let svgPoint = svg.createSVGPoint();
-		svgPoint.x = p[0];
-		svgPoint.y = p[1];
-		svgPoint = svgPoint.matrixTransform(svg.getCTM());
+		let svgPoint = convertCoords(p[0],p[1], svg, rect);
+		CurveManagement.layer.dougonLayer.circle(10).cx(svgPoint.x).cy(svgPoint.y).fill('red');
 		return [svgPoint.x, svgPoint.y];
 	});
+}
+function convertCoords(x,y, svgDoc, elem) {
+
+	let offset = svgDoc.getBoundingClientRect();
+
+	let matrix = elem.getScreenCTM();
+
+	return {
+		x:(matrix.a * x) + (matrix.c * y) + matrix.e - offset.left,
+		y:(matrix.b * x) + (matrix.d * y) + matrix.f - offset.top
+	};
 }
 function setStateForBounding(value) {
 	state.flowerSize = dougonBoundingParam[value].flowerSize;
