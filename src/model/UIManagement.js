@@ -45,10 +45,12 @@ export let state = {
 	leafBranchType: 'big'
 };
 
-let features = {
+export let features = {
 	download : function(){
 		let svg = document.getElementsByTagName('svg')[0];
-		download(svg.outerHTML, 'file.svg', 'text/plain');
+		let string = svg.outerHTML.replace(/<image [\s\S]*?<\/image>/, '');
+
+		download(string, 'file.svg', 'text/plain');
 	},
 	toggleLayer: function(layer){
 		layer.visible() ? layer.hide() : layer.show();

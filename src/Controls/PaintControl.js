@@ -40,6 +40,7 @@ function PaintControl(pannel) {
 
 		CurveManagement.floralScene.push( new Floral(smoothBizer,UI.state.flowerSize, UI.state.trunkHead, UI.state.trunkTail,'海石榴華', aspect, rotateAngle) );
 		CurveManagement.draw();
+		UI.changeColor(UI.state.color);
 		clearRawData();
 	};
 

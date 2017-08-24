@@ -41,42 +41,14 @@
 		<button type="button" class="btn btn-default"  style="width:10%" onclick="setLeaf()">
 			<img class="img-responsive" src="btn-img/draw-leaf.jpg"/>
 		</button>
+		<button type="button" class="btn btn-default"  style="width:8%" onclick="downloadSVG()">
+			<img class="img-responsive" src="btn-img/download-button.svg"/>
+		</button>
 	</div>
 	<button type="button" class="btn btn-default"  onclick="SendLinkByMail()">mail</button>
-<!-- 	<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal</button>
- -->
+	<input type="file" id="file-input" />
+
 	<div id="drawing"></div>
-
-<input type="file" id="file-input" />
-<!-- <h3>Contents of the file:</h3>
-<pre id="file-content"></pre> -->
-
-	<div id="myModal" class="modal fade" role="dialog">
-  <div class="modal-dialog">
-
-    <!-- Modal content-->
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Modal Header</h4>
-      </div>
-      <div class="modal-body">
-		<form name="email" method=POST action="" enctype="text/html">
-			匿稱：<input type="text" name="e_name"><br>
-			信箱：<input type="text" name="e_mail"><br>
-			<textarea name="e_body" rows="10" cols="30">
-		
-			</textarea><br>
-			<input type="button" onclick="sendMail(this.form);" value="寄出">
-			<input type="reset" value="重寫">
-		</form>      
-		</div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
-    </div>
-
-  </div>
 </div>
 </body>
 
@@ -97,6 +69,9 @@ function setLeaf() {
 function setFront() {
 	window['setFrontFlowerState']();
 }
+function downloadSVG() {
+	window['download']();
+}
 
 function SendLinkByMail(href) {
 	var subject= '海石榴華';
@@ -107,16 +82,7 @@ function SendLinkByMail(href) {
 	uri += encodeURIComponent(subject);
 	uri += '&Content-Type=text/html; charset=utf-8';
 	uri += '&body=';
-	uri +=encodeURIComponent(
-`<!DOCTYPE html>
-<html>
-<head>
-	<title></title>
-</head>
-<body>
-${svg.outerHTML}
-</body>
-</html>	`);
+	uri +=encodeURIComponent(svg.outerHTML);
 	window.location.href = uri;
 }
 </script>

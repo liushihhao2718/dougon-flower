@@ -77,6 +77,7 @@ function exportFunctionToHtml() {
 	window['setSideFlowerState'] = UI.setSideFlowerState;
 	window['setFrontFlowerState'] = UI.setFrontFlowerState;
 	window['setLeafState'] = UI.setLeafState;
+	window['download'] = UI.features.download;
 }
 
 function readSingleFile(e) {
