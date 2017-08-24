@@ -227,7 +227,7 @@ function rectElementToPoints(rect, svg) {
 	const h = Number(rect.getAttribute('height'));
 	return [[x,y], [x+w, y], [x+w, y+h], [x, y+h]].map(p =>{
 		let svgPoint = convertCoords(p[0],p[1], svg, rect);
-		CurveManagement.layer.dougonLayer.circle(10).cx(svgPoint.x).cy(svgPoint.y).fill('red');
+		// CurveManagement.layer.dougonLayer.circle(10).cx(svgPoint.x).cy(svgPoint.y).fill('red');
 		return [svgPoint.x, svgPoint.y];
 	});
 }
