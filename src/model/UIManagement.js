@@ -86,7 +86,8 @@ let features = {
 			x.style.display = '';
 			x.style.visibility = state.show.dougon? 'visible':'hidden';
 		});
-	}
+	},
+	whiteColor : whiteColor
 };
 
 export function setGUI(){
@@ -142,7 +143,7 @@ export function setGUI(){
 
 	setOnChange(controls, leafControls);
 
-	let colorControl = gui.add(state, 'color', ['青緣紅地','青緣紅地-地色紅粉','綠緣青地','綠緣青地-地色為白', '鋪地捲成']);
+	let colorControl = gui.add(state, 'color', ['青緣紅地','青緣紅地-地色紅粉','綠緣青地','綠緣青地-地色為白', '鋪地捲成', '素描']);
 	colorControl.onChange(value => changeColor(value));
 
 
@@ -154,7 +155,7 @@ export function setGUI(){
 	setBounding(state.bound);
 
 	gui.add(features, 'test');
-
+	gui.add(features, 'whiteColor');
 	let folder = gui.addFolder('Layer');
 
 	folder.add(state.show, 'image')
@@ -251,4 +252,13 @@ function changeBGColor(class_name,new_color) {
 			graph.style.fill = new_color;
 		}
 	}	
+}
+
+function whiteColor() {
+	const path = Array.from(document.getElementsByTagName('path'));
+	for(let tag of path) {
+		tag.style.stroke = 'black';
+		tag.style.fill = 'white';
+		tag.style.strokeWidth = '1px';
+	}
 }
