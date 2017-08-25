@@ -48,8 +48,19 @@ export let state = {
 
 let features = {
 	download : function(){
-		let svg = document.getElementsByTagName('svg')[0];
-		download(svg.outerHTML, 'file.svg', 'text/plain');
+		let svg = document.getElementsByTagName('svg')[0].cloneNode(true);
+		let image = svg.getElementsByTagName('image')[0];
+		if(image) image.remove();
+
+		let bounding = document.getElementsByTagName('svg')[0].children[1].children[0].children[1];
+		let bbox = bounding.getBBox();
+		let {x, y} = convertCoords(bbox.x, bbox.y, document.getElementsByTagName('svg')[0], bounding);
+		svg.setAttribute('viewBox', `${x} ${y} ${bbox.width} ${bbox.height}`);
+		svg.setAttribute('width', bbox.width);
+		svg.setAttribute('height', bbox.height);
+		let string = svg.outerHTML;
+
+		download(string, 'file.svg', 'text/plain');
 	},
 	toggleLayer: function(layer){
 		layer.visible() ? layer.hide() : layer.show();
@@ -208,8 +219,19 @@ function setBounding(value){
 
 	changeColor( state.color );
 }
+function convertCoords(x,y, svgDoc, elem) {
 
-function changeColor(value) {
+	let offset = svgDoc.getBoundingClientRect();
+
+	let matrix = elem.getScreenCTM();
+
+	return {
+		x:(matrix.a * x) + (matrix.c * y) + matrix.e - offset.left,
+		y:(matrix.b * x) + (matrix.d * y) + matrix.f - offset.top
+	};
+}
+
+export function changeColor(value) {
 	let colorTags = styleMap['五彩遍裝'][value];
 	Object.keys( colorTags ).forEach(key =>{
 		changeBGColor( key, colorMap[colorTags[key]] );
