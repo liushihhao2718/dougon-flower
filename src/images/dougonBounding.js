@@ -1,11 +1,12 @@
 export let dougonBounding = {
 	令栱:require('./令栱.svg'),
 	圖樣:require('./target2.svg'),
-	栱眼壁:require('./new_00224.svg'),
+	// 栱眼壁:require('./new_00224.svg'),
+	栱眼壁:require('./GYB2.svg'),
 	昂:require('./昂.svg'),
 	盧枓:require('./LD.svg'),
 	七舖座:require('./seven.svg'),
-	L: require('./L.svg')
+	L: require('./L2.svg')
 };
 
 export let dougonBoundingNodes = {

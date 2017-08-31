@@ -42,12 +42,16 @@
 			<img class="img-responsive" src="btn-img/draw-leaf.jpg"/>
 		</button>
 		<button type="button" class="btn btn-default"  style="width:8%" onclick="downloadSVG()">
-			<img class="img-responsive" src="btn-img/download-button.svg"/>
+			<img class="img-responsive" src="btn-img/download-2-xxl.png"/>
+			
 		</button>
-	</div>
-	<button type="button" class="btn btn-default"  onclick="SendLinkByMail()">mail</button>
-	<input type="file" id="file-input" />
-
+		<button type="button" class="btn btn-default" style="width:8%" onclick="uploadJSON()">
+			<img class="img-responsive" src="btn-img/upload-3-256.jpg"/>
+			<input type="file" id="file-input" style="display: none;">
+		</button>
+		<button type="button" class="btn btn-default" style="width:8%" onclick="SendLinkByMail()">
+			<img class="img-responsive" src="btn-img/message-256.jpg"/>
+		</button>
 	<div id="drawing"></div>
 </div>
 </body>
@@ -84,6 +88,10 @@ function SendLinkByMail(href) {
 	uri += '&body=';
 	uri +=encodeURIComponent(svg.outerHTML);
 	window.location.href = uri;
+}
+
+function uploadJSON(){
+	document.getElementById('file-input').click();
 }
 </script>
 </html>

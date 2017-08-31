@@ -37,7 +37,7 @@ export let state = {
 	bound: '圖樣',
 	tool:'paint',
 	show:{
-		image:true,
+		image:false,
 		dougon:true
 	},
 	color:'鋪地捲成',
@@ -92,6 +92,7 @@ export function setGUI(){
 	gui = new dat.GUI();
 	gui.remember(state);
 	gui.close();
+
 	let bound =	gui.add(state, 'bound', Object.keys(dougonBounding));
 
 	let c0 = gui.add(state, 'tool', ['paint', 'flower', 'select', 'skeleton']);
@@ -205,6 +206,7 @@ export function setBounding(value){
 	clearOldBounding();
 	computeBounding(value);
 	// updateDatGUI();
+	features.toggleImage();
 	setStateForBounding(value);
 	changeColor( state.color );
 }
