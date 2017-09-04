@@ -38,7 +38,7 @@ export let state = {
 	bound: '圖樣',
 	tool:'paint',
 	show:{
-		image:true,
+		image:false,
 		dougon:true
 	},
 	color:'鋪地捲成',
@@ -77,7 +77,8 @@ let features = {
 	},
 	toggleImage: function(){
 		let image = document.getElementsByTagName('image')[0];
-		image.style.visibility = state.show.image? 'visible':'hidden';
+		if (image) 
+			image.style.visibility = state.show.image? 'visible':'hidden';
 	},
 	toggleDougon: function(){
 		Array.from(CurveManagement.layer.dougonLayer.node.children[0].children)
@@ -158,10 +159,10 @@ export function setGUI(){
 	gui.add(features, 'whiteColor');
 	let folder = gui.addFolder('Layer');
 
-	folder.add(state.show, 'image')
-	.onChange(()=>{
-		features.toggleImage();
-	});
+	// folder.add(state.show, 'image')
+	// .onChange(()=>{
+	// 	features.toggleImage();
+	// });
 
 	folder.add(state.show, 'dougon')
 	.onChange(()=>{
@@ -204,9 +205,10 @@ function setBounding(value){
 	let svgString = dougonBounding[value];
 	CurveManagement.clearAllLayer();
 	CurveManagement.clearScene();
-	
 	CurveManagement.layer.dougonLayer.svg(svgString);
 	
+	features.toggleImage();
+
 	state.flowerSize = dougonBoundingParam[value].flowerSize;
 	state.trunkHead = dougonBoundingParam[value].trunkHead;
 	state.trunkTail = dougonBoundingParam[value].trunkTail;
@@ -215,8 +217,6 @@ function setBounding(value){
 	gui.__controllers[2].updateDisplay();
 	gui.__controllers[3].updateDisplay();
 	gui.__controllers[4].updateDisplay();
-
-	// gui.__controllers[2].updateDisplay();
 
 	changeColor( state.color );
 }
