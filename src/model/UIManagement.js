@@ -77,7 +77,7 @@ let features = {
 	},
 	toggleImage: function(){
 		let image = document.getElementsByTagName('image')[0];
-		if (image) 
+		if (image)
 			image.style.visibility = state.show.image? 'visible':'hidden';
 	},
 	toggleDougon: function(){
