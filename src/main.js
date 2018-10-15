@@ -4,7 +4,7 @@ import * as UI from './model/UIManagement';
 import CurveManagement from './model/CurveManagement';
 
 (function(){
-	let draw = SVG('drawing').size(1900, 2500);
+	let draw = SVG('drawing').size('100%', '100%').viewbox(0,0,1900, 2500);
 	setSVGLayer(draw);
 	setControl(draw);
 	UI.setGUI();

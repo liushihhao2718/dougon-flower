@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "watchify src/main.js -v --debug -t [ stringify --extensions [.svg] ] -t babelify -o docs/js/main.js",
-    "start": "http-server docs --gzip",
+    "start": "http-server docs",
     "concave": "watchify test/ConcaveHullFactory.js -v --debug -t [ stringify --extensions [.svg] ] -t babelify -o test/concave.js"
   },
   "author": "",
