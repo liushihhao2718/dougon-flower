@@ -38,7 +38,7 @@ export let state = {
 	bound: '圖樣',
 	tool:'paint',
 	show:{
-		image:true,
+		image:false,
 		dougon:true
 	},
 	color:'鋪地捲成',
@@ -48,8 +48,19 @@ export let state = {
 
 let features = {
 	download : function(){
-		let svg = document.getElementsByTagName('svg')[0];
-		download(svg.outerHTML, 'file.svg', 'text/plain');
+		let svg = document.getElementsByTagName('svg')[0].cloneNode(true);
+		let image = svg.getElementsByTagName('image')[0];
+		if(image) image.remove();
+
+		let bounding = document.getElementsByTagName('svg')[0].children[1].children[0].children[1];
+		let bbox = bounding.getBBox();
+		let {x, y} = convertCoords(bbox.x, bbox.y, document.getElementsByTagName('svg')[0], bounding);
+		svg.setAttribute('viewBox', `${x} ${y} ${bbox.width} ${bbox.height}`);
+		svg.setAttribute('width', bbox.width);
+		svg.setAttribute('height', bbox.height);
+		let string = svg.outerHTML;
+
+		download(string, 'file.svg', 'text/plain');
 	},
 	toggleLayer: function(layer){
 		layer.visible() ? layer.hide() : layer.show();
@@ -66,7 +77,8 @@ let features = {
 	},
 	toggleImage: function(){
 		let image = document.getElementsByTagName('image')[0];
-		image.style.visibility = state.show.image? 'visible':'hidden';
+		if (image)
+			image.style.visibility = state.show.image? 'visible':'hidden';
 	},
 	toggleDougon: function(){
 		Array.from(CurveManagement.layer.dougonLayer.node.children[0].children)
@@ -75,7 +87,8 @@ let features = {
 			x.style.display = '';
 			x.style.visibility = state.show.dougon? 'visible':'hidden';
 		});
-	}
+	},
+	whiteColor : whiteColor
 };
 
 export function setGUI(){
@@ -131,7 +144,7 @@ export function setGUI(){
 
 	setOnChange(controls, leafControls);
 
-	let colorControl = gui.add(state, 'color', ['青緣紅地','青緣紅地-地色紅粉','綠緣青地','綠緣青地-地色為白', '鋪地捲成']);
+	let colorControl = gui.add(state, 'color', ['青緣紅地','青緣紅地-地色紅粉','綠緣青地','綠緣青地-地色為白', '鋪地捲成', '素描']);
 	colorControl.onChange(value => changeColor(value));
 
 
@@ -143,13 +156,13 @@ export function setGUI(){
 	setBounding(state.bound);
 
 	gui.add(features, 'test');
-
+	gui.add(features, 'whiteColor');
 	let folder = gui.addFolder('Layer');
 
-	folder.add(state.show, 'image')
-	.onChange(()=>{
-		features.toggleImage();
-	});
+	// folder.add(state.show, 'image')
+	// .onChange(()=>{
+	// 	features.toggleImage();
+	// });
 
 	folder.add(state.show, 'dougon')
 	.onChange(()=>{
@@ -192,9 +205,10 @@ function setBounding(value){
 	let svgString = dougonBounding[value];
 	CurveManagement.clearAllLayer();
 	CurveManagement.clearScene();
-	
 	CurveManagement.layer.dougonLayer.svg(svgString);
 	
+	features.toggleImage();
+
 	state.flowerSize = dougonBoundingParam[value].flowerSize;
 	state.trunkHead = dougonBoundingParam[value].trunkHead;
 	state.trunkTail = dougonBoundingParam[value].trunkTail;
@@ -204,12 +218,21 @@ function setBounding(value){
 	gui.__controllers[3].updateDisplay();
 	gui.__controllers[4].updateDisplay();
 
-	// gui.__controllers[2].updateDisplay();
-
 	changeColor( state.color );
 }
+function convertCoords(x,y, svgDoc, elem) {
 
-function changeColor(value) {
+	let offset = svgDoc.getBoundingClientRect();
+
+	let matrix = elem.getScreenCTM();
+
+	return {
+		x:(matrix.a * x) + (matrix.c * y) + matrix.e - offset.left,
+		y:(matrix.b * x) + (matrix.d * y) + matrix.f - offset.top
+	};
+}
+
+export function changeColor(value) {
 	let colorTags = styleMap['五彩遍裝'][value];
 	Object.keys( colorTags ).forEach(key =>{
 		changeBGColor( key, colorMap[colorTags[key]] );
@@ -229,4 +252,13 @@ function changeBGColor(class_name,new_color) {
 			graph.style.fill = new_color;
 		}
 	}	
+}
+
+function whiteColor() {
+	const path = Array.from(document.getElementsByTagName('path'));
+	for(let tag of path) {
+		tag.style.stroke = 'black';
+		tag.style.fill = 'white';
+		tag.style.strokeWidth = '1px';
+	}
 }
